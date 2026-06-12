@@ -202,16 +202,13 @@
 
 /* EXPANDED BODY */
 .port-row__body {
-  display: grid;
+  display: none;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.6s var(--ease);
 }
 
 .port-row--open .port-row__body {
-  max-height: 600px;
+  display: grid;
 }
 
 .port-row__image {
@@ -362,12 +359,9 @@
     padding: 20px 32px;
   }
 
-  .port-row__body {
-    grid-template-columns: 1fr;
-  }
-
   .port-row--open .port-row__body {
-    max-height: 900px;
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .port-row__detail {
