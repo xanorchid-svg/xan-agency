@@ -117,13 +117,13 @@ const WORK = [
 const FILTERS = ['All', 'Brand Identity', 'Web Design', 'Social Media', 'Startup', 'Graphic Design', 'Illustration']
 
 export default function Portfolio() {
-  useScrollReveal()
   const [filter, setFilter] = useState('All')
   const [expanded, setExpanded] = useState(null)
+  useScrollReveal(filter)
 
   const filtered = filter === 'All'
     ? WORK
-    : WORK.filter(w => w.tags.some(t => t.toLowerCase().includes(filter.toLowerCase())))
+    : WORK.filter(w => w.tags.some(t => t === filter))
 
   return (
     <>

@@ -1,21 +1,37 @@
 import { useEffect } from 'react'
 
-export function useScrollReveal() {
+export function useScrollReveal(dep) {
   useEffect(() => {
-    const elements = document.querySelectorAll('.reveal')
+    const timer = setTimeout(() => {
+      const elements = document.querySelectorAll('.reveal')
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
-          }
-        })
-      },
-      { threshold: 0.12 }
-    )
+      // Immediately show elements already in viewport
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect()
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add('visible')
+        }
+      })
 
-    elements.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible')
+            }
+          })
+        },
+        {
+          threshold: 0.08,
+          rootMargin: '0px 0px -40px 0px'
+        }
+      )
+
+      elements.forEach((el) => observer.observe(el))
+
+      return () => observer.disconnect()
+    }, 50)
+
+    return () => clearTimeout(timer)
+  }, [dep])
 }
