@@ -1,0 +1,339 @@
+@import './App.css';
+
+/* ============================================================
+   ABOUT HERO
+   ============================================================ */
+.about-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 80px 80px;
+  gap: 80px;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(184, 134, 42, 0.05), transparent);
+  pointer-events: none;
+}
+
+.about-hero__content {
+  flex: 1;
+  animation: fadeUp 0.8s var(--ease) both;
+}
+
+.about-hero__overline {
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+.about-hero__name {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  color: var(--white);
+  letter-spacing: 0.12em;
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+
+.about-hero__role {
+  font-size: 1rem;
+  font-weight: 200;
+  color: rgba(246, 243, 238, 0.55);
+  letter-spacing: 0.08em;
+  font-style: italic;
+}
+
+.about-hero__photos {
+  position: relative;
+  width: 380px;
+  height: 500px;
+  flex-shrink: 0;
+  animation: fadeUp 0.9s 0.2s var(--ease) both;
+}
+
+.about-hero__photo {
+  position: absolute;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.about-hero__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.about-hero__photo--1 {
+  width: 240px;
+  height: 360px;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.about-hero__photo--1::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid var(--gold);
+  opacity: 0.35;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.about-hero__photo--2 {
+  width: 200px;
+  height: 270px;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  outline: 6px solid var(--navy);
+}
+
+/* ============================================================
+   BIO
+   ============================================================ */
+.about-bio {
+  padding: 120px 80px;
+  background: var(--white);
+}
+
+.about-bio__inner {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-bio__overline {
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.about-bio__title {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 40px;
+}
+
+.about-bio__accent {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--navy);
+  line-height: 2;
+  border-top: 1px solid rgba(184, 134, 42, 0.3);
+  padding-top: 24px;
+}
+
+.about-bio__accent span {
+  color: var(--gold);
+}
+
+.about-bio__p {
+  font-size: 0.97rem;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+
+.about-bio__p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   VALUES
+   ============================================================ */
+.about-values {
+  padding: 120px 80px;
+  background: #f0ece4;
+}
+
+.about-values__header {
+  margin-bottom: 64px;
+}
+
+.about-values__overline {
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.about-values__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--navy);
+}
+
+.about-values__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(184, 134, 42, 0.15);
+  border: 1px solid rgba(184, 134, 42, 0.15);
+}
+
+.value-card {
+  background: #f0ece4;
+  padding: 48px 40px;
+  transition: background 0.3s;
+}
+
+.value-card:hover {
+  background: #e8e2d8;
+}
+
+.value-card__word {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+
+.value-card__desc {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--text-light);
+  line-height: 1.8;
+}
+
+/* ============================================================
+   ABOUT CTA STRIP
+   ============================================================ */
+.about-cta {
+  padding: 120px 80px;
+  background: var(--navy);
+}
+
+.about-cta__inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.about-cta__title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--white);
+}
+
+/* ============================================================
+   FOOTER (reuse from App.css via import)
+   ============================================================ */
+.footer {
+  background: #08111a;
+  padding: 48px 80px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.footer__logo {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--white);
+  margin-right: auto;
+}
+
+.footer__links,
+.footer__socials {
+  display: flex;
+  gap: 32px;
+}
+
+.footer__links a,
+.footer__socials a {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 238, 0.4);
+  transition: color 0.3s;
+}
+
+.footer__links a:hover,
+.footer__socials a:hover {
+  color: var(--gold-light);
+}
+
+.footer__copy {
+  width: 100%;
+  font-size: 0.65rem;
+  color: rgba(246, 243, 238, 0.2);
+  letter-spacing: 0.1em;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .about-hero {
+    padding: 100px 32px 80px;
+    flex-direction: column;
+  }
+
+  .about-hero__photos {
+    width: 100%;
+    height: 320px;
+  }
+
+  .about-bio {
+    padding: 80px 32px;
+  }
+
+  .about-bio__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-values {
+    padding: 80px 32px;
+  }
+
+  .about-values__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-cta {
+    padding: 80px 32px;
+  }
+
+  .footer {
+    padding: 40px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .footer__logo {
+    margin-right: 0;
+  }
+}
