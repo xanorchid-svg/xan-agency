@@ -1,88 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Raleway:wght@200;300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --white: #f6f3ee;
-  --navy: #0d1c2b;
-  --plum: #6b2d4e;
-  --gold: #b8862a;
-  --gold-light: #d4a84b;
-  --sage: #4f5f4a;
-  --text-mid: #3d3530;
-  --text-light: #7a6f68;
-
-  --font-heading: 'Cinzel', serif;
-  --font-body: 'Raleway', sans-serif;
-
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-}
-
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body,
+#root {
+  background-color: #0c0c0c;
+  font-family: 'Kanit', sans-serif;
 }
 
-body {
-  font-family: var(--font-body);
-  background: var(--white);
-  color: var(--text-mid);
-  font-weight: 300;
-  line-height: 1.7;
-  overflow-x: hidden;
+.main-wrapper {
+  overflow-x: clip;
+  background-color: #0c0c0c;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-heading);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  line-height: 1.15;
+/* Gradient heading used everywhere */
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #bbccd7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
 }
-
-img {
-  display: block;
-  max-width: 100%;
+::-webkit-scrollbar-track {
+  background: #0c0c0c;
 }
-
-button {
-  cursor: pointer;
-  font-family: var(--font-body);
-  border: none;
-  background: none;
-}
-
-/* Scroll reveal base */
-.reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-.reveal-delay-5 { transition-delay: 0.5s; }
-.reveal-delay-6 { transition-delay: 0.6s; }
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 2px;
 }
