@@ -1,123 +1,131 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import Nav from './Nav.jsx'
-import { useScrollReveal } from './useScrollReveal.js'
-import { PROJECTS } from './projects.js'
-import './ProjectDetail.css'
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { PROJECTS } from './projects';
+import Nav from './Nav';
+import './ProjectDetail.css';
 
 export default function ProjectDetail() {
-  useScrollReveal()
-  const { slug } = useParams()
-  const navigate = useNavigate()
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const topRef = useRef(null);
 
-  const project = PROJECTS.find(p => p.slug === slug)
-  const currentIndex = PROJECTS.findIndex(p => p.slug === slug)
-  const prev = PROJECTS[currentIndex - 1] || null
-  const next = PROJECTS[currentIndex + 1] || null
+  const index = PROJECTS.findIndex((p) => p.slug === slug);
+  const project = PROJECTS[index];
+  const prev = PROJECTS[index - 1] || null;
+  const next = PROJECTS[index + 1] || null;
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-    if (!project) navigate('/portfolio')
-  }, [slug])
+    topRef.current?.scrollIntoView();
+  }, [slug]);
 
-  if (!project) return null
+  if (!project) {
+    return (
+      <div className="detail-not-found">
+        <Nav />
+        <h1>Project not found.</h1>
+        <Link to="/portfolio">← Back to Portfolio</Link>
+      </div>
+    );
+  }
 
   return (
-    <>
+    <div className="detail-page" ref={topRef}>
       <Nav />
 
-      {/* HERO */}
-      <section className="pd-hero">
-        <div className="pd-hero__content">
-          <Link to="/portfolio" className="pd-back">← All Projects</Link>
-          <div className="pd-hero__tags">
-            {project.tags.map(t => (
-              <span key={t} className="pd-hero__tag">{t}</span>
+      {/* Hero */}
+      <section className="detail-hero">
+        <div className="detail-hero-text">
+          <div className="detail-overline">{project.category}</div>
+          <h1 className="detail-title">{project.title}</h1>
+          <p className="detail-subtitle">{project.subtitle}</p>
+          <div className="detail-tags">
+            {project.tags.map((t) => (
+              <span key={t} className="detail-tag">{t}</span>
             ))}
           </div>
-          <h1 className="pd-hero__title">{project.title}</h1>
-          <p className="pd-hero__subtitle">{project.subtitle}</p>
-          {project.externalUrl && (
-            <a href={project.externalUrl} target="_blank" rel="noreferrer" className="btn btn--gold pd-hero__link">
-              Visit Live Site ↗
-            </a>
-          )}
+          <div className="detail-links">
+            {project.externalUrl && (
+              <a
+                href={project.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="detail-live-link"
+              >
+                View Live Site ↗
+              </a>
+            )}
+            {project.externalUrlSecondary && (
+              <a
+                href={project.externalUrlSecondary}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="detail-live-link detail-live-link--secondary"
+              >
+                {project.externalUrlSecondaryLabel || 'View Project'} ↗
+              </a>
+            )}
+          </div>
         </div>
-        <div className="pd-hero__cover">
+        <div className="detail-hero-img">
           <img src={project.coverImg} alt={project.title} />
         </div>
       </section>
 
-      {/* PROBLEM / SOLUTION */}
-      {(project.problem || project.solution) && (
-        <section className="pd-brief">
-          {project.problem && (
-            <div className="pd-brief__col reveal">
-              <div className="pd-brief__label">Problem</div>
-              <p className="pd-brief__text">{project.problem}</p>
-            </div>
-          )}
-          {project.solution && (
-            <div className="pd-brief__col reveal reveal-delay-2">
-              <div className="pd-brief__label">Solution</div>
-              <p className="pd-brief__text">{project.solution}</p>
-            </div>
-          )}
-        </section>
-      )}
+      {/* Problem / Solution */}
+      <section className="detail-ps">
+        <div className="detail-ps-col">
+          <div className="detail-ps-label">The Challenge</div>
+          <p>{project.problem}</p>
+        </div>
+        <div className="detail-ps-col">
+          <div className="detail-ps-label">The Solution</div>
+          <p>{project.solution}</p>
+        </div>
+      </section>
 
-      {/* STATS */}
-      {project.stats.length > 0 && (
-        <section className="pd-stats">
-          {project.stats.map((s, i) => (
-            <div key={i} className={`pd-stat reveal reveal-delay-${i + 1}`}>
-              <div className="pd-stat__value">{s.value}</div>
-              <div className="pd-stat__label">{s.label}</div>
+      {/* Stats */}
+      {project.stats && project.stats.length > 0 && (
+        <section className="detail-stats">
+          {project.stats.map((s) => (
+            <div key={s.label} className="detail-stat">
+              <div className="detail-stat-value">{s.value}</div>
+              <div className="detail-stat-label">{s.label}</div>
             </div>
           ))}
         </section>
       )}
 
-      {/* IMAGES */}
-      <section className="pd-images">
-        {project.images.map((img, i) => (
-          <div key={i} className={`pd-image reveal reveal-delay-${(i % 3) + 1}`}>
-            <img src={img} alt={`${project.title} — ${i + 1}`} loading="lazy" />
-          </div>
-        ))}
-      </section>
+      {/* Gallery */}
+      {project.images && project.images.length > 0 && (
+        <section className="detail-gallery">
+          {project.images.map((src, i) => (
+            <div key={i} className="detail-gallery-item">
+              <img src={src} alt={`${project.title} ${i + 1}`} />
+            </div>
+          ))}
+        </section>
+      )}
 
-      {/* PREV / NEXT */}
-      <nav className="pd-nav">
+      {/* Prev / Next */}
+      <nav className="detail-nav">
         {prev ? (
-          <Link to={`/portfolio/${prev.slug}`} className="pd-nav__item pd-nav__item--prev">
-            <span className="pd-nav__dir">← Previous</span>
-            <span className="pd-nav__name">{prev.title}</span>
+          <Link to={`/portfolio/${prev.slug}`} className="detail-nav-link detail-nav-prev">
+            ← {prev.title}
           </Link>
-        ) : <div />}
+        ) : (
+          <span />
+        )}
+        <Link to="/portfolio" className="detail-nav-all">
+          All Projects
+        </Link>
         {next ? (
-          <Link to={`/portfolio/${next.slug}`} className="pd-nav__item pd-nav__item--next">
-            <span className="pd-nav__dir">Next →</span>
-            <span className="pd-nav__name">{next.title}</span>
+          <Link to={`/portfolio/${next.slug}`} className="detail-nav-link detail-nav-next">
+            {next.title} →
           </Link>
-        ) : <div />}
+        ) : (
+          <span />
+        )}
       </nav>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer__logo">XAN ORCHID</div>
-        <div className="footer__links">
-          <a href="/portfolio">Portfolio</a>
-          <a href="/about">About</a>
-          <a href="/#contact">Contact</a>
-        </div>
-        <div className="footer__socials">
-          <a href="https://www.instagram.com/graphix.xan" target="_blank" rel="noreferrer">Instagram</a>
-          <a href="https://www.linkedin.com/in/xan-orchid/" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="https://www.upwork.com/freelancers/~01b1742c39720ba911" target="_blank" rel="noreferrer">Upwork</a>
-        </div>
-        <div className="footer__copy">© 2026 Xan Orchid. All rights reserved.</div>
-      </footer>
-    </>
-  )
+    </div>
+  );
 }
