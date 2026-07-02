@@ -1,22 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-  MotionValue,
-} from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from 'framer-motion';
+import wildchildVideo from './assets/wildchild.mp4';
+import powerbagelsVideo from './assets/powerbagels.mp4';
+import xanaduHero from './assets/xanadu-hero.png';
 
 // ─── ContactButton ─────────────────────────────────────────────────────────────
 export function ContactButton() {
   return (
-    <a
-      href="#contact"
-      onClick={(e) => {
-        e.preventDefault();
-        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-      }}
+    <a href="#contact"
+      onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
       className="inline-block rounded-full px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4
                  text-xs sm:text-sm md:text-base font-medium uppercase tracking-widest text-white
                  transition-opacity hover:opacity-90"
@@ -25,40 +18,31 @@ export function ContactButton() {
         boxShadow: '0px 4px 4px rgba(181, 1, 167, 0.25), inset 4px 4px 12px #7721B1',
         outline: '2px solid white',
         outlineOffset: '-3px',
-      }}
-    >
+      }}>
       Contact Me
     </a>
   );
 }
 
 // ─── FadeIn ────────────────────────────────────────────────────────────────────
-function FadeIn({
-  children, delay = 0, duration = 0.7, y = 30, x = 0, className = '', once = true,
-}: {
-  children: React.ReactNode;
-  delay?: number; duration?: number; y?: number; x?: number; className?: string; once?: boolean;
-}) {
+function FadeIn({ children, delay = 0, duration = 0.7, y = 30, x = 0, className = '', once = true }:
+  { children: React.ReactNode; delay?: number; duration?: number; y?: number; x?: number; className?: string; once?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y, x }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once, margin: '50px', amount: 0 }}
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className={className}
-    >
+      className={className}>
       {children}
     </motion.div>
   );
 }
 
 // ─── Magnet ────────────────────────────────────────────────────────────────────
-function Magnet({ children, padding = 150, strength = 3 }: {
-  children: React.ReactNode; padding?: number; strength?: number;
-}) {
+function Magnet({ children, padding = 150, strength = 3 }: { children: React.ReactNode; padding?: number; strength?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -81,7 +65,6 @@ function Magnet({ children, padding = 150, strength = 3 }: {
     window.addEventListener('mousemove', onMove);
     return () => window.removeEventListener('mousemove', onMove);
   }, [padding, strength]);
-
   return (
     <div ref={ref} style={{ willChange: 'transform', transition: active ? 'transform 0.3s ease-out' : 'transform 0.6s ease-in-out' }}>
       {children}
@@ -101,9 +84,7 @@ function AnimatedText({ text, className = '' }: { text: string; className?: stri
     </p>
   );
 }
-function CharSpan({ char, index, total, scrollYProgress }: {
-  char: string; index: number; total: number; scrollYProgress: MotionValue<number>;
-}) {
+function CharSpan({ char, index, total, scrollYProgress }: { char: string; index: number; total: number; scrollYProgress: MotionValue<number> }) {
   const opacity = useTransform(scrollYProgress, [index / total, Math.min((index + 15) / total, 1)], [0.2, 1]);
   return (
     <span className="relative inline-block">
@@ -113,20 +94,20 @@ function CharSpan({ char, index, total, scrollYProgress }: {
   );
 }
 
-// ─── MarqueeSection ────────────────────────────────────────────────────────────
+// ─── Marquee ──────────────────────────────────────────────────────────────────
 const MARQUEE_IMAGES = [
-  'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png/v1/fill/w_960,h_960,fp_0.87_0.36,q_90,enc_avif,quality_auto/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg/v1/fill/w_960,h_960,fp_0.75_0.33,q_90,enc_avif,quality_auto/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png/v1/fit/w_500,h_500,q_90,enc_avif,quality_auto/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png/v1/fit/w_700,h_700,q_90,enc_avif,quality_auto/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg/v1/fill/w_960,h_960,fp_0.48_0.28,q_90,enc_avif,quality_auto/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png/v1/fit/w_725,h_725,q_90,enc_avif,quality_auto/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_f2398da15529481ebc11b11336a02c37~mv2.jpg/v1/fill/w_960,h_960,fp_0.75_0.33,q_90,enc_avif,quality_auto/b80b05_f2398da15529481ebc11b11336a02c37~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg',
 ];
 
 function MarqueeSection() {
@@ -159,7 +140,7 @@ function MarqueeSection() {
   );
 }
 
-// ─── Services ──────────────────────────────────────────────────────────────────
+// ─── Services ─────────────────────────────────────────────────────────────────
 const SERVICES = [
   { num: '01', name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok strategy and management — building consistent brand presence, growing engaged communities, and turning followers into clients.' },
   { num: '02', name: 'Content Creation', desc: 'Reels, posts, and email campaigns crafted to stop the scroll. Visuals, copy, and concept aligned to your brand voice and your audience.' },
@@ -169,58 +150,82 @@ const SERVICES = [
   { num: '06', name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn ad campaigns designed to reach the right people, drive real traffic, and convert at every stage of the funnel.' },
 ];
 
-// ─── Testimonials ──────────────────────────────────────────────────────────────
+// ─── Testimonials ─────────────────────────────────────────────────────────────
 const TESTIMONIALS = [
-  { quote: "I can't say enough about Alexandra Orchid's work. I hired her to build a website for my podcast and coaching business. I had a vague idea of what I wanted, and she took the ball and ran with it. Her work is beautiful, creative and pragmatic. Who could ask for more? I would hire Ms. Orchid again in a minute.", name: 'Marissa K.', company: 'Age Thoughtfully' },
-  { quote: "I can't say enough about Xan. She has helped us in many different roles — Social Media marketing, newsletters, blogs, infographics, and even building and maintaining our website. She is great at taking feedback and implements changes quickly and accurately. I highly recommend Xan.", name: 'David Diamond', company: 'Diamond Vitality Center' },
-  { quote: "I've worked with Alexandra on several projects including pitch decks, paid media ads, social media posts, and promotional materials. She has a strong design eye, delivers efficiently and on time, and absorbs feedback quickly. Alexandra's a joy to work with — highly recommend.", name: 'Leo R.', company: 'Creative Strategic Business Consultant' },
-  { quote: "Our company worked with Xan to rebrand our fragrance website. She was so helpful and knowledgeable throughout. She gave us options and helped us choose the best one. She made sure we were completely satisfied. We would highly recommend her to anyone looking to rebrand.", name: 'Leen B.', company: 'Design Hub 95' },
+  { quote: "I can't say enough about Alexandra Orchid's work. I hired her to build a website for my podcast and coaching business. I had a vague idea of what I wanted, and she took the ball and ran with it. Her work is beautiful, creative and pragmatic. Who could ask for more?", name: 'Marissa K.', company: 'Age Thoughtfully' },
+  { quote: "I can't say enough about Xan. She has helped us in many different roles — Social Media marketing, newsletters, blogs, infographics, and even building and maintaining our website. She is great at taking feedback and implements changes quickly and accurately.", name: 'David Diamond', company: 'Diamond Vitality Center' },
+  { quote: "I've worked with Alexandra on several projects including pitch decks, paid media ads, social media posts, and promotional materials. She has a strong design eye, delivers efficiently and on time, and absorbs feedback quickly.", name: 'Leo R.', company: 'Creative Strategic Business Consultant' },
+  { quote: "Our company worked with Xan to rebrand our fragrance website. She was so helpful and knowledgeable throughout. She gave us options and helped us choose the best one. We would highly recommend her to anyone looking to rebrand.", name: 'Leen B.', company: 'Design Hub 95' },
 ];
 
-// ─── Featured Projects (homepage) ──────────────────────────────────────────────
-// Wild Child Nosara, Power Bagels, Diamond Vitality Center — one image + description each
-const FEATURED_PROJECTS = [
-  {
-    num: '01',
-    title: 'Wild Child Nosara',
-    category: 'Web Design',
-    description: 'A vibrant website for a nature-based school community in Costa Rica. Designed to capture the free-spirited energy of wildschooling while giving parents a clear, trust-building experience.',
-    image: 'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png/v1/fill/w_960,h_960,fp_0.87_0.36,q_90,enc_avif,quality_auto/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
-    url: 'https://elianebeeson.wixsite.com/wildchild',
-    slug: 'dandelion-wild-school',
-  },
-  {
-    num: '02',
-    title: 'Power Bagels',
-    category: 'Brand Identity',
-    description: 'Bold brand identity for a high-energy bagel concept. From logo to color system, every element was built to stand out on social and in-store — confident, fun, and immediately recognizable.',
-    image: 'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png/v1/fit/w_725,h_725,q_90,enc_avif,quality_auto/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
-    url: null,
-    slug: 'flyers',
-  },
-  {
-    num: '03',
-    title: 'Diamond Vitality Center',
-    category: 'Social Media',
-    description: 'Full social media management, content creation, and website upkeep for a wellness center. Grew engagement by 35%, followers by 80%, and drove meaningful traffic to their services.',
-    image: 'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
-    url: 'http://www.diamondvitalitycenter.com',
-    slug: 'diamond-vitality-center',
-  },
-];
+// ─── Featured project card with video support ──────────────────────────────
+function FeaturedCard({
+  num, title, category, description, video, image, url, externalLink, index,
+}: {
+  num: string; title: string; category: string; description: string;
+  video?: string; image: string; url: string; externalLink?: boolean; index: number;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  return (
+    <FadeIn delay={index * 0.15} y={30}>
+      <div className="rounded-[40px] sm:rounded-[50px] border-2 border-[#D7E2EA]/20 overflow-hidden" style={{ background: '#111' }}>
+        <div className="flex flex-col md:flex-row">
+          {/* Media — video or image */}
+          <div className="md:w-1/2 flex-shrink-0 relative overflow-hidden" style={{ minHeight: '320px' }}>
+            {video ? (
+              <video
+                ref={videoRef}
+                src={video}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover absolute inset-0"
+                style={{ minHeight: '320px' }}
+              />
+            ) : (
+              <img src={image} alt={title} className="w-full h-full object-cover absolute inset-0" style={{ minHeight: '320px' }} />
+            )}
+          </div>
+          {/* Content */}
+          <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-between gap-6">
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <span className="hero-heading font-black leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}>{num}</span>
+                <span className="text-[#D7E2EA] text-xs uppercase tracking-widest mt-2" style={{ opacity: 0.5 }}>{category}</span>
+              </div>
+              <h3 className="text-[#D7E2EA] font-black uppercase mb-4 leading-tight" style={{ fontSize: 'clamp(1.2rem, 3vw, 2rem)' }}>{title}</h3>
+              <p className="text-[#D7E2EA] font-light leading-relaxed" style={{ opacity: 0.65, fontSize: 'clamp(0.85rem, 1.5vw, 1.05rem)' }}>{description}</p>
+            </div>
+            <div>
+              {externalLink ? (
+                <a href={url} target="_blank" rel="noopener noreferrer"
+                  className="inline-block rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
+                  Live Site ↗
+                </a>
+              ) : (
+                <Link to={url} className="inline-block rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
+                  View Project
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </FadeIn>
+  );
+}
 
-// ─── Contact Form ──────────────────────────────────────────────────────────────
+// ─── Contact Form ─────────────────────────────────────────────────────────────
 function ContactForm() {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', message: '' });
-  if (sent) {
-    return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
-        <p className="text-[#D7E2EA] font-medium uppercase tracking-wide text-xl">Message received!</p>
-        <p className="text-[#D7E2EA] font-light mt-3" style={{ opacity: 0.5 }}>Xan will be in touch soon.</p>
-      </motion.div>
-    );
-  }
+  if (sent) return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+      <p className="text-[#D7E2EA] font-medium uppercase tracking-wide text-xl">Message received!</p>
+      <p className="text-[#D7E2EA] font-light mt-3" style={{ opacity: 0.5 }}>Xan will be in touch soon.</p>
+    </motion.div>
+  );
   return (
     <div className="flex flex-col gap-4 max-w-xl mx-auto">
       <div className="flex gap-4">
@@ -240,10 +245,9 @@ function ContactForm() {
   );
 }
 
-// ─── Main App ──────────────────────────────────────────────────────────────────
+// ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-
   useEffect(() => {
     const t = setInterval(() => setActiveTestimonial((p) => (p + 1) % TESTIMONIALS.length), 5000);
     return () => clearInterval(t);
@@ -252,94 +256,69 @@ export default function App() {
   return (
     <div className="main-wrapper">
 
-      {/* ═══════ 1. HERO ═══════ */}
+      {/* ═══ HERO ═══ */}
       <section className="h-screen flex flex-col overflow-x-clip relative" style={{ background: '#0c0c0c' }}>
-
-        {/* Navbar */}
         <FadeIn delay={0} y={-20} once={false}>
           <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
-            <Link to="/" className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200">
-              Xan Orchid
-            </Link>
+            <Link to="/" className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Xan Orchid</Link>
             <div className="flex gap-6 md:gap-10">
               {[{ label: 'About', to: '/about' }, { label: 'Portfolio', to: '/portfolio' }].map(({ label, to }) => (
-                <Link key={label} to={to} className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200">{label}</Link>
+                <Link key={label} to={to} className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">{label}</Link>
               ))}
               <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200">
-                Contact
-              </a>
+                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Contact</a>
             </div>
           </nav>
         </FadeIn>
 
-        {/* Hero Heading — fluid font so "Xan Orchid" never clips */}
         <div className="overflow-hidden mt-6 sm:mt-4 md:-mt-2 px-4 md:px-8">
           <FadeIn delay={0.15} y={40} once={false}>
-            <h1
-              className="hero-heading font-black uppercase tracking-tight leading-none w-full"
-              style={{ fontSize: 'clamp(3rem, 12.5vw, 17.5vw)' }}
-            >
+            <h1 className="hero-heading font-black uppercase tracking-tight leading-none w-full" style={{ fontSize: 'clamp(3rem, 12.5vw, 17.5vw)' }}>
               Xan Orchid
             </h1>
           </FadeIn>
         </div>
 
-        {/* Bottom bar */}
         <div className="flex justify-between items-end flex-1 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10">
           <FadeIn delay={0.35} y={20} once={false}>
-            <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
-              style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}>
+            <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]" style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}>
               a creative designer driven by crafting striking and unforgettable brands
             </p>
           </FadeIn>
-          <FadeIn delay={0.5} y={20} once={false}>
-            <ContactButton />
-          </FadeIn>
+          <FadeIn delay={0.5} y={20} once={false}><ContactButton /></FadeIn>
         </div>
 
-        {/* Portrait — centered absolute */}
         <div className="absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[320px] md:w-[400px] lg:w-[460px]">
           <FadeIn delay={0.6} y={30} once={false}>
             <Magnet padding={150} strength={3}>
-              <img
-                src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg/v1/fill/w_800,h_1200,al_c,q_90,enc_avif,quality_auto/IMG_2061_JPG.jpg"
-                alt="Xan Orchid"
-                className="w-full object-cover object-top"
-                style={{ borderRadius: '50% 50% 0 0', maskImage: 'linear-gradient(to top, transparent 0%, black 20%)', WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%)', aspectRatio: '2/3' }}
-              />
+              <img src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg" alt="Xan Orchid" className="w-full object-cover object-top"
+                style={{ borderRadius: '50% 50% 0 0', maskImage: 'linear-gradient(to top, transparent 0%, black 20%)', WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%)', aspectRatio: '2/3' }} />
             </Magnet>
           </FadeIn>
         </div>
       </section>
 
-      {/* ═══════ 2. MARQUEE ═══════ */}
+      {/* ═══ MARQUEE ═══ */}
       <MarqueeSection />
 
-      {/* ═══════ 3. ABOUT ═══════ */}
-      {/* FIX: corner images are hidden on small screens, smaller on large — so they never cover text */}
+      {/* ═══ ABOUT ═══ */}
       <section className="min-h-screen flex flex-col items-center justify-center relative px-5 sm:px-8 md:px-10 py-32" style={{ background: '#0c0c0c' }}>
-
-        {/* Corner decorative images — hidden on mobile, small + far on desktop */}
-        <div className="hidden md:block absolute top-[6%] left-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-60">
-          <img src="https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png/v1/fit/w_400,h_400,q_90,enc_avif,quality_auto/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png" alt="" className="w-full rounded-2xl" />
+        <div className="hidden md:block absolute top-[6%] left-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
+          <img src="https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png" alt="" className="w-full rounded-2xl" />
         </div>
-        <div className="hidden md:block absolute bottom-[6%] left-[2%] w-[100px] lg:w-[140px] pointer-events-none opacity-60">
-          <img src="https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png/v1/fit/w_400,h_400,q_90,enc_avif,quality_auto/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png" alt="" className="w-full rounded-2xl" />
+        <div className="hidden md:block absolute bottom-[6%] left-[2%] w-[100px] lg:w-[130px] pointer-events-none opacity-50">
+          <img src="https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png" alt="" className="w-full rounded-2xl" />
         </div>
-        <div className="hidden md:block absolute top-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-60">
-          <img src="https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png/v1/fit/w_400,h_400,q_90,enc_avif,quality_auto/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png" alt="" className="w-full rounded-2xl" />
+        <div className="hidden md:block absolute top-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
+          <img src="https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png" alt="" className="w-full rounded-2xl" />
         </div>
-        <div className="hidden md:block absolute bottom-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-60">
-          <img src="https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg/v1/fit/w_400,h_400,q_90,enc_avif,quality_auto/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg" alt="" className="w-full rounded-2xl" />
+        <div className="hidden md:block absolute bottom-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
+          <img src="https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg" alt="" className="w-full rounded-2xl" />
         </div>
 
-        {/* Center content — z-10 so it always sits above the corner images */}
         <div className="relative z-10 flex flex-col items-center gap-10 sm:gap-14 md:gap-16 max-w-[600px] w-full">
           <FadeIn delay={0} y={40}>
-            <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>
-              About Me
-            </h2>
+            <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>About Me</h2>
           </FadeIn>
           <div className="flex flex-col items-center gap-16 sm:gap-20 md:gap-24 w-full">
             <AnimatedText
@@ -351,12 +330,10 @@ export default function App() {
         </div>
       </section>
 
-      {/* ═══════ 4. SERVICES ═══════ */}
+      {/* ═══ SERVICES ═══ */}
       <section className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={30}>
-          <h2 className="font-black uppercase text-center mb-16 sm:mb-20 md:mb-28" style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0c0c0c' }}>
-            Services
-          </h2>
+          <h2 className="font-black uppercase text-center mb-16 sm:mb-20 md:mb-28" style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0c0c0c' }}>Services</h2>
         </FadeIn>
         <div className="max-w-5xl mx-auto">
           {SERVICES.map((svc, i) => (
@@ -374,76 +351,55 @@ export default function App() {
         </div>
       </section>
 
-      {/* ═══════ 5. PROJECTS — single image + description cards ═══════ */}
+      {/* ═══ PROJECTS — video cards ═══ */}
       <section className="-mt-10 sm:-mt-12 md:-mt-14 z-10 relative rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 pt-20 pb-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
-          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>
-            Projects
-          </h2>
+          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>Projects</h2>
         </FadeIn>
         <FadeIn delay={0.2} y={0}>
           <div className="text-center mb-16">
-            <Link to="/portfolio" className="text-[#D7E2EA] uppercase tracking-widest text-sm font-medium hover:opacity-70 transition-opacity">
-              Full Portfolio →
-            </Link>
+            <Link to="/portfolio" className="text-[#D7E2EA] uppercase tracking-widest text-sm font-medium hover:opacity-70 transition-opacity">Full Portfolio →</Link>
           </div>
         </FadeIn>
 
         <div className="max-w-5xl mx-auto flex flex-col gap-6">
-          {FEATURED_PROJECTS.map((project, i) => (
-            <FadeIn key={project.num} delay={i * 0.15} y={30}>
-              <div className="rounded-[40px] sm:rounded-[50px] border-2 border-[#D7E2EA]/30 overflow-hidden"
-                style={{ background: '#111' }}>
-                <div className="flex flex-col md:flex-row">
-                  {/* Image */}
-                  <div className="md:w-1/2 flex-shrink-0">
-                    <img src={project.image} alt={project.title} className="w-full h-[280px] md:h-full object-cover" style={{ minHeight: '320px' }} />
-                  </div>
-                  {/* Content */}
-                  <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-between gap-6">
-                    <div>
-                      <div className="flex items-start justify-between gap-4 mb-6">
-                        <span className="hero-heading font-black leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}>
-                          {project.num}
-                        </span>
-                        <span className="text-[#D7E2EA] text-xs uppercase tracking-widest mt-2" style={{ opacity: 0.5 }}>
-                          {project.category}
-                        </span>
-                      </div>
-                      <h3 className="text-[#D7E2EA] font-black uppercase mb-4 leading-tight" style={{ fontSize: 'clamp(1.2rem, 3vw, 2rem)' }}>
-                        {project.title}
-                      </h3>
-                      <p className="text-[#D7E2EA] font-light leading-relaxed" style={{ opacity: 0.65, fontSize: 'clamp(0.85rem, 1.5vw, 1.05rem)' }}>
-                        {project.description}
-                      </p>
-                    </div>
-                    <div>
-                      {project.url ? (
-                        <a href={project.url} target="_blank" rel="noopener noreferrer"
-                          className="inline-block rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
-                          Live Project
-                        </a>
-                      ) : (
-                        <Link to={`/portfolio/${project.slug}`}
-                          className="inline-block rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
-                          View Project
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
+          <FeaturedCard
+            index={0}
+            num="01"
+            title="Wild Child Nosara"
+            category="Web Design"
+            description="A vibrant website for a nature-based school community in Costa Rica. Designed to capture the free-spirited energy of wildschooling while giving parents a clear, trust-building experience."
+            video={wildchildVideo}
+            image="https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg"
+            url="/portfolio/dandelion-wild-school"
+          />
+          <FeaturedCard
+            index={1}
+            num="02"
+            title="Power Bagels"
+            category="Brand Identity"
+            description="Bold brand identity and video content for a high-energy bagel concept. From logo to social content, every element was built to stand out — confident, fun, and immediately recognizable."
+            video={powerbagelsVideo}
+            image="https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png"
+            url="/portfolio/power-bagels"
+          />
+          <FeaturedCard
+            index={2}
+            num="03"
+            title="Dream Xanadu"
+            category="Web Design"
+            description="Full brand identity and website design for a network for awakening places. A rich, immersive digital experience built to embody trust, beauty, and mystery."
+            image={xanaduHero}
+            url="https://dreamxanadu.com"
+            externalLink
+          />
         </div>
       </section>
 
-      {/* ═══════ TESTIMONIALS ═══════ */}
+      {/* ═══ TESTIMONIALS ═══ */}
       <section className="bg-white px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={30}>
-          <h2 className="font-black uppercase text-center mb-16 sm:mb-20" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)', color: '#0c0c0c' }}>
-            What Clients Say
-          </h2>
+          <h2 className="font-black uppercase text-center mb-16 sm:mb-20" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)', color: '#0c0c0c' }}>What Clients Say</h2>
         </FadeIn>
         <div className="max-w-3xl mx-auto">
           <AnimatePresence mode="wait">
@@ -464,12 +420,10 @@ export default function App() {
         </div>
       </section>
 
-      {/* ═══════ CONTACT ═══════ */}
+      {/* ═══ CONTACT ═══ */}
       <section id="contact" className="-mt-10 z-10 relative rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
-          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)' }}>
-            Let&apos;s Make Waves
-          </h2>
+          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)' }}>Let&apos;s Make Waves</h2>
         </FadeIn>
         <FadeIn delay={0.2} y={0}>
           <p className="text-[#D7E2EA] text-center font-light uppercase tracking-wide mb-12" style={{ opacity: 0.45, fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)' }}>
@@ -479,7 +433,7 @@ export default function App() {
         <FadeIn delay={0.3} y={20}><ContactForm /></FadeIn>
       </section>
 
-      {/* ═══════ FOOTER ═══════ */}
+      {/* ═══ FOOTER ═══ */}
       <footer className="px-5 sm:px-8 md:px-10 py-10 border-t" style={{ background: '#0c0c0c', borderColor: 'rgba(215,226,234,0.08)' }}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
           <p className="text-[#D7E2EA] font-light text-sm" style={{ opacity: 0.35 }}>© 2026 Xan Orchid. All rights reserved.</p>

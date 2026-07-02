@@ -1,0 +1,238 @@
+export const PROJECTS = [
+  {
+    slug: 'diamond-vitality-center',
+    title: 'Diamond Vitality Center',
+    subtitle: 'Social media strategy & content for a holistic wellness brand',
+    category: 'Social Media',
+    tags: ['Social Media'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
+    ],
+    externalUrl: 'http://www.diamondvitalitycenter.com',
+    problem: 'Diamond Vitality Center needed a consistent, professional social media presence to attract new wellness clients and communicate the depth of their services.',
+    solution: 'Developed a cohesive content strategy and visual identity across social platforms, resulting in stronger brand recognition and measurable audience growth.',
+    stats: [
+      { value: '35%', label: 'Increase in followers' },
+      { value: '80%', label: 'Rise in engagement rate' },
+      { value: '15%', label: 'Growth in client inquiries' },
+    ],
+  },
+
+  {
+    slug: 'dandelion-wild-school',
+    title: 'Wild Child Nosara',
+    subtitle: 'Brand identity, web design & enrollment platform for a nature-based school in Costa Rica',
+    category: 'Web Design',
+    tags: ['Web Design', 'Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png/v1/fill/w_960,h_960,fp_0.87_0.36,q_90,enc_avif,quality_auto/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png/v1/fill/w_960,h_960,fp_0.87_0.36,q_90,enc_avif,quality_auto/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_75ec53fa53884067abb3571f2a459a8d~mv2.png/v1/fit/w_2500,h_1330,al_c/b80b05_75ec53fa53884067abb3571f2a459a8d~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_e55bf10e169946c09caea69956fe295d~mv2.png/v1/fill/w_1272,h_620,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/b80b05_e55bf10e169946c09caea69956fe295d~mv2.png',
+      'https://static.wixstatic.com/media/d5e4c3_fd53c9c1328145c8b10893e6e3de9faa~mv2.jpg/v1/fit/w_960,h_884,q_90,enc_avif,quality_auto/d5e4c3_fd53c9c1328145c8b10893e6e3de9faa~mv2.jpg',
+      'https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg/v1/fit/w_480,h_443,q_90,enc_avif,quality_auto/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg',
+      'https://static.wixstatic.com/media/b80b05_47e038b0be594e1392e95947ffc4d562~mv2.jpg/v1/fit/w_480,h_442,q_90,enc_avif,quality_auto/b80b05_47e038b0be594e1392e95947ffc4d562~mv2.jpg',
+    ],
+    externalUrl: 'https://www.wildchildnosara.com',
+    externalUrlSecondary: 'https://wildchild-registration.vercel.app',
+    externalUrlSecondaryLabel: 'Enrollment App',
+    problem: 'Wild Child Nosara — a bilingual, nature-based learning community for ages 1–12 in Nosara, Costa Rica — needed a complete online presence: a brand identity, a public-facing website, and a separate enrollment platform for families around the world to register their children.',
+    solution: 'Delivered two connected web projects: the main wildchildnosara.com brand site built on Wix (communicating vision, programs, and community), and a custom React enrollment application at wildchild-registration.vercel.app where families can browse programs and submit enrollment forms.',
+    stats: [],
+  },
+
+  {
+    slug: 'simple',
+    title: 'Simple',
+    subtitle: 'Brand identity design for a minimalist lifestyle brand',
+    category: 'Brand Identity',
+    tags: ['Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg/v1/fill/w_960,h_960,fp_0.75_0.33,q_90,enc_avif,quality_auto/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg/v1/fill/w_960,h_960,fp_0.75_0.33,q_90,enc_avif,quality_auto/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
+    ],
+    externalUrl: null,
+    problem: 'Simple needed a brand identity that embodied its core philosophy — less is more. The visual system had to feel refined and intentional without being cold.',
+    solution: 'Created a stripped-back brand identity system using tight typography, a restrained color palette, and clean mark design that lets the product speak for itself.',
+    stats: [],
+  },
+
+  {
+    slug: 'seekr',
+    title: 'Seekr',
+    subtitle: 'Brand identity for a purpose-driven discovery platform',
+    category: 'Brand Identity',
+    tags: ['Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png/v1/fit/w_500,h_500,q_90,enc_avif,quality_auto/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png/v1/fit/w_500,h_500,q_90,enc_avif,quality_auto/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'Seekr needed a brand identity that communicated exploration, curiosity, and purpose — something that felt modern but grounded.',
+    solution: 'Designed a full brand identity with logo, mark, typography, and color system that balances a sense of journey with clarity and confidence.',
+    stats: [],
+  },
+
+  {
+    slug: 'abrago',
+    title: 'Abrago',
+    subtitle: 'Brand identity & visual system for a wellness startup',
+    category: 'Startup',
+    tags: ['Startup', 'Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png/v1/fit/w_700,h_700,q_90,enc_avif,quality_auto/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png/v1/fit/w_700,h_700,q_90,enc_avif,quality_auto/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'Abrago needed a brand identity that could work across a full startup lifecycle — pitch decks, product, and marketing — without feeling generic or over-designed.',
+    solution: 'Built a versatile brand system with a distinctive wordmark, warm color palette, and flexible visual language that scales from investor materials to product UI.',
+    stats: [],
+  },
+
+  {
+    slug: 'one-local',
+    title: 'One Local',
+    subtitle: 'Brand identity for a community-first marketplace',
+    category: 'Brand Identity',
+    tags: ['Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg/v1/fill/w_960,h_960,fp_0.48_0.28,q_90,enc_avif,quality_auto/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg/v1/fill/w_960,h_960,fp_0.48_0.28,q_90,enc_avif,quality_auto/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
+    ],
+    externalUrl: null,
+    problem: 'One Local needed a brand that felt rooted — connected to real places and real people — without feeling rustic or nostalgic.',
+    solution: 'Created an identity anchored in warmth and community: earthy tones, approachable typography, and a mark that communicates togetherness without cliché.',
+    stats: [],
+  },
+
+  {
+    slug: 'goddess-activations',
+    title: 'Goddess Activations',
+    subtitle: 'Brand identity for a sacred feminine ceremony space',
+    category: 'Brand Identity',
+    tags: ['Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
+    ],
+    externalUrl: null,
+    problem: 'Goddess Activations needed visual branding that felt ceremonial, feminine, and powerful — without leaning into overused mystical tropes.',
+    solution: 'Developed a brand identity with deep jewel tones, fluid forms, and a mark that evokes the sacred while remaining contemporary and credible.',
+    stats: [],
+  },
+
+  {
+    slug: 'flyers',
+    title: 'Flyers & Print',
+    subtitle: 'Print design collection — event flyers, promotional materials, and brand collateral',
+    category: 'Graphic Design',
+    tags: ['Graphic Design'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png/v1/fit/w_725,h_725,q_90,enc_avif,quality_auto/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png/v1/fit/w_725,h_725,q_90,enc_avif,quality_auto/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'Clients across events, wellness, and retail needed high-impact print collateral that stood out physically — in mailboxes, on bulletin boards, and at events.',
+    solution: 'Designed a range of event flyers and promotional materials with bold layouts, strong hierarchy, and print-ready specifications for various formats.',
+    stats: [],
+  },
+
+  {
+    slug: 'art-portfolio',
+    title: 'Art Portfolio',
+    subtitle: 'Illustration & original artwork — digital and traditional',
+    category: 'Illustration',
+    tags: ['Illustration'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'A personal portfolio of original artwork needed to be presented as a cohesive body of work that communicates range, voice, and craft.',
+    solution: 'Curated and presented a collection of digital and traditional illustrations spanning character design, abstract work, and editorial-style pieces.',
+    stats: [],
+  },
+
+  {
+    slug: 'hypnositea',
+    title: 'Hypnositea',
+    subtitle: 'Brand identity for a tea ritual & hypnosis brand',
+    category: 'Brand Identity',
+    tags: ['Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'Hypnositea needed a brand identity that fused two distinct worlds — tea ritual and hypnotherapy — into something cohesive, calming, and intriguing.',
+    solution: 'Crafted a visual identity with dreamlike qualities: muted botanical tones, elegant typography, and a mark that suggests both stillness and depth.',
+    stats: [],
+  },
+
+  {
+    slug: 'astro-trips',
+    title: 'Astro Trips',
+    subtitle: 'Brand identity & visual design for a cosmic travel concept',
+    category: 'Startup',
+    tags: ['Startup', 'Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
+    ],
+    externalUrl: null,
+    problem: 'Astro Trips needed to communicate wonder, exploration, and premium experience in a crowded travel and experiences market.',
+    solution: 'Developed a cosmic-inspired brand identity system with deep space visuals, futuristic typography, and a mark that evokes both travel and transcendence.',
+    stats: [],
+  },
+
+  {
+    slug: 'gogal',
+    title: 'GoGal',
+    subtitle: 'Brand identity & app design for a women-first social travel platform',
+    category: 'Startup',
+    tags: ['Startup', 'Brand Identity'],
+    coverImg: 'https://static.wixstatic.com/media/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg',
+    images: [
+      'https://static.wixstatic.com/media/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg/v1/fit/w_960,h_960,q_90,enc_avif,quality_auto/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg',
+    ],
+    externalUrl: null,
+    problem: 'GoGal needed an identity and app design that felt safe, empowering, and modern — built specifically for women who travel solo or in groups.',
+    solution: 'Designed a bold, friendly brand with app UI screens that prioritize safety features and community connection while keeping the experience joyful and confident.',
+    stats: [],
+  },
+
+  // ─── New Web Projects ─────────────────────────────────────────────────────
+
+  {
+    slug: 'power-bagels',
+    title: 'Power Bagels',
+    subtitle: 'Brand identity & full web design for an energetic bagel brand',
+    category: 'Web Design',
+    tags: ['Web Design', 'Brand Identity'],
+    coverImg: 'https://power-bagels.vercel.app/og-image.png',
+    images: [
+      'https://power-bagels.vercel.app/og-image.png',
+    ],
+    externalUrl: 'https://power-bagels.vercel.app/',
+    problem: 'Power Bagels needed a web presence that matched the brand\'s high energy and personality — something that felt bold, fun, and immediately appetizing.',
+    solution: 'Designed and built a full brand identity and React website that captures the playful, punchy energy of the brand with strong typography, vivid color, and a design that makes you hungry.',
+    stats: [],
+  },
+
+  {
+    slug: 'bronco-buckle',
+    title: 'Bronco Buckle Company',
+    subtitle: 'Web design & e-commerce experience for a Western lifestyle brand',
+    category: 'Web Design',
+    tags: ['Web Design', 'Brand Identity'],
+    coverImg: 'https://bronco-buckle-company.vercel.app/og-image.png',
+    images: [
+      'https://bronco-buckle-company.vercel.app/og-image.png',
+    ],
+    externalUrl: 'https://bronco-buckle-company.vercel.app/the-buckle',
+    problem: 'Bronco Buckle Company needed a web experience that honored the authentic Western heritage of the brand while feeling premium and modern enough to attract a new generation of buyers.',
+    solution: 'Built a React website with strong Western visual identity, rich product photography integration, and a shopping experience that feels as rugged and refined as the product itself.',
+    stats: [],
+  },
+];
