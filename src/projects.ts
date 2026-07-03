@@ -155,12 +155,12 @@ export const PROJECTS: Project[] = [
     category: 'Advertising',
     tags: ['Advertising'],
     coverImg:
-      'https://static.wixstatic.com/media/b80b05_4364238f7fee4f5ca2800fa5000f192f~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
     galleryImgs: [
+      'https://static.wixstatic.com/media/b80b05_4364238f7fee4f5ca2800fa5000f192f~mv2.png',
       'https://static.wixstatic.com/media/b80b05_e3bd61f15a7e4a0ea02a7d123a11a3dd~mv2.png',
       'https://static.wixstatic.com/media/b80b05_3e5248cf7a1f4b49906aee99616220c3f003.jpg',
       'https://static.wixstatic.com/media/b80b05_ecb0068d690242ff92ef39b12ee93587~mv2.png',
-      'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
       'https://static.wixstatic.com/media/b80b05_7c57d5596b0c4b86b7b39d6cc83500b3~mv2.png',
       'https://static.wixstatic.com/media/b80b05_13dda89c28614e66b4efeb05c449cb72~mv2.png',
       'https://static.wixstatic.com/media/b80b05_6d752b01c3a74545b1aa3f2086487c23~mv2.png',
@@ -281,8 +281,9 @@ export const PROJECTS: Project[] = [
     category: 'Graphic Design',
     tags: ['Graphic Design'],
     coverImg:
-      'https://static.wixstatic.com/media/b80b05_e33f787deb7f4b26be020a92a2cd45e0~mv2.jpg',
+      'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
     galleryImgs: [
+      'https://static.wixstatic.com/media/b80b05_e33f787deb7f4b26be020a92a2cd45e0~mv2.jpg',
       'https://static.wixstatic.com/media/b80b05_e07ca4a65f614c70a427b2410b86a5db~mv2.png',
       'https://static.wixstatic.com/media/b80b05_51174a903a48491e8ac6a697269224ee~mv2.png',
       'https://static.wixstatic.com/media/b80b05_8f916fe0280c4539a779a67beca71ee9~mv2.png',
@@ -338,7 +339,7 @@ export const PROJECTS: Project[] = [
     title: 'Astro Trips',
     subtitle: 'Minted NFT Project',
     category: 'Illustration',
-    tags: ['Illustration', 'Branding'],
+    tags: ['Illustration', 'Branding', 'Graphic Design'],
     coverImg:
       'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
     galleryImgs: [
@@ -377,7 +378,7 @@ export const PROJECTS: Project[] = [
     title: 'Power Bagels',
     subtitle: 'Brand identity & content creation for a high-energy bagel concept',
     category: 'Branding',
-    tags: ['Branding', 'Graphic Design'],
+    tags: ['Branding'],
     coverVideo: '/src/assets/powerbagels.mp4',
     coverImg: '', // TODO: add a still/screenshot to src/assets/ for the portfolio grid thumbnail — the video only shows on the full case-study page
     galleryImgs: [],
@@ -407,13 +408,20 @@ export const PROJECTS: Project[] = [
     stats: [],
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // BRONCO BUCKLE COMPANY \u2014 checked every prior git commit (all
-  // the way back to the first redesign commit) and this project
-  // isn't in any of them. It's not on Wix either. If you still want
-  // it on the site, send me the images/links/copy and I'll add it \u2014
-  // otherwise it may have been planned but never actually built in.
-  // ─────────────────────────────────────────────────────────────
+  {
+    slug: 'bronco-buckle-company',
+    title: 'Bronco Buckle Company',
+    subtitle: 'Hand-crafted sterling silver belt buckles, Dallas, TX',
+    category: 'Web Design',
+    tags: ['Web Design'],
+    coverImg: '', // TODO: add a screenshot to src/assets/ \u2014 not on Wix, need this from you
+    galleryImgs: [],
+    externalUrl: 'https://www.broncobuckles.com/',
+    externalUrlLabel: 'Visit Website',
+    problem: '', // NEEDS COPY \u2014 what was the challenge for Bronco Buckle?
+    solution: '', // NEEDS COPY \u2014 what did you build/design for them?
+    stats: [],
+  },
 
   // ─────────────────────────────────────────────────────────────
   // DIRECT-LINK PROJECTS \u2014 Xan built the site or runs the Instagram

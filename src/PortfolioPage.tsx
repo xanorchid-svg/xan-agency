@@ -5,6 +5,13 @@ import { PROJECTS, ALL_TAGS } from './projects';
 import type { FilterTag, Category } from './projects';
 import { ContactButton } from './App';
 import xanaduHero from './assets/xanadu-hero.png';
+import wildchildVideo from './assets/wildchild.mp4';
+import powerbagelsVideo from './assets/powerbagels.mp4';
+
+const VIDEO_MAP: Record<string, string> = {
+  'dandelion-wild-school': wildchildVideo,
+  'power-bagels': powerbagelsVideo,
+};
 
 export default function PortfolioPage() {
   const [activeTag, setActiveTag] = useState<FilterTag>('All');
@@ -82,10 +89,13 @@ export default function PortfolioPage() {
 
 function GridCard({ project, xanaduHero }: { project: import('./projects').Project; xanaduHero: string }) {
   const imgSrc = project.slug === 'xanadu' ? xanaduHero : project.coverImg;
+  const videoSrc = VIDEO_MAP[project.slug];
   return (
     <>
       <div className="overflow-hidden rounded-2xl relative" style={{ aspectRatio: '1', background: 'rgba(255,255,255,0.03)' }}>
-        {imgSrc ? (
+        {videoSrc ? (
+          <video src={videoSrc} autoPlay muted loop playsInline className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        ) : imgSrc ? (
           <img src={imgSrc} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

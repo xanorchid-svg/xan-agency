@@ -4,6 +4,16 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { PROJECTS } from './projects';
 import { ContactButton } from './App';
 import xanaduHero from './assets/xanadu-hero.png';
+import wildchildVideo from './assets/wildchild.mp4';
+import powerbagelsVideo from './assets/powerbagels.mp4';
+
+// Same video files used on the homepage featured cards \u2014 imported properly
+// so Vite bundles them correctly for production (a raw string path in the
+// data file only works in local dev, not on the live build).
+const VIDEO_MAP: Record<string, string> = {
+  'dandelion-wild-school': wildchildVideo,
+  'power-bagels': powerbagelsVideo,
+};
 
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -23,7 +33,8 @@ export default function ProjectDetail() {
   const prev = PROJECTS[idx - 1];
   const next = PROJECTS[idx + 1];
   const coverSrc = project.slug === 'xanadu' ? xanaduHero : project.coverImg;
-  const hasCover = Boolean(project.coverVideo || coverSrc);
+  const videoSrc = VIDEO_MAP[project.slug];
+  const hasCover = Boolean(videoSrc || coverSrc);
 
   return (
     <div className="main-wrapper min-h-screen" style={{ background: '#0c0c0c' }}>
@@ -74,11 +85,11 @@ export default function ProjectDetail() {
       {hasCover && (
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="px-5 sm:px-8 md:px-10 mb-16">
           <div className="relative w-full rounded-3xl overflow-hidden" style={{ height: '70vh', background: '#000' }}>
-            {project.coverVideo ? (
+            {videoSrc ? (
               <>
-                <video src={project.coverVideo} autoPlay muted loop playsInline
+                <video src={videoSrc} autoPlay muted loop playsInline
                   className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-40" />
-                <video src={project.coverVideo} autoPlay muted loop playsInline
+                <video src={videoSrc} autoPlay muted loop playsInline
                   className="relative w-full h-full object-contain" />
               </>
             ) : (
