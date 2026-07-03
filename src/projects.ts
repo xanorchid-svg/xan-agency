@@ -105,7 +105,7 @@ export const PROJECTS: Project[] = [
     tags: ['Web Design', 'Social Media'],
     coverVideo: '/src/assets/wildchild.mp4',
     coverImg:
-      'https://static.wixstatic.com/media/b80b05_a83f083de1764ec8ac1d53c1c790a8ec~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_2d46d1e24b8044509f73cbf72783d968~mv2.png',
     galleryImgs: [
       'https://static.wixstatic.com/media/b80b05_a83f083de1764ec8ac1d53c1c790a8ec~mv2.png',
       'https://static.wixstatic.com/media/b80b05_1f45b6ed23194fe3aa1563e33d6a6b78~mv2.png',
