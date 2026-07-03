@@ -356,6 +356,22 @@ export const PROJECTS: Project[] = [
     directLink: true,
   },
   {
+    slug: 'posada-natura',
+    title: 'Posada Natura Reels',
+    subtitle: 'Social content for a Costa Rica rainforest retreat center',
+    category: 'Social Media',
+    tags: ['Social Media'],
+    coverImg: 'https://static.wixstatic.com/media/40515e_4cb5696f48b04350aeebc50323b397f7~mv2.png',
+    galleryImgs: [],
+    socials: {
+      instagram: 'https://www.instagram.com/posadanatura/',
+    },
+    problem: '',
+    solution: '',
+    stats: [],
+    directLink: true,
+  },
+  {
     slug: 'one-local',
     title: 'One Local',
     subtitle: 'Connecting the community through healing.',

@@ -55,7 +55,7 @@ export default function PortfolioPage() {
       </div>
 
       <div className="px-5 sm:px-8 md:px-10 py-10">
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           <AnimatePresence>
             {filtered.map((project, i) => {
               const directHref = project.externalUrl || project.socials?.instagram;
@@ -110,7 +110,7 @@ function GridCard({ project, xanaduHero }: { project: import('./projects').Proje
         <div className="absolute inset-0 flex items-end p-5 transition-all duration-300 bg-black/0 group-hover:bg-black/50">
           <div className="translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
             <p className="text-white text-xs uppercase tracking-widest mb-1" style={{ opacity: 0.7 }}>{project.category}</p>
-            <h3 className="text-white font-black uppercase text-lg leading-tight">{project.title}</h3>
+            <h3 className="text-white font-black uppercase text-sm sm:text-base leading-tight">{project.title}</h3>
           </div>
         </div>
       </div>
