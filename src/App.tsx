@@ -7,7 +7,7 @@ import xanaduHero from './assets/xanadu-hero.png';
 import reel1 from './assets/reel1.mp4';
 import reel2 from './assets/reel2.mp4';
 import reel3 from './assets/reel3.mp4';
-import orchidBg from './assets/orchid-bg.png';
+import { ProceduralOrchid } from './components/ProceduralOrchid';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
 import { Magnetic } from './components/Magnetic';
@@ -141,29 +141,15 @@ function FixedNav() {
   );
 }
 
-// ─── PANEL 1 — restrained hero, no heavy motion ────────────────────────────────
-// ─── OrchidBackground — continuous seamless vertical scroll, screen-blended so
-// only the glow shows against the dark sections. Built from a static image \u2014
-// no video needed for this effect, the loop itself is what creates the motion.
-function OrchidBackground({ opacity = 0.45 }: { opacity?: number }) {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ opacity }}>
-      <motion.div
-        animate={{ y: ['0%', '-50%'] }}
-        transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-        style={{ willChange: 'transform' }}>
-        {[0, 1].map((i) => (
-          <img key={i} src={orchidBg} alt="" className="w-full object-cover" style={{ height: '100vh', mixBlendMode: 'screen' }} />
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
+// ─── PANEL 1 — restrained hero, procedural orchid behind content, dissolves
+// into sacred geometry as the user scrolls the hero out of view ──────────────
 function HeroSimple() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+
   return (
-    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
-      <OrchidBackground opacity={0.4} />
+    <section ref={ref} className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
+      <ProceduralOrchid variant="hero" dissolve={scrollYProgress} />
       <FadeIn once={false}>
         <span className="relative text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
@@ -259,7 +245,7 @@ function AboutTeaser() {
           animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
           transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         />
-        <OrchidBackground opacity={0.5} />
+        <ProceduralOrchid variant="about" />
         <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.35)' }} />
         <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
           <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
