@@ -7,7 +7,6 @@ import xanaduHero from './assets/xanadu-hero.png';
 import reel1 from './assets/reel1.mp4';
 import reel2 from './assets/reel2.mp4';
 import reel3 from './assets/reel3.mp4';
-import heroOrchidVideo from './assets/hero-orchid.mp4';
 import { ProceduralOrchid } from './components/ProceduralOrchid';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
@@ -145,22 +144,8 @@ function FixedNav() {
 // ─── PANEL 1 — restrained hero, procedural orchid behind content, dissolves
 // into sacred geometry as the user scrolls the hero out of view ──────────────
 function HeroSimple() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
-
   return (
-    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
-      <div className="absolute inset-0" aria-hidden="true">
-        <video ref={videoRef} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover" style={{ opacity: 0.55 }}>
-          <source src={heroOrchidVideo} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.25)' }} />
-      </div>
+    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ fontFamily: FONT, zIndex: 1 }}>
       <FadeIn once={false}>
         <span className="relative text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
@@ -228,16 +213,9 @@ function IntroAndAboutCombined() {
   const nameOpacity = useTransform(panel2Local, [0.3, 0.4], [0, 1]);
 
   return (
-    <div ref={ref} style={{ height: `${PANEL2_VH + PANEL3_VH}vh`, position: 'relative', zIndex: 2, background: '#0c0c0c' }}>
-      {/* Shared orchid \u2014 sticky for the ENTIRE combined span, so it's the one
-          continuous background behind both the reels/name and the About copy.
-          Zooms and slowly dissolves using the full (unremapped) scroll progress. */}
-      <div style={{ position: 'sticky', top: 0, height: '100vh' }}>
-        <ProceduralOrchid variant="hero" dissolve={scrollYProgress} />
-      </div>
-
-      {/* Panel 2 content \u2014 reels + name, transparent background so the orchid
-          behind it shows through. Sticky within just the first portion. */}
+    <div ref={ref} style={{ height: `${PANEL2_VH + PANEL3_VH}vh`, position: 'relative', zIndex: 2 }}>
+      {/* Panel 2 content \u2014 reels + name, transparent background so the global
+          orchid behind it shows through. Sticky within just the first portion. */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }} className="flex items-center justify-center">
           <div className="w-full max-w-4xl px-6 grid items-center gap-3 sm:gap-5" style={{ gridTemplateColumns: '0.85fr 1fr 0.85fr' }}>
@@ -324,7 +302,7 @@ function ServicesDance() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   return (
     <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', background: '#0c0c0c' }} className="flex flex-col items-center justify-center px-6">
+      <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex flex-col items-center justify-center px-6">
         <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ fontFamily: FONT, color: RED }}>Services</span></FadeIn>
         <FadeIn delay={0.1}>
           <h2 className="font-bold uppercase text-center mt-4 mb-16 sm:mb-20 leading-tight" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.6rem, 4.4vw, 2.75rem)', letterSpacing: '-0.01em' }}>
@@ -441,22 +419,32 @@ export default function App() {
     return () => clearInterval(t);
   }, []);
 
+  // One continuous orchid for the whole page: starts at zero (reads as pure
+  // black on the hero), grows/zooms as you scroll, later dissolves into
+  // sacred geometry. Fixed + low z-index so every section with a transparent
+  // background shows it, while white sections (Testimonials) naturally cover
+  // it with their own opaque background \u2014 no per-section logic needed.
+  const { scrollYProgress: pageScroll } = useScroll();
+
   return (
-    <div className="main-wrapper" style={{ fontFamily: FONT }}>
+    <div className="main-wrapper" style={{ fontFamily: FONT, background: '#0c0c0c' }}>
+      <div className="fixed inset-0" style={{ zIndex: 0 }} aria-hidden="true">
+        <ProceduralOrchid variant="hero" dissolve={pageScroll} />
+      </div>
       <GrainOverlay />
       <FixedNav />
 
       {/* ═══ PANEL 1: HERO ═══ */}
       <HeroSimple />
 
-      {/* ═══ PANELS 2+3: IMAGES → NAME, then ABOUT TEASER \u2014 one shared orchid background ═══ */}
+      {/* ═══ PANELS 2+3: IMAGES → NAME, then ABOUT TEASER \u2014 shared global orchid shows through ═══ */}
       <IntroAndAboutCombined />
 
       {/* ═══ PANEL 4: SERVICES, dancing icons (pushes panel 3 out) ═══ */}
       <ServicesDance />
 
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
-      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-20 pb-32" style={{ background: '#0c0c0c' }}>
+      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-20 pb-32">
         <FadeIn delay={0} y={40}>
           <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2rem, 6vw, 4.5rem)', letterSpacing: '-0.01em' }}>Projects</h2>
         </FadeIn>
@@ -527,7 +515,7 @@ export default function App() {
       </section>
 
       {/* ═══ CONTACT ═══ */}
-      <section id="contact" className="relative z-[5] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: '#0c0c0c' }}>
+      <section id="contact" className="relative z-[5] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={40}>
           <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.8rem, 5vw, 3rem)', letterSpacing: '-0.01em' }}>Let&apos;s Make Waves</h2>
         </FadeIn>
@@ -540,7 +528,7 @@ export default function App() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="relative z-[5] px-5 sm:px-8 md:px-10 py-10 border-t" style={{ background: '#0c0c0c', borderColor: 'rgba(215,226,234,0.08)' }}>
+      <footer className="relative z-[5] px-5 sm:px-8 md:px-10 py-10 border-t" style={{ borderColor: 'rgba(215,226,234,0.08)' }}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
           <p className="text-[#D7E2EA] font-light text-sm" style={{ opacity: 0.35 }}>© 2026 Xan Orchid. All rights reserved.</p>
           <div className="flex gap-8">

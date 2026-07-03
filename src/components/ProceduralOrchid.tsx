@@ -26,6 +26,16 @@ function readDissolve(d: Dissolve) {
   return d ? d.get() : 0;
 }
 
+// The orchid's whole lifecycle across a full page scroll:
+//  0.00 \u2013 0.22  growth   \u2014 emerges from nothing (starts black on the hero)
+//  0.22 \u2013 0.62  steady   \u2014 fully bloomed, breathing/pulsing/morphing
+//  0.62 \u2013 1.00  dissolve \u2014 transforms into sacred-geometry rings
+function lifecycle(d: number) {
+  const growth = Math.min(1, d / 0.22);
+  const dissolveT = Math.max(0, (d - 0.62) / 0.38);
+  return { growth, dissolveT };
+}
+
 const PALETTE = ['#3b6bff', '#4f3bff', '#8b3bff', '#c93bff', '#ff6ec7'];
 
 function paletteColor(t: number) {
@@ -62,6 +72,7 @@ function OrchidPetals({ dissolve }: { dissolve: Dissolve }) {
 
   useFrame(({ clock }) => {
     const d = readDissolve(dissolve);
+    const { growth, dissolveT } = lifecycle(d);
     const t = clock.getElapsedTime();
     const breathe = 1 + Math.sin(t * 0.15) * 0.05;
     const morph = Math.sin(t * 0.07) * 0.6;
@@ -80,12 +91,14 @@ function OrchidPetals({ dissolve }: { dissolve: Dissolve }) {
         pos[s * 3 + 2] = Math.sin(theta * 3 + t * 0.1 + i) * 0.05;
       }
       geometry.attributes.position.needsUpdate = true;
-      material.opacity = 0.55 * (1 - d);
+      material.opacity = 0.55 * growth * (1 - dissolveT);
     });
 
     if (group.current) {
-      group.current.rotation.z = Math.sin(t * 0.03) * 0.08 + d * t * 0.15;
-      group.current.scale.setScalar(1 + d * 1.4);
+      group.current.rotation.z = Math.sin(t * 0.03) * 0.08 + dissolveT * t * 0.15;
+      // Starts tiny (invisible against black) and grows to full size, then
+      // continues expanding further as it dissolves into sacred geometry.
+      group.current.scale.setScalar(0.05 + growth * 0.95 + dissolveT * 1.4);
     }
   });
 
@@ -125,10 +138,11 @@ function OrchidParticles({ count = 900, dissolve }: { count?: number; dissolve: 
     []
   );
 
-  const particleFadeAmount = (d: number) => Math.max(0, d - 0.7) / 0.3; // particles fade only in the last part of the dissolve
+  const particleFadeAmount = (dissolveT: number) => Math.max(0, dissolveT - 0.6) / 0.4; // particles fade only in the last part of the dissolve phase
 
   useFrame(({ clock }) => {
     const d = readDissolve(dissolve);
+    const { growth, dissolveT } = lifecycle(d);
     const t = clock.getElapsedTime();
     const pos = geometry.attributes.position.array as Float32Array;
     let lastOutward = 0;
@@ -136,16 +150,16 @@ function OrchidParticles({ count = 900, dissolve }: { count?: number; dissolve: 
       const seed = seeds[i];
       const baseX = positions[i * 3];
       const baseY = positions[i * 3 + 1];
-      const drift = 1 + d * 1.8;
+      const drift = 1 + dissolveT * 1.8;
       const outward = ((t * 0.03 + seed) % 4) / 4; // 0..1 looping emission cycle
       lastOutward = outward;
-      const scaleOut = 1 + outward * drift;
+      const scaleOut = (0.1 + growth * 0.9) * (1 + outward * drift);
       pos[i * 3] = baseX * scaleOut;
       pos[i * 3 + 1] = baseY * scaleOut + Math.sin(t * 0.4 + seed) * 0.03;
       pos[i * 3 + 2] = positions[i * 3 + 2] + Math.cos(t * 0.3 + seed) * 0.05;
     }
     geometry.attributes.position.needsUpdate = true;
-    material.opacity = 0.7 * (1 - particleFadeAmount(d)) * (0.5 + lastOutward * 0.5);
+    material.opacity = 0.7 * growth * (1 - particleFadeAmount(dissolveT)) * (0.5 + lastOutward * 0.5);
   });
 
   return <points ref={pointsRef} geometry={geometry} material={material} />;
@@ -192,10 +206,11 @@ function SacredGeometry({ dissolve }: { dissolve: Dissolve }) {
 
   useFrame(({ clock }) => {
     const d = readDissolve(dissolve);
+    const { dissolveT } = lifecycle(d);
     const t = clock.getElapsedTime();
     if (group.current) group.current.rotation.z = t * 0.02;
-    rings.forEach(({ material }) => { material.opacity = d * 0.35; });
-    spokes.material.opacity = d * 0.18;
+    rings.forEach(({ material }) => { material.opacity = dissolveT * 0.35; });
+    spokes.material.opacity = dissolveT * 0.18;
   });
 
   return (
