@@ -125,6 +125,7 @@ export const PROJECTS: Project[] = [
     coverImg:
       'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
     galleryImgs: [
+      'https://static.wixstatic.com/media/b80b05_f2398da15529481ebc11b11336a02c37~mv2.jpg',
       'https://static.wixstatic.com/media/b80b05_53bc842d10af4edcb95a456d1b2084f9~mv2.jpg',
       'https://static.wixstatic.com/media/b80b05_b8f7acc76ce8408d98b1d18ca91ffd28~mv2.jpg',
       'https://static.wixstatic.com/media/b80b05_ad56c5d9fe0a4ba8a923e6cd92dd761e~mv2.jpg',
@@ -144,6 +145,7 @@ export const PROJECTS: Project[] = [
       'https://static.wixstatic.com/media/b80b05_4364238f7fee4f5ca2800fa5000f192f~mv2.png',
     galleryImgs: [
       'https://static.wixstatic.com/media/b80b05_e3bd61f15a7e4a0ea02a7d123a11a3dd~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_3e5248cf7a1f4b49906aee99616220c3f003.jpg',
       'https://static.wixstatic.com/media/b80b05_ecb0068d690242ff92ef39b12ee93587~mv2.png',
       'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
       'https://static.wixstatic.com/media/b80b05_7c57d5596b0c4b86b7b39d6cc83500b3~mv2.png',
@@ -349,10 +351,34 @@ export const PROJECTS: Project[] = [
       'https://static.wixstatic.com/media/b80b05_b8c2e22cb7b940a88d892fbb33f7f87f~mv2.png',
       'https://static.wixstatic.com/media/b80b05_983ad59c036942d0b437e8de9e255080~mv2.png',
       'https://static.wixstatic.com/media/b80b05_b48a401b04e747809bdd648c90969b05~mv2.png',
+      'https://static.wixstatic.com/media/b80b05_23e1ee663baa49c09461be6501f58b67f000.jpg',
     ],
     problem: '',
     solution:
       'Women-only, invite-only safety platform that connects mutual friends of friends for comfort and support while traveling or in your home town. Role: Team Leader as CEO & Founder \u2014 UI/UX Design, Brand Design, Business Development & Strategy.',
+    stats: [],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // MERGE NOTE: this is a stub. Your existing Power Bagels entry
+  // (coverVideo powerbagels.mp4, etc. per the 2026-07-02 handover)
+  // has real content I don't have visibility into \u2014 copy this
+  // externalUrl into your existing entry rather than replacing it
+  // wholesale with this stub.
+  // ─────────────────────────────────────────────────────────────
+  {
+    slug: 'power-bagels',
+    title: 'Power Bagels',
+    subtitle: '', // keep your existing subtitle
+    category: 'Web Design',
+    tags: ['Web Design', 'Branding'],
+    coverVideo: '/src/assets/powerbagels.mp4', // keep your existing cover
+    coverImg: '',
+    galleryImgs: [],
+    externalUrl: 'https://www.powerbagels.com',
+    externalUrlLabel: 'Visit Website',
+    problem: '', // keep your existing copy
+    solution: '', // keep your existing copy
     stats: [],
   },
 
