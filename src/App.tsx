@@ -14,6 +14,8 @@ import { RevealImage } from './components/RevealImage';
 import { Magnetic } from './components/Magnetic';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const RED = '#B3231C';
 
 // ─── ContactButton ─────────────────────────────────────────────────────────────
 export function ContactButton() {
@@ -143,12 +145,14 @@ function FixedNav() {
 // ─── PANEL 1 — restrained hero, no heavy motion ────────────────────────────────
 function HeroSimple() {
   return (
-    <section className="h-screen flex flex-col justify-center items-center relative px-6" style={{ background: '#0c0c0c' }}>
+    <section className="h-screen flex flex-col justify-center items-center relative px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
       <FadeIn once={false}>
-        <span className="text-[#D7E2EA] text-xs uppercase tracking-widest mb-6 block text-center" style={{ opacity: 0.6 }}>Xan Orchid</span>
+        <span className="text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
       <FadeIn delay={0.1} once={false}>
-        <h1 className="hero-heading font-black uppercase leading-[0.95] text-center max-w-4xl" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}>
+        <h1
+          className="font-bold uppercase text-center whitespace-normal sm:whitespace-nowrap"
+          style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.4rem, 4vw, 2.75rem)', letterSpacing: '-0.01em', lineHeight: 1.1 }}>
           Here to make your dreams a reality.
         </h1>
       </FadeIn>
@@ -156,8 +160,8 @@ function HeroSimple() {
         <ContactButton />
       </FadeIn>
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="animate-bounce" aria-hidden="true">
-          <path d="M4 8l8 7 8-7M4 13l8 7 8-7" stroke="#D7E2EA" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" className="animate-bounce" aria-hidden="true">
+          <path d="M4 8l8 7 8-7M4 13l8 7 8-7" stroke={RED} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" opacity="0.85" />
         </svg>
       </div>
     </section>
@@ -165,6 +169,24 @@ function HeroSimple() {
 }
 
 // ─── PANEL 2 — videos appear one by one, then name slides all the way through and off-screen ──
+// Defensive video wrapper — some browsers only honor autoplay if `muted` is
+// also set via JS on the element, not just the attribute. Explicit <source>
+// with a type avoids ambiguity about the file format too.
+function IntroVideo({ src }: { src: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.muted = true;
+      ref.current.play().catch(() => {});
+    }
+  }, []);
+  return (
+    <video ref={ref} autoPlay muted loop playsInline preload="auto" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }}>
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+}
+
 const INTRO_VIDEOS = [reel1, reel2, reel3];
 
 function ImagesNamePanel() {
@@ -185,17 +207,17 @@ function ImagesNamePanel() {
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
         <div className="relative w-full max-w-5xl px-6 flex items-center justify-center gap-3 sm:gap-5">
           <motion.div style={{ opacity: img1, scale: img1 }} className="w-1/4 rounded-2xl overflow-hidden">
-            <video src={INTRO_VIDEOS[0]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <IntroVideo src={INTRO_VIDEOS[0]} />
           </motion.div>
           <motion.div style={{ opacity: img2, scale: img2 }} className="w-1/3 rounded-2xl overflow-hidden">
-            <video src={INTRO_VIDEOS[1]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <IntroVideo src={INTRO_VIDEOS[1]} />
           </motion.div>
           <motion.div style={{ opacity: img3, scale: img3 }} className="w-1/4 rounded-2xl overflow-hidden">
-            <video src={INTRO_VIDEOS[2]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <IntroVideo src={INTRO_VIDEOS[2]} />
           </motion.div>
         </div>
         <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-          <h2 className="hero-heading font-black uppercase leading-none text-center" style={{ fontSize: 'clamp(3.5rem, 15vw, 15rem)' }}>Xan Orchid</h2>
+          <h2 className="font-bold uppercase leading-none text-center" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2.5rem, 11vw, 10rem)', letterSpacing: '-0.02em' }}>Xan Orchid</h2>
         </motion.div>
       </div>
     </div>
@@ -214,21 +236,22 @@ function AboutTeaser() {
           transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         />
         <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.35)' }} />
-        <div className="relative z-10 max-w-2xl text-center">
-          <FadeIn><span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.6 }}>About</span></FadeIn>
+        <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
+          <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
           <FadeIn delay={0.1}>
-            <h2 className="hero-heading font-black uppercase mt-4 mb-6 leading-[0.95]" style={{ fontSize: 'clamp(1.8rem, 5vw, 3.4rem)' }}>
+            <h2 className="font-bold uppercase mt-4 mb-6 leading-tight" style={{ color: '#D7E2EA', fontSize: 'clamp(1.5rem, 3.6vw, 2.4rem)', letterSpacing: '-0.01em' }}>
               Seeking Creative, Innovative Design and Business Solutions?
             </h2>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="text-[#D7E2EA] font-light leading-relaxed mb-8" style={{ opacity: 0.75, fontSize: 'clamp(0.9rem, 1.4vw, 1.05rem)' }}>
+            <p className="font-light leading-relaxed mb-8" style={{ color: '#D7E2EA', opacity: 0.75, fontSize: 'clamp(0.9rem, 1.4vw, 1.05rem)' }}>
               Xan is a creative entrepreneur, web designer, social media manager, and graphic designer, focused on collaborating with her clients to make beautiful designs, help build brand awareness, and grow your company.
             </p>
           </FadeIn>
           <FadeIn delay={0.3}>
             <Magnetic strength={0.3}>
-              <Link to="/about" data-cursor="hover" className="inline-block rounded-full bg-white text-[#0c0c0c] px-8 py-3 text-sm font-medium uppercase tracking-widest">
+              <Link to="/about" data-cursor="hover" className="inline-block rounded-full px-8 py-3 text-sm font-medium uppercase tracking-widest"
+                style={{ background: RED, color: 'white' }}>
                 Read More
               </Link>
             </Magnetic>
@@ -262,12 +285,12 @@ function DancingIcon({ item, index, scrollYProgress }: { item: ServiceIconItem; 
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
           className="w-16 h-16 rounded-2xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #d7d7d7, #8a8a8a)' }}>
+          style={{ background: 'linear-gradient(135deg, #e2e2e2, #8a8a8a)', border: `1.5px solid ${RED}` }}>
           <Icon className="w-7 h-7" style={{ color: '#1a1a1a' }} strokeWidth={1.75} />
         </motion.div>
       </motion.div>
-      <h3 className="text-white font-bold uppercase text-sm sm:text-base">{item.name}</h3>
-      <p className="text-white font-light text-xs sm:text-sm max-w-[220px]" style={{ opacity: 0.6 }}>{item.desc}</p>
+      <h3 className="font-bold uppercase text-sm sm:text-base" style={{ fontFamily: FONT, color: 'white' }}>{item.name}</h3>
+      <p className="font-light text-xs sm:text-sm max-w-[220px]" style={{ fontFamily: FONT, color: 'white', opacity: 0.6 }}>{item.desc}</p>
     </div>
   );
 }
@@ -278,9 +301,9 @@ function ServicesDance() {
   return (
     <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', background: '#0c0c0c' }} className="flex flex-col items-center justify-center px-6">
-        <FadeIn><span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.6 }}>Services</span></FadeIn>
+        <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ fontFamily: FONT, color: RED }}>Services</span></FadeIn>
         <FadeIn delay={0.1}>
-          <h2 className="hero-heading font-black uppercase text-center mt-4 mb-16 sm:mb-20 leading-none" style={{ fontSize: 'clamp(1.8rem, 5.5vw, 3.6rem)' }}>
+          <h2 className="font-bold uppercase text-center mt-4 mb-16 sm:mb-20 leading-tight" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.6rem, 4.4vw, 2.75rem)', letterSpacing: '-0.01em' }}>
             Not Just Social Butterflies
           </h2>
         </FadeIn>
@@ -395,7 +418,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="main-wrapper">
+    <div className="main-wrapper" style={{ fontFamily: FONT }}>
       <CustomCursor />
       <GrainOverlay />
       <FixedNav />
@@ -415,7 +438,7 @@ export default function App() {
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
       <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-20 pb-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
-          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>Projects</h2>
+          <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2rem, 6vw, 4.5rem)', letterSpacing: '-0.01em' }}>Projects</h2>
         </FadeIn>
         <FadeIn delay={0.2} y={0}>
           <div className="text-center mb-8">
@@ -462,9 +485,9 @@ export default function App() {
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="relative z-[5] bg-white px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={30}>
-          <h2 className="font-black uppercase text-center mb-16 sm:mb-20" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)', color: '#0c0c0c' }}>What Clients Say</h2>
+          <h2 className="font-bold uppercase text-center mb-16 sm:mb-20" style={{ fontFamily: FONT, fontSize: 'clamp(1.8rem, 4.5vw, 3rem)', color: '#0c0c0c', letterSpacing: '-0.01em' }}>What Clients Say</h2>
         </FadeIn>
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto" style={{ fontFamily: FONT }}>
           <AnimatePresence mode="wait">
             <motion.div key={activeTestimonial} initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }} transition={{ duration: 0.6, ease: EASE }} className="text-center">
               <p className="font-light leading-relaxed mb-8" style={{ fontSize: 'clamp(1.1rem, 2.4vw, 1.7rem)', color: '#0c0c0c', opacity: 0.8 }}>
@@ -477,7 +500,7 @@ export default function App() {
           <div className="flex justify-center gap-3 mt-10">
             {TESTIMONIALS.map((_, i) => (
               <button key={i} data-cursor="hover" onClick={() => setActiveTestimonial(i)} className="rounded-full transition-all duration-300"
-                style={{ width: i === activeTestimonial ? '28px' : '8px', height: '8px', background: i === activeTestimonial ? '#0c0c0c' : 'rgba(12,12,12,0.25)' }} />
+                style={{ width: i === activeTestimonial ? '28px' : '8px', height: '8px', background: i === activeTestimonial ? RED : 'rgba(12,12,12,0.25)' }} />
             ))}
           </div>
         </div>
@@ -486,7 +509,7 @@ export default function App() {
       {/* ═══ CONTACT ═══ */}
       <section id="contact" className="relative z-[5] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
-          <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)' }}>Let&apos;s Make Waves</h2>
+          <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.8rem, 5vw, 3rem)', letterSpacing: '-0.01em' }}>Let&apos;s Make Waves</h2>
         </FadeIn>
         <FadeIn delay={0.2} y={0}>
           <p className="text-[#D7E2EA] text-center font-light uppercase tracking-wide mb-12" style={{ opacity: 0.45, fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)' }}>
