@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from 'framer-motion';
-import { ThumbsUp, Heart, MessageSquare, Send, Home, User, type LucideIcon } from 'lucide-react';
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
 import xanaduHero from './assets/xanadu-hero.png';
 import reel1 from './assets/reel1.mp4';
 import reel2 from './assets/reel2.mp4';
 import reel3 from './assets/reel3.mp4';
-import { CustomCursor } from './components/CustomCursor';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
 import { Magnetic } from './components/Magnetic';
@@ -181,9 +179,12 @@ function IntroVideo({ src }: { src: string }) {
     }
   }, []);
   return (
-    <video ref={ref} autoPlay muted loop playsInline preload="auto" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }}>
-      <source src={src} type="video/mp4" />
-    </video>
+    // iPhone screen proportions (~19.5:9), rounded like a phone bezel
+    <div className="w-full rounded-[28px] overflow-hidden" style={{ aspectRatio: '9/19.5', background: '#111' }}>
+      <video ref={ref} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
   );
 }
 
@@ -205,19 +206,19 @@ function ImagesNamePanel() {
   return (
     <div ref={ref} style={{ height: '240vh', position: 'relative', zIndex: 2 }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
-        <div className="relative w-full max-w-5xl px-6 flex items-center justify-center gap-3 sm:gap-5">
-          <motion.div style={{ opacity: img1, scale: img1 }} className="w-1/4 rounded-2xl overflow-hidden">
+        <div className="w-full max-w-4xl px-6 grid grid-cols-3 gap-3 sm:gap-5 items-center">
+          <motion.div style={{ opacity: img1, scale: img1 }}>
             <IntroVideo src={INTRO_VIDEOS[0]} />
           </motion.div>
-          <motion.div style={{ opacity: img2, scale: img2 }} className="w-1/3 rounded-2xl overflow-hidden">
+          <motion.div style={{ opacity: img2, scale: img2 }}>
             <IntroVideo src={INTRO_VIDEOS[1]} />
           </motion.div>
-          <motion.div style={{ opacity: img3, scale: img3 }} className="w-1/4 rounded-2xl overflow-hidden">
+          <motion.div style={{ opacity: img3, scale: img3 }}>
             <IntroVideo src={INTRO_VIDEOS[2]} />
           </motion.div>
         </div>
-        <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-          <h2 className="font-bold uppercase leading-none text-center" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2.5rem, 11vw, 10rem)', letterSpacing: '-0.02em' }}>Xan Orchid</h2>
+        <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
+          <h2 className="font-bold uppercase leading-none text-center w-full" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(3.5rem, 17vw, 15rem)', letterSpacing: '-0.03em' }}>Xan Orchid</h2>
         </motion.div>
       </div>
     </div>
@@ -263,31 +264,29 @@ function AboutTeaser() {
 }
 
 // ─── PANEL 4 — Services, icons dance on scroll, pushes About out of frame ──────
-interface ServiceIconItem { icon: LucideIcon; name: string; desc: string; }
+interface ServiceIconItem { img: string; name: string; desc: string; }
 const SERVICE_ICONS: ServiceIconItem[] = [
-  { icon: ThumbsUp, name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok' },
-  { icon: Heart, name: 'Content Creation', desc: 'Reels, Posts, and Email Campaigns' },
-  { icon: MessageSquare, name: 'Business Development', desc: 'Business and Marketing Strategy, A/B Testing, and Implementation' },
-  { icon: Send, name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn Ads' },
-  { icon: Home, name: 'Range of Skills', desc: 'Figma, Canva, Adobe Illustrator, Photoshop, and InDesign.' },
-  { icon: User, name: 'Community Management', desc: 'CRM and Client Acquisition' },
+  { img: 'https://static.wixstatic.com/media/c837a6_a00a8b54a94b45f5986a698fd0e2e687~mv2.png', name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok' },
+  { img: 'https://static.wixstatic.com/media/c837a6_14b621448ee5407283a5596d19b0a050~mv2.png', name: 'Content Creation', desc: 'Reels, Posts, and Email Campaigns' },
+  { img: 'https://static.wixstatic.com/media/c837a6_4d43a6ee0f934212904c9ddf6e315b10~mv2.png', name: 'Business Development', desc: 'Business and Marketing Strategy, A/B Testing, and Implementation' },
+  { img: 'https://static.wixstatic.com/media/c837a6_944b11dc96cd405882b72bb708bd9bf4~mv2.png', name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn Ads' },
+  { img: 'https://static.wixstatic.com/media/c837a6_86cfe0201e3d4240acc8fb7a00e001cf~mv2.png', name: 'Range of Skills', desc: 'Figma, Canva, Adobe Illustrator, Photoshop, and InDesign.' },
+  { img: 'https://static.wixstatic.com/media/c837a6_b5147a4462684c8b87ee35acf9401655~mv2.png', name: 'Community Management', desc: 'CRM and Client Acquisition' },
 ];
 
 function DancingIcon({ item, index, scrollYProgress }: { item: ServiceIconItem; index: number; scrollYProgress: MotionValue<number> }) {
-  const Icon = item.icon;
-  const dir = index % 2 === 0 ? 1 : -1;
-  const scrollY = useTransform(scrollYProgress, [0, 1], [0, dir * -18]);
-  const scrollRotate = useTransform(scrollYProgress, [0, 1], [0, dir * 8]);
+  const [hover, setHover] = useState(false);
+  const scrollRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   return (
     <div className="flex flex-col items-center text-center gap-4">
-      <motion.div style={{ y: scrollY, rotate: scrollRotate }}>
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
-          className="w-16 h-16 rounded-2xl flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #e2e2e2, #8a8a8a)', border: `1.5px solid ${RED}` }}>
-          <Icon className="w-7 h-7" style={{ color: '#1a1a1a' }} strokeWidth={1.75} />
-        </motion.div>
+      <motion.div
+        onHoverStart={() => setHover(true)}
+        onHoverEnd={() => setHover(false)}
+        style={{ rotate: hover ? undefined : scrollRotate }}
+        animate={hover ? { rotate: 360, scale: 1.15 } : { y: [0, -8, 0], scale: 1 }}
+        transition={hover ? { duration: 0.6, ease: 'easeInOut' } : { duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
+        className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center cursor-default">
+        <img src={item.img} alt={item.name} className="w-full h-full object-contain drop-shadow-lg" />
       </motion.div>
       <h3 className="font-bold uppercase text-sm sm:text-base" style={{ fontFamily: FONT, color: 'white' }}>{item.name}</h3>
       <p className="font-light text-xs sm:text-sm max-w-[220px]" style={{ fontFamily: FONT, color: 'white', opacity: 0.6 }}>{item.desc}</p>
@@ -419,7 +418,6 @@ export default function App() {
 
   return (
     <div className="main-wrapper" style={{ fontFamily: FONT }}>
-      <CustomCursor />
       <GrainOverlay />
       <FixedNav />
 
