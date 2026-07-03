@@ -271,17 +271,21 @@ const SERVICE_ICONS: ServiceIconItem[] = [
   { img: 'https://static.wixstatic.com/media/c837a6_b5147a4462684c8b87ee35acf9401655~mv2.png', name: 'Community Management', desc: 'CRM and Client Acquisition' },
 ];
 
-function DancingIcon({ item, index, scrollYProgress }: { item: ServiceIconItem; index: number; scrollYProgress: MotionValue<number> }) {
+function DancingIcon({ item, index }: { item: ServiceIconItem; index: number }) {
   const [hover, setHover] = useState(false);
-  const scrollRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   return (
     <div className="flex flex-col items-center text-center gap-4">
       <motion.div
         onHoverStart={() => setHover(true)}
         onHoverEnd={() => setHover(false)}
-        style={{ rotate: hover ? undefined : scrollRotate }}
-        animate={hover ? { rotate: 360, scale: 1.15 } : { y: [0, -8, 0], scale: 1 }}
-        transition={hover ? { duration: 0.6, ease: 'easeInOut' } : { duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
+        // Resting state is upside-down (rotate: 180) \u2014 that's the "normal"
+        // idle look. On hover it spins continuously, passing through
+        // right-side-up as part of the spin, then settles back upside-down
+        // once you move away.
+        animate={hover ? { rotate: [180, 540], y: 0, scale: 1.15 } : { rotate: 180, y: [0, -8, 0], scale: 1 }}
+        transition={hover
+          ? { rotate: { duration: 1, repeat: Infinity, ease: 'linear' }, scale: { duration: 0.3, ease: EASE } }
+          : { rotate: { duration: 0.5, ease: EASE }, y: { duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }, scale: { duration: 0.3, ease: EASE } }}
         className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center cursor-default">
         <img src={item.img} alt={item.name} className="w-full h-full object-contain drop-shadow-lg" />
       </motion.div>
@@ -293,7 +297,6 @@ function DancingIcon({ item, index, scrollYProgress }: { item: ServiceIconItem; 
 
 function ServicesDance() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   return (
     <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh' }} className="flex flex-col items-center justify-center px-6">
@@ -305,7 +308,7 @@ function ServicesDance() {
         </FadeIn>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 sm:gap-x-14 gap-y-12 sm:gap-y-16 max-w-4xl">
           {SERVICE_ICONS.map((item, i) => (
-            <DancingIcon key={item.name} item={item} index={i} scrollYProgress={scrollYProgress} />
+            <DancingIcon key={item.name} item={item} index={i} />
           ))}
         </div>
       </div>
