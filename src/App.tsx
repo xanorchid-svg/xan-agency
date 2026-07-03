@@ -278,14 +278,10 @@ function DancingIcon({ item, index }: { item: ServiceIconItem; index: number }) 
       <motion.div
         onHoverStart={() => setHover(true)}
         onHoverEnd={() => setHover(false)}
-        // Resting state is upside-down (rotate: 180) \u2014 that's the "normal"
-        // idle look, from the very first render (explicit initial, not just
-        // the animate target, so there's no brief right-side-up flash on
-        // mount). On hover it spins continuously, passing through
-        // right-side-up as part of the spin, then settles back upside-down
-        // once you move away.
-        initial={{ rotate: 180 }}
-        animate={hover ? { rotate: [180, 540], y: 0, scale: 1.15 } : { rotate: 180, y: [0, -8, 0], scale: 1 }}
+        // Resting state is normal/right-side-up. On hover it spins
+        // continuously, then settles back to normal once you move away.
+        initial={{ rotate: 0 }}
+        animate={hover ? { rotate: [0, 360], y: 0, scale: 1.15 } : { rotate: 0, y: [0, -8, 0], scale: 1 }}
         transition={hover
           ? { rotate: { duration: 1, repeat: Infinity, ease: 'linear' }, scale: { duration: 0.3, ease: EASE } }
           : { rotate: { duration: 0.5, ease: EASE }, y: { duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }, scale: { duration: 0.3, ease: EASE } }}
