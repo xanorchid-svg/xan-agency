@@ -6,6 +6,7 @@ import { ContactButton } from './App';
 import xanaduHero from './assets/xanadu-hero.png';
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
+import perfeqtionCover from './assets/perfeqtion-cover.png';
 
 // Same video files used on the homepage featured cards \u2014 imported properly
 // so Vite bundles them correctly for production (a raw string path in the
@@ -13,6 +14,12 @@ import powerbagelsVideo from './assets/powerbagels.mp4';
 const VIDEO_MAP: Record<string, string> = {
   'dandelion-wild-school': wildchildVideo,
   'power-bagels': powerbagelsVideo,
+};
+
+// Local image overrides \u2014 same reasoning as VIDEO_MAP above. Used when a
+// project's cover needs to be a locally uploaded asset instead of a remote URL.
+const IMAGE_MAP: Record<string, string> = {
+  'perfeqtion-imaging': perfeqtionCover,
 };
 
 export default function ProjectDetail() {
@@ -32,7 +39,7 @@ export default function ProjectDetail() {
 
   const prev = PROJECTS[idx - 1];
   const next = PROJECTS[idx + 1];
-  const coverSrc = project.slug === 'xanadu' ? xanaduHero : project.coverImg;
+  const coverSrc = project.slug === 'xanadu' ? xanaduHero : (IMAGE_MAP[project.slug] || project.coverImg);
   const videoSrc = VIDEO_MAP[project.slug];
   const hasCover = Boolean(videoSrc || coverSrc);
 

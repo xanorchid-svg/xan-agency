@@ -7,10 +7,15 @@ import { ContactButton } from './App';
 import xanaduHero from './assets/xanadu-hero.png';
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
+import perfeqtionCover from './assets/perfeqtion-cover.png';
 
 const VIDEO_MAP: Record<string, string> = {
   'dandelion-wild-school': wildchildVideo,
   'power-bagels': powerbagelsVideo,
+};
+
+const IMAGE_MAP: Record<string, string> = {
+  'perfeqtion-imaging': perfeqtionCover,
 };
 
 export default function PortfolioPage() {
@@ -88,7 +93,7 @@ export default function PortfolioPage() {
 }
 
 function GridCard({ project, xanaduHero }: { project: import('./projects').Project; xanaduHero: string }) {
-  const imgSrc = project.slug === 'xanadu' ? xanaduHero : project.coverImg;
+  const imgSrc = project.slug === 'xanadu' ? xanaduHero : (IMAGE_MAP[project.slug] || project.coverImg);
   const videoSrc = VIDEO_MAP[project.slug];
   return (
     <>
