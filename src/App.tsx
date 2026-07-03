@@ -124,9 +124,9 @@ function FixedNav() {
         paddingTop: scrolled ? 12 : 28,
         paddingBottom: scrolled ? 12 : 0,
         backgroundColor: scrolled ? 'rgba(12,12,12,0.7)' : 'rgba(12,12,12,0)',
-        backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
       }}
-      transition={{ duration: 0.5, ease: EASE }}>
+      transition={{ duration: 0.5, ease: EASE }}
+      style={{ backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)' }}>
       <nav className="flex justify-between items-center px-6 md:px-10">
         <Link to="/" data-cursor="hover" className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Xan Orchid</Link>
         <div className="flex gap-6 md:gap-10">
@@ -168,18 +168,11 @@ function HeroSimple() {
   );
 }
 
-// ─── PANEL 2 — videos appear one by one, then name slides all the way through and off-screen ──
-// Defensive video wrapper — some browsers only honor autoplay if `muted` is
-// also set via JS on the element, not just the attribute. Explicit <source>
-// with a type avoids ambiguity about the file format too.
+// Simplified deliberately: trusting the native autoPlay/muted/loop/playsInline
+// attributes alone (no custom JS .play() call). A manual play() call racing
+// against the browser's own native autoplay handling is a real, documented
+// source of desktop-only playback failures \u2014 removing it is the fix here.
 function IntroVideo({ src }: { src: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.muted = true;
-      ref.current.play().catch(() => {});
-    }
-  }, []);
   return (
     // iPhone screen proportions (~19.5:9), rounded like a phone bezel. Height
     // is explicit and capped (not derived from width via grid stretch +
@@ -187,7 +180,7 @@ function IntroVideo({ src }: { src: string }) {
     // grid cell tries to stretch the item to 100% width) \u2014 width then
     // follows automatically from the aspect-ratio, which is reliable.
     <div className="rounded-[28px] overflow-hidden mx-auto" style={{ height: 'min(60vh, 50vw)', aspectRatio: '9/19.5', background: '#111' }}>
-      <video ref={ref} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
+      <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
         <source src={src} type="video/mp4" />
       </video>
     </div>
@@ -210,9 +203,6 @@ function IntroAndAboutCombined() {
 
   // Panel 2's local progress: 0\u20131 across just its portion of the combined scroll.
   const panel2Local = useTransform(scrollYProgress, [0, PANEL2_FRACTION], [0, 1], { clamp: true });
-  const img1 = useTransform(panel2Local, [0, 0.12], [0, 1]);
-  const img2 = useTransform(panel2Local, [0.06, 0.2], [0, 1]);
-  const img3 = useTransform(panel2Local, [0.12, 0.26], [0, 1]);
   const nameY = useTransform(panel2Local, [0.3, 0.98], ['70%', '-140%']);
   const nameOpacity = useTransform(panel2Local, [0.3, 0.4], [0, 1]);
 
@@ -223,13 +213,13 @@ function IntroAndAboutCombined() {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh', overflow: 'hidden' }} className="flex items-center justify-center">
           <div className="w-full max-w-4xl px-6 grid grid-cols-3 items-center gap-3 sm:gap-5">
-            <motion.div style={{ opacity: img1, willChange: 'opacity, transform' }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
               <IntroVideo src={INTRO_VIDEOS[0]} />
             </motion.div>
-            <motion.div style={{ opacity: img2, scale: 1.15, willChange: 'opacity, transform' }}>
+            <motion.div initial={{ opacity: 0, scale: 1.15 }} animate={{ opacity: 1, scale: 1.15 }} transition={{ duration: 0.8, delay: 0.15 }}>
               <IntroVideo src={INTRO_VIDEOS[1]} />
             </motion.div>
-            <motion.div style={{ opacity: img3, willChange: 'opacity, transform' }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
               <IntroVideo src={INTRO_VIDEOS[2]} />
             </motion.div>
           </div>
@@ -448,7 +438,7 @@ export default function App() {
       <ServicesDance />
 
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
-      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-12 sm:pt-16 md:pt-20 pb-16 sm:pb-24 md:pb-32">
+      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-24 sm:pt-28 md:pt-20 pb-16 sm:pb-24 md:pb-32">
         <FadeIn delay={0} y={40}>
           <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2rem, 6vw, 4.5rem)', letterSpacing: '-0.01em' }}>Projects</h2>
         </FadeIn>

@@ -54,8 +54,9 @@ function superformula(theta: number, m: number, n1: number, n2: number, n3: numb
   return Math.pow(t1 + t2, -1 / n1);
 }
 
-function OrchidPetals({ dissolve, segments, layers }: { dissolve: Dissolve; segments: number; layers: number }) {
+function OrchidPetals({ dissolve, segments, layers, throttle }: { dissolve: Dissolve; segments: number; layers: number; throttle: number }) {
   const group = useRef<THREE.Group>(null);
+  const frameCount = useRef(0);
   const lines = useMemo(() => {
     return Array.from({ length: layers }, (_, i) => {
       const geometry = new THREE.BufferGeometry();
@@ -71,25 +72,35 @@ function OrchidPetals({ dissolve, segments, layers }: { dissolve: Dissolve; segm
     const d = readDissolve(dissolve);
     const { growth, dissolveT } = lifecycle(d);
     const t = clock.getElapsedTime();
-    const breathe = 1 + Math.sin(t * 0.15) * 0.05;
-    const morph = Math.sin(t * 0.07) * 0.6;
 
-    lines.forEach(({ geometry, material, i }) => {
-      const layerT = i / (layers - 1);
-      const radius = (0.4 + layerT * 2.6) * breathe;
-      const n1 = 0.3 + Math.sin(t * 0.05 + i) * 0.05;
-      const params = { m: 5, n1: 0.25 + n1, n2: 1.7 + morph * 0.15, n3: 1.7 - morph * 0.1, a: 1, b: 1 };
-      const pos = geometry.attributes.position.array as Float32Array;
-      for (let s = 0; s <= segments; s++) {
-        const theta = (s / segments) * Math.PI * 2;
-        const r = superformula(theta + t * 0.02, params.m, params.n1, params.n2, params.n3, params.a, params.b) * radius;
-        pos[s * 3] = r * Math.cos(theta);
-        pos[s * 3 + 1] = r * Math.sin(theta) * 0.86; // slight vertical compression, more orchid-like
-        pos[s * 3 + 2] = Math.sin(theta * 3 + t * 0.1 + i) * 0.05;
-      }
-      geometry.attributes.position.needsUpdate = true;
-      material.opacity = 0.55 * growth * (1 - dissolveT);
-    });
+    // The per-vertex superformula recomputation below is the single most
+    // expensive thing this component does every frame \u2014 on mobile this is
+    // throttled to every Nth frame (cheap transform-only properties like
+    // rotation/scale still update every frame via the group, below, so
+    // motion still reads as smooth even though the shape itself updates
+    // less often).
+    frameCount.current++;
+    if (frameCount.current % throttle === 0) {
+      const breathe = 1 + Math.sin(t * 0.15) * 0.05;
+      const morph = Math.sin(t * 0.07) * 0.6;
+      lines.forEach(({ geometry, material, i }) => {
+        const layerT = i / (layers - 1);
+        const radius = (0.4 + layerT * 2.6) * breathe;
+        const n1 = 0.3 + Math.sin(t * 0.05 + i) * 0.05;
+        const params = { m: 5, n1: 0.25 + n1, n2: 1.7 + morph * 0.15, n3: 1.7 - morph * 0.1, a: 1, b: 1 };
+        const pos = geometry.attributes.position.array as Float32Array;
+        for (let s = 0; s <= segments; s++) {
+          const theta = (s / segments) * Math.PI * 2;
+          const r = superformula(theta + t * 0.02, params.m, params.n1, params.n2, params.n3, params.a, params.b) * radius;
+          pos[s * 3] = r * Math.cos(theta);
+          pos[s * 3 + 1] = r * Math.sin(theta) * 0.86; // slight vertical compression, more orchid-like
+          pos[s * 3 + 2] = Math.sin(theta * 3 + t * 0.1 + i) * 0.05;
+        }
+        geometry.attributes.position.needsUpdate = true;
+      });
+    }
+
+    lines.forEach(({ material }) => { material.opacity = 0.55 * growth * (1 - dissolveT); });
 
     if (group.current) {
       group.current.rotation.z = Math.sin(t * 0.03) * 0.08 + dissolveT * t * 0.15;
@@ -108,8 +119,9 @@ function OrchidPetals({ dissolve, segments, layers }: { dissolve: Dissolve; segm
   );
 }
 
-function OrchidParticles({ count = 900, dissolve }: { count?: number; dissolve: Dissolve }) {
+function OrchidParticles({ count = 900, dissolve, throttle = 1 }: { count?: number; dissolve: Dissolve; throttle?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
+  const frameCount = useRef(0);
   const { positions, seeds } = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const seeds = new Float32Array(count);
@@ -141,22 +153,25 @@ function OrchidParticles({ count = 900, dissolve }: { count?: number; dissolve: 
     const d = readDissolve(dissolve);
     const { growth, dissolveT } = lifecycle(d);
     const t = clock.getElapsedTime();
-    const pos = geometry.attributes.position.array as Float32Array;
-    let lastOutward = 0;
-    for (let i = 0; i < count; i++) {
-      const seed = seeds[i];
-      const baseX = positions[i * 3];
-      const baseY = positions[i * 3 + 1];
-      const drift = 1 + dissolveT * 1.8;
-      const outward = ((t * 0.03 + seed) % 4) / 4; // 0..1 looping emission cycle
-      lastOutward = outward;
-      const scaleOut = (0.1 + growth * 0.9) * (1 + outward * drift);
-      pos[i * 3] = baseX * scaleOut;
-      pos[i * 3 + 1] = baseY * scaleOut + Math.sin(t * 0.4 + seed) * 0.03;
-      pos[i * 3 + 2] = positions[i * 3 + 2] + Math.cos(t * 0.3 + seed) * 0.05;
+    frameCount.current++;
+    if (frameCount.current % throttle === 0) {
+      const pos = geometry.attributes.position.array as Float32Array;
+      let lastOutward = 0;
+      for (let i = 0; i < count; i++) {
+        const seed = seeds[i];
+        const baseX = positions[i * 3];
+        const baseY = positions[i * 3 + 1];
+        const drift = 1 + dissolveT * 1.8;
+        const outward = ((t * 0.03 + seed) % 4) / 4; // 0..1 looping emission cycle
+        lastOutward = outward;
+        const scaleOut = (0.1 + growth * 0.9) * (1 + outward * drift);
+        pos[i * 3] = baseX * scaleOut;
+        pos[i * 3 + 1] = baseY * scaleOut + Math.sin(t * 0.4 + seed) * 0.03;
+        pos[i * 3 + 2] = positions[i * 3 + 2] + Math.cos(t * 0.3 + seed) * 0.05;
+      }
+      geometry.attributes.position.needsUpdate = true;
+      material.opacity = 0.7 * growth * (1 - particleFadeAmount(dissolveT)) * (0.5 + lastOutward * 0.5);
     }
-    geometry.attributes.position.needsUpdate = true;
-    material.opacity = 0.7 * growth * (1 - particleFadeAmount(dissolveT)) * (0.5 + lastOutward * 0.5);
   });
 
   return <points ref={pointsRef} geometry={geometry} material={material} />;
@@ -239,13 +254,13 @@ function CameraDrift() {
   return null;
 }
 
-function Scene({ dissolve, particleCount, segments, layers }: { dissolve: Dissolve; particleCount: number; segments: number; layers: number }) {
+function Scene({ dissolve, particleCount, segments, layers, throttle }: { dissolve: Dissolve; particleCount: number; segments: number; layers: number; throttle: number }) {
   return (
     <>
       <CameraDrift />
       <MouseParallax>
-        <OrchidPetals dissolve={dissolve} segments={segments} layers={layers} />
-        <OrchidParticles count={particleCount} dissolve={dissolve} />
+        <OrchidPetals dissolve={dissolve} segments={segments} layers={layers} throttle={throttle} />
+        <OrchidParticles count={particleCount} dissolve={dissolve} throttle={throttle} />
         <SacredGeometry dissolve={dissolve} />
       </MouseParallax>
     </>
@@ -294,9 +309,10 @@ export function ProceduralOrchid({
     // the pure black background the spec calls for.
     return null;
   }
-  const segments = isMobile ? 90 : 180;
-  const layers = isMobile ? 18 : 34;
-  const particleCount = isMobile ? 300 : (variant === 'hero' ? 900 : 600);
+  const segments = isMobile ? 70 : 180;
+  const layers = isMobile ? 14 : 34;
+  const particleCount = isMobile ? 220 : (variant === 'hero' ? 900 : 600);
+  const throttle = isMobile ? 3 : 1;
   return (
     <div className="absolute inset-0" aria-hidden="true">
       <Canvas
@@ -304,7 +320,7 @@ export function ProceduralOrchid({
         dpr={isMobile ? [1, 1.25] : [1, 1.75]}
         gl={{ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' }}
         style={{ background: 'transparent' }}>
-        <Scene dissolve={dissolve} particleCount={particleCount} segments={segments} layers={layers} />
+        <Scene dissolve={dissolve} particleCount={particleCount} segments={segments} layers={layers} throttle={throttle} />
         <EffectComposer>
           <Bloom luminanceThreshold={0.05} luminanceSmoothing={0.9} intensity={variant === 'hero' ? 1.4 : 1.1} mipmapBlur={!isMobile} />
         </EffectComposer>
