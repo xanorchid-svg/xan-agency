@@ -414,7 +414,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Hand-crafted sterling silver belt buckles, Dallas, TX',
     category: 'Web Design',
     tags: ['Web Design'],
-    coverImg: '', // TODO: add a screenshot to src/assets/ \u2014 not on Wix, need this from you
+    coverImg: 'https://www.broncobuckles.com/bblogo.png',
     galleryImgs: [],
     externalUrl: 'https://www.broncobuckles.com/',
     externalUrlLabel: 'Visit Website',
@@ -435,7 +435,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Wellness site for Marissa Kennerson',
     category: 'Web Design',
     tags: ['Web Design'],
-    coverImg: '', // TODO: add a screenshot of agethoughtfully.com to src/assets/
+    coverImg: 'https://images.squarespace-cdn.com/content/v1/5ea20c129ed1223b74d7d398/1607894600247-6JP0ZPS0W4AVNO8SQ1O1/image-asset.jpeg',
     galleryImgs: [],
     externalUrl: 'https://www.agethoughtfully.com',
     externalUrlLabel: 'Visit Website',
@@ -453,7 +453,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Web application',
     category: 'Web Design',
     tags: ['Web Design'],
-    coverImg: '', // TODO: add a screenshot of unicorn-alliance.vercel.app to src/assets/
+    coverImg: 'https://raw.githubusercontent.com/xanorchid-svg/unicorn-alliance/main/public/unicorn-assets/whatsapp.jpeg',
     galleryImgs: [],
     externalUrl: 'https://unicorn-alliance.vercel.app/',
     externalUrlLabel: 'Visit Website',
@@ -468,10 +468,10 @@ export const PROJECTS: Project[] = [
     subtitle: 'Social media for Dr. Jenn Simmons',
     category: 'Social Media',
     tags: ['Social Media'],
-    coverImg: '', // TODO: add a screenshot of the IG grid to src/assets/
+    coverImg: 'https://static.wixstatic.com/media/cb4220_8a62ba55f67b4902ac63e0755219d0f1~mv2.jpg',
     galleryImgs: [],
     socials: {
-      instagram: 'https://www.instagram.com/drjennsimmons/',
+      instagram: 'https://www.instagram.com/perfeqtionimaging/',
     },
     problem: '',
     solution: '',

@@ -29,9 +29,8 @@ export default function AboutPage() {
 
       <section className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-start">
-          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="flex gap-4 items-end">
-            <img src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg" alt="Xan Orchid" className="flex-1 object-cover object-top rounded-3xl" style={{ aspectRatio: '2/3' }} />
-            <img src="https://static.wixstatic.com/media/b80b05_9ce31db91e124350895756cffa3ad5f3~mv2.jpg" alt="Xan Orchid" className="flex-1 object-cover object-top rounded-3xl mt-12" style={{ aspectRatio: '3/4' }} />
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <img src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg" alt="Xan Orchid" className="w-full object-cover object-top rounded-3xl" style={{ aspectRatio: '3/4' }} />
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }} className="flex flex-col gap-6">
             <h2 className="font-black uppercase leading-none" style={{ fontSize: 'clamp(2rem, 5vw, 60px)', color: '#0c0c0c' }}>Xan Orchid</h2>
