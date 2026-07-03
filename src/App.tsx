@@ -211,7 +211,7 @@ function IntroAndAboutCombined() {
       {/* Panel 2 content \u2014 reels + name, transparent background so the global
           orchid behind it shows through. Sticky within just the first portion. */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh', overflow: 'hidden' }} className="flex items-center justify-center">
+        <div style={{ position: 'sticky', top: 0, height: '100dvh' }} className="h-screen flex items-center justify-center overflow-hidden">
           <div className="w-full max-w-4xl px-6 grid grid-cols-3 items-center gap-3 sm:gap-5">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
               <IntroVideo src={INTRO_VIDEOS[0]} />
@@ -232,7 +232,7 @@ function IntroAndAboutCombined() {
       {/* Panel 3 content \u2014 About teaser, transparent background, sticky within
           the remaining portion, positioned right after panel 2's span ends. */}
       <div style={{ position: 'absolute', top: `${PANEL2_VH}vh`, left: 0, right: 0, height: `${PANEL3_VH}vh` }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh' }} className="flex items-center justify-center px-6">
+        <div style={{ position: 'sticky', top: 0, height: '100dvh' }} className="h-screen flex items-center justify-center px-6">
           <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
             <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
             <FadeIn delay={0.1}>
@@ -299,7 +299,7 @@ function ServicesDance() {
   const ref = useRef<HTMLDivElement>(null);
   return (
     <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh' }} className="flex flex-col items-center justify-center px-6">
+      <div style={{ position: 'sticky', top: 0, height: '100dvh' }} className="h-screen flex flex-col items-center justify-center px-6">
         <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ fontFamily: FONT, color: RED }}>Services</span></FadeIn>
         <FadeIn delay={0.1}>
           <h2 className="font-bold uppercase text-center mt-4 mb-16 sm:mb-20 leading-tight" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.6rem, 4.4vw, 2.75rem)', letterSpacing: '-0.01em' }}>
@@ -441,7 +441,7 @@ export default function App() {
       <ServicesDance />
 
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
-      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-24 sm:pt-28 md:pt-20 pb-16 sm:pb-24 md:pb-32">
+      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-36 sm:pt-32 md:pt-20 pb-16 sm:pb-24 md:pb-32">
         <FadeIn delay={0} y={40}>
           <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2rem, 6vw, 4.5rem)', letterSpacing: '-0.01em' }}>Projects</h2>
         </FadeIn>
