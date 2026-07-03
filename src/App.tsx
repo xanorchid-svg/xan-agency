@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from 'framer-motion';
+import { Layout, Megaphone, PenTool, Palette, TrendingUp, Target, type LucideIcon } from 'lucide-react';
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
 import xanaduHero from './assets/xanadu-hero.png';
@@ -141,14 +142,97 @@ function MarqueeSection() {
 }
 
 // ─── Services ─────────────────────────────────────────────────────────────────
-const SERVICES = [
-  { num: '01', name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok strategy and management — building consistent brand presence, growing engaged communities, and turning followers into clients.' },
-  { num: '02', name: 'Content Creation', desc: 'Reels, posts, and email campaigns crafted to stop the scroll. Visuals, copy, and concept aligned to your brand voice and your audience.' },
-  { num: '03', name: 'Brand Identity', desc: 'Logos, color systems, typography, and visual language built from scratch — a complete identity that communicates who you are at a glance.' },
-  { num: '04', name: 'Web Design', desc: 'Clean, modern, conversion-focused websites. Every layout, color, and word chosen to serve the visitor and represent the brand.' },
-  { num: '05', name: 'Business Development', desc: 'Business and marketing strategy, A/B testing, and implementation — turning good ideas into measurable, lasting results.' },
-  { num: '06', name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn ad campaigns designed to reach the right people, drive real traffic, and convert at every stage of the funnel.' },
+interface ServiceItem {
+  num: string;
+  name: string;
+  desc: string;
+  icon: LucideIcon;
+  skills: string[];
+}
+
+const SERVICES: ServiceItem[] = [
+  {
+    num: '01',
+    name: 'Web Design',
+    desc: 'Clean, modern, conversion-focused websites. Every layout, color, and word chosen to serve the visitor and represent the brand.',
+    icon: Layout,
+    skills: ['React', 'Vite', 'Webflow', 'Figma'],
+  },
+  {
+    num: '02',
+    name: 'Brand Identity',
+    desc: 'Logos, color systems, typography, and visual language built from scratch — a complete identity that communicates who you are at a glance.',
+    icon: Palette,
+    skills: ['Illustrator', 'Photoshop', 'Figma'],
+  },
+  {
+    num: '03',
+    name: 'Social Media Management',
+    desc: 'Meta, LinkedIn, and TikTok strategy and management — building consistent brand presence, growing engaged communities, and turning followers into clients.',
+    icon: Megaphone,
+    skills: ['Meta Business Suite', 'LinkedIn', 'TikTok'],
+  },
+  {
+    num: '04',
+    name: 'Content Creation',
+    desc: 'Reels, posts, and email campaigns crafted to stop the scroll. Visuals, copy, and concept aligned to your brand voice and your audience.',
+    icon: PenTool,
+    skills: ['Premiere Pro', 'Canva', 'CapCut'],
+  },
+  {
+    num: '05',
+    name: 'Social Media Advertising',
+    desc: 'Google, Meta, and LinkedIn ad campaigns designed to reach the right people, drive real traffic, and convert at every stage of the funnel.',
+    icon: Target,
+    skills: ['Meta Ads Manager', 'Google Ads', 'A/B Testing'],
+  },
+  {
+    num: '06',
+    name: 'Business Development',
+    desc: 'Business and marketing strategy, A/B testing, and implementation — turning good ideas into measurable, lasting results.',
+    icon: TrendingUp,
+    skills: ['Strategy', 'Analytics', 'Growth Planning'],
+  },
 ];
+
+function ServiceCard({ service, index }: { service: ServiceItem; index: number }) {
+  const Icon = service.icon;
+  return (
+    <FadeIn delay={index * 0.08} y={30}>
+      <motion.div
+        whileHover={{ y: -8 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className="group relative rounded-3xl p-7 sm:p-8 h-full overflow-hidden cursor-default"
+        style={{ border: '1px solid rgba(12,12,12,0.12)' }}>
+        <motion.div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100"
+          style={{ background: 'linear-gradient(135deg, rgba(182,0,168,0.06) 0%, rgba(190,76,0,0.06) 100%)' }}
+          transition={{ duration: 0.3 }}
+        />
+        <div className="relative flex items-start justify-between mb-6">
+          <motion.div
+            whileHover={{ rotate: -8, scale: 1.08 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+            className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)' }}>
+            <Icon className="w-6 h-6 text-white" strokeWidth={1.75} />
+          </motion.div>
+          <span className="font-black leading-none" style={{ fontSize: '2.5rem', color: '#0c0c0c', opacity: 0.08 }}>{service.num}</span>
+        </div>
+        <h3 className="relative font-medium uppercase mb-3" style={{ fontSize: 'clamp(1rem, 1.6vw, 1.35rem)', color: '#0c0c0c' }}>{service.name}</h3>
+        <p className="relative font-light leading-relaxed mb-5" style={{ fontSize: '0.92rem', color: '#0c0c0c', opacity: 0.6 }}>{service.desc}</p>
+        <div className="relative flex flex-wrap gap-2">
+          {service.skills.map((skill) => (
+            <span key={skill} className="text-xs uppercase tracking-wide px-3 py-1 rounded-full font-medium"
+              style={{ color: '#0c0c0c', opacity: 0.55, border: '1px solid rgba(12,12,12,0.15)' }}>
+              {skill}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+    </FadeIn>
+  );
+}
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────
 const TESTIMONIALS = [
@@ -335,18 +419,9 @@ export default function App() {
         <FadeIn delay={0} y={30}>
           <h2 className="font-black uppercase text-center mb-16 sm:mb-20 md:mb-28" style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0c0c0c' }}>Services</h2>
         </FadeIn>
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {SERVICES.map((svc, i) => (
-            <FadeIn key={svc.num} delay={i * 0.1} y={20}>
-              <div className="flex items-start gap-4 sm:gap-6 md:gap-8 py-8 sm:py-10 md:py-12"
-                style={{ borderTop: i === 0 ? '1px solid rgba(12,12,12,0.15)' : undefined, borderBottom: '1px solid rgba(12,12,12,0.15)' }}>
-                <span className="font-black leading-none flex-shrink-0" style={{ fontSize: 'clamp(3rem, 10vw, 140px)', color: '#0c0c0c' }}>{svc.num}</span>
-                <div className="pt-2">
-                  <h3 className="font-medium uppercase mb-3" style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', color: '#0c0c0c' }}>{svc.name}</h3>
-                  <p className="font-light leading-relaxed max-w-2xl" style={{ fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)', color: '#0c0c0c', opacity: 0.6 }}>{svc.desc}</p>
-                </div>
-              </div>
-            </FadeIn>
+            <ServiceCard key={svc.num} service={svc} index={i} />
           ))}
         </div>
       </section>
