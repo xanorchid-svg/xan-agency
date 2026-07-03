@@ -203,8 +203,13 @@ function IntroAndAboutCombined() {
 
   // Panel 2's local progress: 0\u20131 across just its portion of the combined scroll.
   const panel2Local = useTransform(scrollYProgress, [0, PANEL2_FRACTION], [0, 1], { clamp: true });
-  const nameY = useTransform(panel2Local, [0.3, 0.98], ['70%', '-140%']);
-  const nameOpacity = useTransform(panel2Local, [0.3, 0.4], [0, 1]);
+  // Videos: grow in from a point (like emerging from the orchid's center),
+  // hold at full size, then scroll up and away before the name arrives.
+  const videosScale = useTransform(panel2Local, [0, 0.16], [0.15, 1]);
+  const videosOpacity = useTransform(panel2Local, [0, 0.1, 0.3, 0.4], [0, 1, 1, 0]);
+  const videosY = useTransform(panel2Local, [0.3, 0.42], ['0%', '-55%']);
+  const nameY = useTransform(panel2Local, [0.35, 0.98], ['70%', '-140%']);
+  const nameOpacity = useTransform(panel2Local, [0.35, 0.45], [0, 1]);
 
   return (
     <div ref={ref} style={{ height: `${PANEL2_VH + PANEL3_VH}vh`, position: 'relative', zIndex: 2 }}>
@@ -212,17 +217,19 @@ function IntroAndAboutCombined() {
           orchid behind it shows through. Sticky within just the first portion. */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
         <div style={{ position: 'sticky', top: 0, height: '100dvh' }} className="h-screen flex items-center justify-center overflow-hidden">
-          <div className="w-full max-w-4xl px-6 grid grid-cols-3 items-center gap-3 sm:gap-5">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+          <motion.div
+            style={{ scale: videosScale, opacity: videosOpacity, y: videosY }}
+            className="w-full max-w-4xl px-6 grid grid-cols-3 items-center gap-6 sm:gap-10">
+            <div>
               <IntroVideo src={INTRO_VIDEOS[0]} />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 1.15 }} animate={{ opacity: 1, scale: 1.15 }} transition={{ duration: 0.8, delay: 0.15 }}>
+            </div>
+            <div style={{ transform: 'scale(1.15)' }}>
               <IntroVideo src={INTRO_VIDEOS[1]} />
-            </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
+            </div>
+            <div>
               <IntroVideo src={INTRO_VIDEOS[2]} />
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
           <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
             <h2 className="font-bold uppercase leading-none text-center w-full" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(3.5rem, 17vw, 15rem)', letterSpacing: '-0.03em' }}>Xan Orchid</h2>
           </motion.div>
