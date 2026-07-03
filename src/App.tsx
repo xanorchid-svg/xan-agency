@@ -7,6 +7,7 @@ import xanaduHero from './assets/xanadu-hero.png';
 import reel1 from './assets/reel1.mp4';
 import reel2 from './assets/reel2.mp4';
 import reel3 from './assets/reel3.mp4';
+import heroOrchidVideo from './assets/hero-orchid.mp4';
 import { ProceduralOrchid } from './components/ProceduralOrchid';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
@@ -144,12 +145,22 @@ function FixedNav() {
 // ─── PANEL 1 — restrained hero, procedural orchid behind content, dissolves
 // into sacred geometry as the user scrolls the hero out of view ──────────────
 function HeroSimple() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
 
   return (
-    <section ref={ref} className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
-      <ProceduralOrchid variant="hero" dissolve={scrollYProgress} />
+    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
+      <div className="absolute inset-0" aria-hidden="true">
+        <video ref={videoRef} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover" style={{ opacity: 0.55 }}>
+          <source src={heroOrchidVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.25)' }} />
+      </div>
       <FadeIn once={false}>
         <span className="relative text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
@@ -157,7 +168,7 @@ function HeroSimple() {
         <h1
           className="relative font-bold uppercase text-center whitespace-normal sm:whitespace-nowrap"
           style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.4rem, 4vw, 2.75rem)', letterSpacing: '-0.01em', lineHeight: 1.1 }}>
-          Here to make your dreams a reality.
+          Making dreams a reality.
         </h1>
       </FadeIn>
       <FadeIn delay={0.2} once={false} className="relative mt-10">
@@ -245,8 +256,7 @@ function AboutTeaser() {
           animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
           transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         />
-        <ProceduralOrchid variant="about" />
-        <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.35)' }} />
+        <ProceduralOrchid variant="hero" />
         <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
           <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
           <FadeIn delay={0.1}>

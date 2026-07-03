@@ -266,7 +266,7 @@ export function ProceduralOrchid({
     return null;
   }
   return (
-    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0" aria-hidden="true">
       <Canvas
         camera={{ position: [0, 0, variant === 'hero' ? 6 : 5.2], fov: 45 }}
         dpr={[1, 1.75]}
