@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence, MotionValue } from 'framer-motion';
-import { Layout, Megaphone, PenTool, Palette, TrendingUp, Target, type LucideIcon } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from 'framer-motion';
+import { ThumbsUp, Heart, MessageSquare, Send, Home, User, type LucideIcon } from 'lucide-react';
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
 import xanaduHero from './assets/xanadu-hero.png';
@@ -34,7 +34,7 @@ export function ContactButton() {
   );
 }
 
-// ─── FadeIn — blur + upward + scale, per the new motion spec ──────────────────
+// ─── FadeIn ────────────────────────────────────────────────────────────────────
 function FadeIn({ children, delay = 0, duration = 1, y = 40, x = 0, className = '', once = true, blur = true }:
   { children: React.ReactNode; delay?: number; duration?: number; y?: number; x?: number; className?: string; once?: boolean; blur?: boolean }) {
   return (
@@ -104,119 +104,6 @@ function CharSpan({ char, index, total, scrollYProgress }: { char: string; index
   );
 }
 
-// ─── Marquee ──────────────────────────────────────────────────────────────────
-const MARQUEE_IMAGES = [
-  'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_834d8e3048924049a1e673671f1b279e~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_9d859e430f874acdb67af939ed2e5a36~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_b93b871b516a4171bdcdcdc71fcac166~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_d7e67e7f4c3141d3a3d1f23ebd9a15ff~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_0432fd65720948f1845054d751a9d154~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg',
-];
-
-function MarqueeSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(200);
-  useEffect(() => {
-    const onScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionTop = window.scrollY + rect.top;
-      setOffset((window.scrollY - sectionTop + window.innerHeight) * 0.3);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  const row1 = [...MARQUEE_IMAGES, ...MARQUEE_IMAGES, ...MARQUEE_IMAGES];
-  const row2 = [...MARQUEE_IMAGES.slice(4), ...MARQUEE_IMAGES.slice(4), ...MARQUEE_IMAGES.slice(4)];
-  return (
-    <section ref={sectionRef} className="pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden" style={{ background: '#0c0c0c' }}>
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-3" style={{ transform: `translateX(${offset - 200}px)`, willChange: 'transform' }}>
-          {row1.map((src, i) => <img key={i} src={src} alt="" loading="lazy" className="rounded-2xl object-cover flex-shrink-0 grayscale hover:grayscale-0 transition-[filter] duration-700" style={{ width: '420px', height: '270px' }} />)}
-        </div>
-        <div className="flex gap-3" style={{ transform: `translateX(${-(offset - 200)}px)`, willChange: 'transform' }}>
-          {row2.map((src, i) => <img key={i} src={src} alt="" loading="lazy" className="rounded-2xl object-cover flex-shrink-0 grayscale hover:grayscale-0 transition-[filter] duration-700" style={{ width: '420px', height: '270px' }} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── IntroReveal — blank screen \u2192 images scale/fade in \u2192 name pinned, w/ mouse-light ──
-function IntroReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
-
-  const imagesOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.35]);
-  const imagesScale = useTransform(scrollYProgress, [0, 1], [0.8, 1.25]);
-  const imagesBlurPx = useTransform(scrollYProgress, [0, 0.25], [6, 0]);
-  const imagesFilter = useTransform(imagesBlurPx, (v) => `blur(${v}px)`);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [1, 0.55, 0.7]);
-  const nameScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.82]);
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.12, 0.85, 1], [0, 1, 1, 0]);
-  const promptOpacity = useTransform(scrollYProgress, [0, 0.08, 0.2], [1, 1, 0]);
-
-  // Mouse-driven spotlight
-  const mx = useMotionValue(50);
-  const my = useMotionValue(50);
-  const smx = useSpring(mx, { stiffness: 60, damping: 20 });
-  const smy = useSpring(my, { stiffness: 60, damping: 20 });
-  const spotlightBg = useTransform([smx, smy], (latest) => {
-    const [px, py] = latest as number[];
-    return `radial-gradient(600px circle at ${px}% ${py}%, rgba(182,0,168,0.10), transparent 70%)`;
-  });
-  const onMove = (e: React.MouseEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    mx.set(((e.clientX - rect.left) / rect.width) * 100);
-    my.set(((e.clientY - rect.top) / rect.height) * 100);
-  };
-
-  const introImages = MARQUEE_IMAGES.slice(0, 9);
-
-  return (
-    <div ref={ref} style={{ height: '260vh', position: 'relative', background: '#0c0c0c' }}>
-      <div onMouseMove={onMove} style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
-        <motion.div
-          style={{ opacity: imagesOpacity, scale: imagesScale, filter: imagesFilter }}
-          className="absolute inset-0 grid grid-cols-3 md:grid-cols-3 gap-2 sm:gap-3 p-2 sm:p-4">
-          {introImages.map((src, i) => (
-            <div key={i} className="rounded-2xl overflow-hidden" style={{ gridColumn: i % 5 === 0 ? 'span 2' : undefined }}>
-              <img src={src} alt="" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: '100%' }} />
-            </div>
-          ))}
-        </motion.div>
-
-        {/* mouse spotlight */}
-        <motion.div className="absolute inset-0 pointer-events-none" style={{ background: spotlightBg }} />
-
-        <motion.div
-          style={{ opacity: overlayOpacity, background: 'radial-gradient(circle at 50% 50%, rgba(12,12,12,0.35) 0%, rgba(12,12,12,0.92) 75%)' }}
-          className="absolute inset-0" />
-
-        <motion.div style={{ scale: nameScale, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center px-4">
-          <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-center" style={{ fontSize: 'clamp(3rem, 13vw, 18vw)' }}>
-            Xan Orchid
-          </h1>
-        </motion.div>
-
-        <motion.div style={{ opacity: promptOpacity }} className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.5 }}>Scroll</span>
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-[1px] h-8" style={{ background: 'linear-gradient(to bottom, rgba(215,226,234,0.5), transparent)' }} />
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Shrinking nav ──────────────────────────────────────────────────────────────
 function FixedNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -250,63 +137,158 @@ function FixedNav() {
   );
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-interface ServiceItem { num: string; name: string; desc: string; icon: LucideIcon; skills: string[]; }
+// ─── PANEL 1 — restrained hero, no heavy motion ────────────────────────────────
+function HeroSimple() {
+  return (
+    <section className="h-screen flex flex-col justify-center items-center relative px-6" style={{ background: '#0c0c0c' }}>
+      <FadeIn once={false}>
+        <span className="text-[#D7E2EA] text-xs uppercase tracking-widest mb-6 block text-center" style={{ opacity: 0.6 }}>Xan Orchid</span>
+      </FadeIn>
+      <FadeIn delay={0.1} once={false}>
+        <h1 className="hero-heading font-black uppercase leading-[0.95] text-center max-w-4xl" style={{ fontSize: 'clamp(2.2rem, 6.5vw, 5rem)' }}>
+          a creative designer driven by crafting striking and unforgettable brands
+        </h1>
+      </FadeIn>
+      <FadeIn delay={0.2} once={false} className="mt-10">
+        <ContactButton />
+      </FadeIn>
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="animate-bounce" aria-hidden="true">
+          <path d="M4 8l8 7 8-7M4 13l8 7 8-7" stroke="#D7E2EA" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+        </svg>
+      </div>
+    </section>
+  );
+}
 
-const SERVICES: ServiceItem[] = [
-  { num: '01', name: 'Web Design', desc: 'Clean, modern, conversion-focused websites. Every layout, color, and word chosen to serve the visitor and represent the brand.', icon: Layout, skills: ['React', 'Vite', 'Webflow', 'Figma'] },
-  { num: '02', name: 'Brand Identity', desc: 'Logos, color systems, typography, and visual language built from scratch — a complete identity that communicates who you are at a glance.', icon: Palette, skills: ['Illustrator', 'Photoshop', 'Figma'] },
-  { num: '03', name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok strategy and management — building consistent brand presence, growing engaged communities, and turning followers into clients.', icon: Megaphone, skills: ['Meta Business Suite', 'LinkedIn', 'TikTok'] },
-  { num: '04', name: 'Content Creation', desc: 'Reels, posts, and email campaigns crafted to stop the scroll. Visuals, copy, and concept aligned to your brand voice and your audience.', icon: PenTool, skills: ['Premiere Pro', 'Canva', 'CapCut'] },
-  { num: '05', name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn ad campaigns designed to reach the right people, drive real traffic, and convert at every stage of the funnel.', icon: Target, skills: ['Meta Ads Manager', 'Google Ads', 'A/B Testing'] },
-  { num: '06', name: 'Business Development', desc: 'Business and marketing strategy, A/B testing, and implementation — turning good ideas into measurable, lasting results.', icon: TrendingUp, skills: ['Strategy', 'Analytics', 'Growth Planning'] },
+// ─── PANEL 2 — images appear one by one, then name slides up over them ────────
+const INTRO_MEDIA = [
+  'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
+  'https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg',
+  'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
 ];
 
-function ServiceRow({ service, index }: { service: ServiceItem; index: number }) {
-  const Icon = service.icon;
-  const [hover, setHover] = useState(false);
+function ImagesNamePanel() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
+
+  const img1 = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
+  const img2 = useTransform(scrollYProgress, [0.08, 0.24], [0, 1]);
+  const img3 = useTransform(scrollYProgress, [0.16, 0.32], [0, 1]);
+  const nameY = useTransform(scrollYProgress, [0.35, 0.85], ['60%', '0%']);
+  const nameOpacity = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
+
   return (
-    <FadeIn delay={index * 0.05} y={30}>
-      <motion.div
-        onHoverStart={() => setHover(true)}
-        onHoverEnd={() => setHover(false)}
-        data-cursor="hover"
-        className="group py-8 sm:py-10 md:py-12 cursor-default"
-        style={{ borderTop: index === 0 ? '1px solid rgba(12,12,12,0.12)' : undefined, borderBottom: '1px solid rgba(12,12,12,0.12)' }}>
-        <div className="flex items-center gap-5 sm:gap-8 md:gap-10">
-          <span className="font-black leading-none flex-shrink-0 transition-opacity duration-500" style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)', color: '#0c0c0c', opacity: hover ? 0.15 : 0.06 }}>{service.num}</span>
-          <motion.div
-            animate={{ rotate: hover ? -8 : 0, scale: hover ? 1.08 : 1 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-            className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)' }}>
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={1.75} />
+    <div ref={ref} style={{ height: '220vh', position: 'relative', zIndex: 2 }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
+        <div className="relative w-full max-w-5xl px-6 flex items-center justify-center gap-3 sm:gap-5">
+          <motion.div style={{ opacity: img1, scale: img1 }} className="w-1/4 rounded-2xl overflow-hidden">
+            <img src={INTRO_MEDIA[0]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
           </motion.div>
-          <div className="flex-1 min-w-0">
-            <motion.h3
-              animate={{ x: hover ? 8 : 0 }}
-              transition={{ duration: 0.4, ease: EASE }}
-              className="font-medium uppercase mb-2" style={{ fontSize: 'clamp(1.1rem, 2.4vw, 2.2rem)', color: '#0c0c0c' }}>
-              {service.name}
-            </motion.h3>
-            <AnimatePresence>
-              {hover && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4, ease: EASE }} className="overflow-hidden">
-                  <p className="font-light leading-relaxed max-w-2xl mb-3" style={{ fontSize: 'clamp(0.85rem, 1.4vw, 1.1rem)', color: '#0c0c0c', opacity: 0.6 }}>{service.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {service.skills.map((skill) => (
-                      <span key={skill} className="text-xs uppercase tracking-wide px-3 py-1 rounded-full font-medium" style={{ color: '#0c0c0c', opacity: 0.5, border: '1px solid rgba(12,12,12,0.15)' }}>{skill}</span>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <motion.div style={{ opacity: img2, scale: img2 }} className="w-1/3 rounded-2xl overflow-hidden">
+            <img src={INTRO_MEDIA[1]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+          </motion.div>
+          <motion.div style={{ opacity: img3, scale: img3 }} className="w-1/4 rounded-2xl overflow-hidden">
+            <img src={INTRO_MEDIA[2]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+          </motion.div>
         </div>
+        <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
+          <h2 className="hero-heading font-black uppercase leading-none text-center" style={{ fontSize: 'clamp(3.5rem, 15vw, 15rem)' }}>Xan Orchid</h2>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PANEL 3 — About teaser, pushes panel 2 out of frame ───────────────────────
+function AboutTeaser() {
+  return (
+    <div style={{ height: '150vh', position: 'relative', zIndex: 3 }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex items-center justify-center px-6 relative overflow-hidden">
+        <motion.div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(120deg, #1a1a2e 0%, #2d1b3d 40%, #16213e 70%, #0c0c0c 100%)', backgroundSize: '250% 250%' }}
+          animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
+          transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+        />
+        <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.35)' }} />
+        <div className="relative z-10 max-w-2xl text-center">
+          <FadeIn><span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.6 }}>About</span></FadeIn>
+          <FadeIn delay={0.1}>
+            <h2 className="hero-heading font-black uppercase mt-4 mb-6 leading-[0.95]" style={{ fontSize: 'clamp(1.8rem, 5vw, 3.4rem)' }}>
+              Seeking Creative, Innovative Design and Business Solutions?
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="text-[#D7E2EA] font-light leading-relaxed mb-8" style={{ opacity: 0.75, fontSize: 'clamp(0.9rem, 1.4vw, 1.05rem)' }}>
+              Xan is a creative entrepreneur, web designer, social media manager, and graphic designer, focused on collaborating with her clients to make beautiful designs, help build brand awareness, and grow your company.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.3}>
+            <Magnetic strength={0.3}>
+              <Link to="/about" data-cursor="hover" className="inline-block rounded-full bg-white text-[#0c0c0c] px-8 py-3 text-sm font-medium uppercase tracking-widest">
+                Read More
+              </Link>
+            </Magnetic>
+          </FadeIn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PANEL 4 — Services, icons dance on scroll, pushes About out of frame ──────
+interface ServiceIconItem { icon: LucideIcon; name: string; desc: string; }
+const SERVICE_ICONS: ServiceIconItem[] = [
+  { icon: ThumbsUp, name: 'Social Media Management', desc: 'Meta, LinkedIn, and TikTok' },
+  { icon: Heart, name: 'Content Creation', desc: 'Reels, Posts, and Email Campaigns' },
+  { icon: MessageSquare, name: 'Business Development', desc: 'Business and Marketing Strategy, A/B Testing, and Implementation' },
+  { icon: Send, name: 'Social Media Advertising', desc: 'Google, Meta, and LinkedIn Ads' },
+  { icon: Home, name: 'Range of Skills', desc: 'Figma, Canva, Adobe Illustrator, Photoshop, and InDesign.' },
+  { icon: User, name: 'Community Management', desc: 'CRM and Client Acquisition' },
+];
+
+function DancingIcon({ item, index, scrollYProgress }: { item: ServiceIconItem; index: number; scrollYProgress: MotionValue<number> }) {
+  const Icon = item.icon;
+  const dir = index % 2 === 0 ? 1 : -1;
+  const scrollY = useTransform(scrollYProgress, [0, 1], [0, dir * -18]);
+  const scrollRotate = useTransform(scrollYProgress, [0, 1], [0, dir * 8]);
+  return (
+    <div className="flex flex-col items-center text-center gap-4">
+      <motion.div style={{ y: scrollY, rotate: scrollRotate }}>
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 2.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
+          className="w-16 h-16 rounded-2xl flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #d7d7d7, #8a8a8a)' }}>
+          <Icon className="w-7 h-7" style={{ color: '#1a1a1a' }} strokeWidth={1.75} />
+        </motion.div>
       </motion.div>
-    </FadeIn>
+      <h3 className="text-white font-bold uppercase text-sm sm:text-base">{item.name}</h3>
+      <p className="text-white font-light text-xs sm:text-sm max-w-[220px]" style={{ opacity: 0.6 }}>{item.desc}</p>
+    </div>
+  );
+}
+
+function ServicesDance() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  return (
+    <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', background: '#0c0c0c' }} className="flex flex-col items-center justify-center px-6">
+        <FadeIn><span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.6 }}>Services</span></FadeIn>
+        <FadeIn delay={0.1}>
+          <h2 className="hero-heading font-black uppercase text-center mt-4 mb-16 sm:mb-20 leading-none" style={{ fontSize: 'clamp(1.8rem, 5.5vw, 3.6rem)' }}>
+            Not Just Social Butterflies
+          </h2>
+        </FadeIn>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 sm:gap-x-14 gap-y-12 sm:gap-y-16 max-w-4xl">
+          {SERVICE_ICONS.map((item, i) => (
+            <DancingIcon key={item.name} item={item} index={i} scrollYProgress={scrollYProgress} />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -416,76 +398,20 @@ export default function App() {
       <GrainOverlay />
       <FixedNav />
 
-      {/* ═══ INTRO ═══ */}
-      <IntroReveal />
+      {/* ═══ PANEL 1: HERO ═══ */}
+      <HeroSimple />
 
-      {/* ═══ HERO — tagline, CTA, portrait ═══ */}
-      <section className="min-h-[70vh] flex flex-col justify-end overflow-x-clip relative" style={{ background: '#0c0c0c' }}>
-        <div className="flex justify-between items-end flex-1 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10">
-          <FadeIn delay={0.1} y={20}>
-            <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]" style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}>
-              a creative designer driven by crafting striking and unforgettable brands
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.2} y={20}><ContactButton /></FadeIn>
-        </div>
+      {/* ═══ PANEL 2: IMAGES → NAME ═══ */}
+      <ImagesNamePanel />
 
-        <div className="absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[320px] md:w-[400px] lg:w-[460px]">
-          <FadeIn delay={0.15} y={30}>
-            <Magnet padding={150} strength={3}>
-              <img src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg" alt="Xan Orchid" className="w-full object-cover object-top"
-                style={{ borderRadius: '50% 50% 0 0', maskImage: 'linear-gradient(to top, transparent 0%, black 20%)', WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%)', aspectRatio: '2/3' }} />
-            </Magnet>
-          </FadeIn>
-        </div>
-      </section>
+      {/* ═══ PANEL 3: ABOUT TEASER (pushes panel 2 out) ═══ */}
+      <AboutTeaser />
 
-      {/* ═══ MARQUEE ═══ */}
-      <MarqueeSection />
-
-      {/* ═══ ABOUT ═══ */}
-      <section className="min-h-screen flex flex-col items-center justify-center relative px-5 sm:px-8 md:px-10 py-32" style={{ background: '#0c0c0c' }}>
-        <div className="hidden md:block absolute top-[6%] left-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
-          <img src="https://static.wixstatic.com/media/b80b05_3cc09fce62da4a83b087e02c2df13e0b~mv2.png" alt="" className="w-full rounded-2xl" />
-        </div>
-        <div className="hidden md:block absolute bottom-[6%] left-[2%] w-[100px] lg:w-[130px] pointer-events-none opacity-50">
-          <img src="https://static.wixstatic.com/media/b80b05_2305bdcff38f45baa939ff183c6ae499~mv2.png" alt="" className="w-full rounded-2xl" />
-        </div>
-        <div className="hidden md:block absolute top-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
-          <img src="https://static.wixstatic.com/media/b80b05_d701bdcad664423c8ca381b760b91c56~mv2.png" alt="" className="w-full rounded-2xl" />
-        </div>
-        <div className="hidden md:block absolute bottom-[6%] right-[2%] w-[120px] lg:w-[160px] pointer-events-none opacity-50">
-          <img src="https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg" alt="" className="w-full rounded-2xl" />
-        </div>
-
-        <div className="relative z-10 flex flex-col items-center gap-10 sm:gap-14 md:gap-16 max-w-[600px] w-full">
-          <FadeIn delay={0} y={40}>
-            <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>About Me</h2>
-          </FadeIn>
-          <div className="flex flex-col items-center gap-16 sm:gap-20 md:gap-24 w-full">
-            <AnimatedText
-              text="With over five years of experience in design and business, I focus on branding, web design, social media, and strategy. A CU Boulder grad who won the New Venture Creation competition in Barcelona — I truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together."
-              className="text-[#D7E2EA] font-medium text-center leading-relaxed text-base md:text-lg"
-            />
-            <ContactButton />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SERVICES ═══ */}
-      <section className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
-        <FadeIn delay={0} y={30}>
-          <h2 className="font-black uppercase text-center mb-16 sm:mb-20 md:mb-28" style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0c0c0c' }}>Services</h2>
-        </FadeIn>
-        <div className="max-w-5xl mx-auto">
-          {SERVICES.map((svc, i) => (
-            <ServiceRow key={svc.num} service={svc} index={i} />
-          ))}
-        </div>
-      </section>
+      {/* ═══ PANEL 4: SERVICES, dancing icons (pushes panel 3 out) ═══ */}
+      <ServicesDance />
 
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
-      <section className="-mt-10 sm:-mt-12 md:-mt-14 z-10 relative rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 pt-20 pb-32" style={{ background: '#0c0c0c' }}>
+      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-20 pb-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
           <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>Projects</h2>
         </FadeIn>
@@ -532,7 +458,7 @@ export default function App() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="bg-white px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
+      <section className="relative z-[5] bg-white px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={30}>
           <h2 className="font-black uppercase text-center mb-16 sm:mb-20" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)', color: '#0c0c0c' }}>What Clients Say</h2>
         </FadeIn>
@@ -556,7 +482,7 @@ export default function App() {
       </section>
 
       {/* ═══ CONTACT ═══ */}
-      <section id="contact" className="-mt-10 z-10 relative rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: '#0c0c0c' }}>
+      <section id="contact" className="relative z-[5] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: '#0c0c0c' }}>
         <FadeIn delay={0} y={40}>
           <h2 className="hero-heading font-black uppercase text-center mb-4" style={{ fontSize: 'clamp(2.5rem, 8vw, 100px)' }}>Let&apos;s Make Waves</h2>
         </FadeIn>
@@ -569,7 +495,7 @@ export default function App() {
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="px-5 sm:px-8 md:px-10 py-10 border-t" style={{ background: '#0c0c0c', borderColor: 'rgba(215,226,234,0.08)' }}>
+      <footer className="relative z-[5] px-5 sm:px-8 md:px-10 py-10 border-t" style={{ background: '#0c0c0c', borderColor: 'rgba(215,226,234,0.08)' }}>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
           <p className="text-[#D7E2EA] font-light text-sm" style={{ opacity: 0.35 }}>© 2026 Xan Orchid. All rights reserved.</p>
           <div className="flex gap-8">
