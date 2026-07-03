@@ -206,77 +206,82 @@ function IntroVideo({ src }: { src: string }) {
 }
 
 const INTRO_VIDEOS = [reel1, reel2, reel3];
+const PANEL2_VH = 340;
+const PANEL3_VH = 150;
+const PANEL2_FRACTION = PANEL2_VH / (PANEL2_VH + PANEL3_VH);
 
-function ImagesNamePanel() {
+// ─── PANELS 2+3 combined — one continuous orchid background stretches behind
+// both the reel/name reveal AND the About teaser. The orchid zooms and slowly
+// dissolves toward sacred geometry across the FULL combined scroll span; each
+// panel's own content uses a locally-remapped 0\u20131 progress derived from that
+// same shared scroll value, so everything stays perfectly in sync. ───────────
+function IntroAndAboutCombined() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
 
-  const img1 = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
-  const img2 = useTransform(scrollYProgress, [0.06, 0.2], [0, 1]);
-  const img3 = useTransform(scrollYProgress, [0.12, 0.26], [0, 1]);
-  // Slower, more gradual pass \u2014 name enters, holds, then continues all the way
-  // off the top of the frame before this panel's scroll room runs out.
-  const nameY = useTransform(scrollYProgress, [0.3, 0.98], ['70%', '-140%']);
-  const nameOpacity = useTransform(scrollYProgress, [0.3, 0.4], [0, 1]);
+  // Panel 2's local progress: 0\u20131 across just its portion of the combined scroll.
+  const panel2Local = useTransform(scrollYProgress, [0, PANEL2_FRACTION], [0, 1], { clamp: true });
+  const img1 = useTransform(panel2Local, [0, 0.12], [0, 1]);
+  const img2 = useTransform(panel2Local, [0.06, 0.2], [0, 1]);
+  const img3 = useTransform(panel2Local, [0.12, 0.26], [0, 1]);
+  const nameY = useTransform(panel2Local, [0.3, 0.98], ['70%', '-140%']);
+  const nameOpacity = useTransform(panel2Local, [0.3, 0.4], [0, 1]);
 
   return (
-    <div ref={ref} style={{ height: '340vh', position: 'relative', zIndex: 2 }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
-        {/* Middle video slightly larger than the two sides. opacity-only fade-in
-            (no scale) plus a forced GPU layer per item \u2014 the scale transform on
-            a live <video> was the likely cause of the middle item silently
-            failing to composite on some desktop browsers while working on mobile. */}
-        <div className="w-full max-w-4xl px-6 grid items-center gap-3 sm:gap-5" style={{ gridTemplateColumns: '0.85fr 1fr 0.85fr' }}>
-          <motion.div style={{ opacity: img1, transform: 'translateZ(0)', willChange: 'opacity' }}>
-            <IntroVideo src={INTRO_VIDEOS[0]} />
-          </motion.div>
-          <motion.div style={{ opacity: img2, transform: 'translateZ(0)', willChange: 'opacity' }}>
-            <IntroVideo src={INTRO_VIDEOS[1]} />
-          </motion.div>
-          <motion.div style={{ opacity: img3, transform: 'translateZ(0)', willChange: 'opacity' }}>
-            <IntroVideo src={INTRO_VIDEOS[2]} />
+    <div ref={ref} style={{ height: `${PANEL2_VH + PANEL3_VH}vh`, position: 'relative', zIndex: 2, background: '#0c0c0c' }}>
+      {/* Shared orchid \u2014 sticky for the ENTIRE combined span, so it's the one
+          continuous background behind both the reels/name and the About copy.
+          Zooms and slowly dissolves using the full (unremapped) scroll progress. */}
+      <div style={{ position: 'sticky', top: 0, height: '100vh' }}>
+        <ProceduralOrchid variant="hero" dissolve={scrollYProgress} />
+      </div>
+
+      {/* Panel 2 content \u2014 reels + name, transparent background so the orchid
+          behind it shows through. Sticky within just the first portion. */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }} className="flex items-center justify-center">
+          <div className="w-full max-w-4xl px-6 grid items-center gap-3 sm:gap-5" style={{ gridTemplateColumns: '0.85fr 1fr 0.85fr' }}>
+            <motion.div style={{ opacity: img1, transform: 'translateZ(0)', willChange: 'opacity' }}>
+              <IntroVideo src={INTRO_VIDEOS[0]} />
+            </motion.div>
+            <motion.div style={{ opacity: img2, transform: 'translateZ(0)', willChange: 'opacity' }}>
+              <IntroVideo src={INTRO_VIDEOS[1]} />
+            </motion.div>
+            <motion.div style={{ opacity: img3, transform: 'translateZ(0)', willChange: 'opacity' }}>
+              <IntroVideo src={INTRO_VIDEOS[2]} />
+            </motion.div>
+          </div>
+          <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
+            <h2 className="font-bold uppercase leading-none text-center w-full" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(3.5rem, 17vw, 15rem)', letterSpacing: '-0.03em' }}>Xan Orchid</h2>
           </motion.div>
         </div>
-        <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-2">
-          <h2 className="font-bold uppercase leading-none text-center w-full" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(3.5rem, 17vw, 15rem)', letterSpacing: '-0.03em' }}>Xan Orchid</h2>
-        </motion.div>
       </div>
-    </div>
-  );
-}
 
-// ─── PANEL 3 — About teaser, pushes panel 2 out of frame ───────────────────────
-function AboutTeaser() {
-  return (
-    <div style={{ height: '150vh', position: 'relative', zIndex: 3 }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex items-center justify-center px-6 relative overflow-hidden">
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(120deg, #1a1a2e 0%, #2d1b3d 40%, #16213e 70%, #0c0c0c 100%)', backgroundSize: '250% 250%' }}
-          animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-        />
-        <ProceduralOrchid variant="hero" />
-        <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
-          <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
-          <FadeIn delay={0.1}>
-            <h2 className="font-bold uppercase mt-4 mb-6 leading-tight" style={{ color: '#D7E2EA', fontSize: 'clamp(1.5rem, 3.6vw, 2.4rem)', letterSpacing: '-0.01em' }}>
-              Seeking Creative, Innovative Design and Business Solutions?
-            </h2>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <p className="font-light leading-relaxed mb-8" style={{ color: '#D7E2EA', opacity: 0.75, fontSize: 'clamp(0.9rem, 1.4vw, 1.05rem)' }}>
-              Xan is a creative entrepreneur, web designer, social media manager, and graphic designer, focused on collaborating with her clients to make beautiful designs, help build brand awareness, and grow your company.
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.3}>
-            <Magnetic strength={0.3}>
-              <Link to="/about" data-cursor="hover" className="inline-block rounded-full px-8 py-3 text-sm font-medium uppercase tracking-widest"
-                style={{ background: RED, color: 'white' }}>
-                Read More
-              </Link>
-            </Magnetic>
-          </FadeIn>
+      {/* Panel 3 content \u2014 About teaser, transparent background, sticky within
+          the remaining portion, positioned right after panel 2's span ends. */}
+      <div style={{ position: 'absolute', top: `${PANEL2_VH}vh`, left: 0, right: 0, height: `${PANEL3_VH}vh` }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex items-center justify-center px-6">
+          <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
+            <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
+            <FadeIn delay={0.1}>
+              <h2 className="font-bold uppercase mt-4 mb-6 leading-tight" style={{ color: '#D7E2EA', fontSize: 'clamp(1.5rem, 3.6vw, 2.4rem)', letterSpacing: '-0.01em' }}>
+                Seeking Creative, Innovative Design and Business Solutions?
+              </h2>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <p className="font-light leading-relaxed mb-8" style={{ color: '#D7E2EA', opacity: 0.75, fontSize: 'clamp(0.9rem, 1.4vw, 1.05rem)' }}>
+                Xan is a creative entrepreneur, web designer, social media manager, and graphic designer, focused on collaborating with her clients to make beautiful designs, help build brand awareness, and grow your company.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <Magnetic strength={0.3}>
+                <Link to="/about" data-cursor="hover" className="inline-block rounded-full px-8 py-3 text-sm font-medium uppercase tracking-widest"
+                  style={{ background: RED, color: 'white' }}>
+                  Read More
+                </Link>
+              </Magnetic>
+            </FadeIn>
+          </div>
         </div>
       </div>
     </div>
@@ -444,11 +449,8 @@ export default function App() {
       {/* ═══ PANEL 1: HERO ═══ */}
       <HeroSimple />
 
-      {/* ═══ PANEL 2: IMAGES → NAME ═══ */}
-      <ImagesNamePanel />
-
-      {/* ═══ PANEL 3: ABOUT TEASER (pushes panel 2 out) ═══ */}
-      <AboutTeaser />
+      {/* ═══ PANELS 2+3: IMAGES → NAME, then ABOUT TEASER \u2014 one shared orchid background ═══ */}
+      <IntroAndAboutCombined />
 
       {/* ═══ PANEL 4: SERVICES, dancing icons (pushes panel 3 out) ═══ */}
       <ServicesDance />
