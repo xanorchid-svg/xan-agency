@@ -54,21 +54,18 @@ function superformula(theta: number, m: number, n1: number, n2: number, n3: numb
   return Math.pow(t1 + t2, -1 / n1);
 }
 
-const SEGMENTS = 180;
-const LAYERS = 34;
-
-function OrchidPetals({ dissolve }: { dissolve: Dissolve }) {
+function OrchidPetals({ dissolve, segments, layers }: { dissolve: Dissolve; segments: number; layers: number }) {
   const group = useRef<THREE.Group>(null);
   const lines = useMemo(() => {
-    return Array.from({ length: LAYERS }, (_, i) => {
+    return Array.from({ length: layers }, (_, i) => {
       const geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array((SEGMENTS + 1) * 3);
+      const positions = new Float32Array((segments + 1) * 3);
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const color = paletteColor(i / (LAYERS - 1));
+      const color = paletteColor(i / (layers - 1));
       const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending });
       return { geometry, material, i };
     });
-  }, []);
+  }, [segments, layers]);
 
   useFrame(({ clock }) => {
     const d = readDissolve(dissolve);
@@ -78,13 +75,13 @@ function OrchidPetals({ dissolve }: { dissolve: Dissolve }) {
     const morph = Math.sin(t * 0.07) * 0.6;
 
     lines.forEach(({ geometry, material, i }) => {
-      const layerT = i / (LAYERS - 1);
+      const layerT = i / (layers - 1);
       const radius = (0.4 + layerT * 2.6) * breathe;
       const n1 = 0.3 + Math.sin(t * 0.05 + i) * 0.05;
       const params = { m: 5, n1: 0.25 + n1, n2: 1.7 + morph * 0.15, n3: 1.7 - morph * 0.1, a: 1, b: 1 };
       const pos = geometry.attributes.position.array as Float32Array;
-      for (let s = 0; s <= SEGMENTS; s++) {
-        const theta = (s / SEGMENTS) * Math.PI * 2;
+      for (let s = 0; s <= segments; s++) {
+        const theta = (s / segments) * Math.PI * 2;
         const r = superformula(theta + t * 0.02, params.m, params.n1, params.n2, params.n3, params.a, params.b) * radius;
         pos[s * 3] = r * Math.cos(theta);
         pos[s * 3 + 1] = r * Math.sin(theta) * 0.86; // slight vertical compression, more orchid-like
@@ -242,12 +239,12 @@ function CameraDrift() {
   return null;
 }
 
-function Scene({ dissolve, particleCount }: { dissolve: Dissolve; particleCount: number }) {
+function Scene({ dissolve, particleCount, segments, layers }: { dissolve: Dissolve; particleCount: number; segments: number; layers: number }) {
   return (
     <>
       <CameraDrift />
       <MouseParallax>
-        <OrchidPetals dissolve={dissolve} />
+        <OrchidPetals dissolve={dissolve} segments={segments} layers={layers} />
         <OrchidParticles count={particleCount} dissolve={dissolve} />
         <SacredGeometry dissolve={dissolve} />
       </MouseParallax>
@@ -267,6 +264,22 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
+// Mobile devices need meaningfully less per-frame work \u2014 regenerating
+// thousands of points every frame competes with the main thread for scroll
+// handling, and that contention is a common real cause of janky/skippy
+// mobile scroll. This trims geometry complexity and pixel ratio accordingly.
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mq.matches);
+    const handler = () => setIsMobile(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return isMobile;
+}
+
 export function ProceduralOrchid({
   dissolve,
   variant = 'hero',
@@ -275,21 +288,25 @@ export function ProceduralOrchid({
   variant?: 'hero' | 'about';
 }) {
   const reduced = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
   if (reduced) {
     // Respect prefers-reduced-motion: no animated canvas at all, just leave
     // the pure black background the spec calls for.
     return null;
   }
+  const segments = isMobile ? 90 : 180;
+  const layers = isMobile ? 18 : 34;
+  const particleCount = isMobile ? 300 : (variant === 'hero' ? 900 : 600);
   return (
     <div className="absolute inset-0" aria-hidden="true">
       <Canvas
         camera={{ position: [0, 0, variant === 'hero' ? 6 : 5.2], fov: 45 }}
-        dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true }}
+        dpr={isMobile ? [1, 1.25] : [1, 1.75]}
+        gl={{ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' }}
         style={{ background: 'transparent' }}>
-        <Scene dissolve={dissolve} particleCount={variant === 'hero' ? 900 : 600} />
+        <Scene dissolve={dissolve} particleCount={particleCount} segments={segments} layers={layers} />
         <EffectComposer>
-          <Bloom luminanceThreshold={0.05} luminanceSmoothing={0.9} intensity={variant === 'hero' ? 1.4 : 1.1} mipmapBlur />
+          <Bloom luminanceThreshold={0.05} luminanceSmoothing={0.9} intensity={variant === 'hero' ? 1.4 : 1.1} mipmapBlur={!isMobile} />
         </EffectComposer>
       </Canvas>
     </div>

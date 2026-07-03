@@ -145,7 +145,7 @@ function FixedNav() {
 // into sacred geometry as the user scrolls the hero out of view ──────────────
 function HeroSimple() {
   return (
-    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ fontFamily: FONT, zIndex: 1 }}>
+    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ fontFamily: FONT, zIndex: 1, height: '100dvh' }}>
       <FadeIn once={false}>
         <span className="relative text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
@@ -181,8 +181,12 @@ function IntroVideo({ src }: { src: string }) {
     }
   }, []);
   return (
-    // iPhone screen proportions (~19.5:9), rounded like a phone bezel
-    <div className="w-full rounded-[28px] overflow-hidden" style={{ aspectRatio: '9/19.5', background: '#111' }}>
+    // iPhone screen proportions (~19.5:9), rounded like a phone bezel. Height
+    // is explicit and capped (not derived from width via grid stretch +
+    // aspect-ratio, which resolves inconsistently across browsers when the
+    // grid cell tries to stretch the item to 100% width) \u2014 width then
+    // follows automatically from the aspect-ratio, which is reliable.
+    <div className="rounded-[28px] overflow-hidden mx-auto" style={{ height: 'min(60vh, 50vw)', aspectRatio: '9/19.5', background: '#111' }}>
       <video ref={ref} autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
         <source src={src} type="video/mp4" />
       </video>
@@ -191,7 +195,7 @@ function IntroVideo({ src }: { src: string }) {
 }
 
 const INTRO_VIDEOS = [reel1, reel2, reel3];
-const PANEL2_VH = 340;
+const PANEL2_VH = 220;
 const PANEL3_VH = 150;
 const PANEL2_FRACTION = PANEL2_VH / (PANEL2_VH + PANEL3_VH);
 
@@ -217,15 +221,15 @@ function IntroAndAboutCombined() {
       {/* Panel 2 content \u2014 reels + name, transparent background so the global
           orchid behind it shows through. Sticky within just the first portion. */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${PANEL2_VH}vh` }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }} className="flex items-center justify-center">
-          <div className="w-full max-w-4xl px-6 grid items-center gap-3 sm:gap-5" style={{ gridTemplateColumns: '0.85fr 1fr 0.85fr' }}>
-            <motion.div style={{ opacity: img1, transform: 'translateZ(0)', willChange: 'opacity' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh', overflow: 'hidden' }} className="flex items-center justify-center">
+          <div className="w-full max-w-4xl px-6 grid grid-cols-3 items-center gap-3 sm:gap-5">
+            <motion.div style={{ opacity: img1, willChange: 'opacity, transform' }}>
               <IntroVideo src={INTRO_VIDEOS[0]} />
             </motion.div>
-            <motion.div style={{ opacity: img2, transform: 'translateZ(0)', willChange: 'opacity' }}>
+            <motion.div style={{ opacity: img2, scale: 1.15, willChange: 'opacity, transform' }}>
               <IntroVideo src={INTRO_VIDEOS[1]} />
             </motion.div>
-            <motion.div style={{ opacity: img3, transform: 'translateZ(0)', willChange: 'opacity' }}>
+            <motion.div style={{ opacity: img3, willChange: 'opacity, transform' }}>
               <IntroVideo src={INTRO_VIDEOS[2]} />
             </motion.div>
           </div>
@@ -238,7 +242,7 @@ function IntroAndAboutCombined() {
       {/* Panel 3 content \u2014 About teaser, transparent background, sticky within
           the remaining portion, positioned right after panel 2's span ends. */}
       <div style={{ position: 'absolute', top: `${PANEL2_VH}vh`, left: 0, right: 0, height: `${PANEL3_VH}vh` }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex items-center justify-center px-6">
+        <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh' }} className="flex items-center justify-center px-6">
           <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
             <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
             <FadeIn delay={0.1}>
@@ -302,7 +306,7 @@ function ServicesDance() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   return (
     <div ref={ref} style={{ height: '150vh', position: 'relative', zIndex: 4 }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh' }} className="flex flex-col items-center justify-center px-6">
+      <div style={{ position: 'sticky', top: 0, height: '100vh', maxHeight: '100dvh' }} className="flex flex-col items-center justify-center px-6">
         <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ fontFamily: FONT, color: RED }}>Services</span></FadeIn>
         <FadeIn delay={0.1}>
           <h2 className="font-bold uppercase text-center mt-4 mb-16 sm:mb-20 leading-tight" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.6rem, 4.4vw, 2.75rem)', letterSpacing: '-0.01em' }}>
@@ -336,7 +340,7 @@ function FeaturedCard({
 }) {
   const reversed = index % 2 === 1;
   return (
-    <div className={`flex flex-col ${reversed ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 md:gap-14 items-center py-16 md:py-24`}
+    <div className={`flex flex-col ${reversed ? 'md:flex-row-reverse' : 'md:flex-row'} gap-6 md:gap-14 items-center py-8 sm:py-12 md:py-24`}
       style={{ borderTop: index === 0 ? 'none' : '1px solid rgba(215,226,234,0.08)' }}>
       <div className="w-full md:w-1/2">
         {video ? (
@@ -444,12 +448,12 @@ export default function App() {
       <ServicesDance />
 
       {/* ═══ PROJECTS — editorial alternating layout ═══ */}
-      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-20 pb-32">
+      <section className="relative z-[5] px-5 sm:px-8 md:px-10 pt-12 sm:pt-16 md:pt-20 pb-16 sm:pb-24 md:pb-32">
         <FadeIn delay={0} y={40}>
           <h2 className="font-bold uppercase text-center mb-4" style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(2rem, 6vw, 4.5rem)', letterSpacing: '-0.01em' }}>Projects</h2>
         </FadeIn>
         <FadeIn delay={0.2} y={0}>
-          <div className="text-center mb-8">
+          <div className="text-center mb-4 sm:mb-6 md:mb-8">
             <Magnetic strength={0.3}>
               <Link to="/portfolio" data-cursor="hover" className="text-[#D7E2EA] uppercase tracking-widest text-sm font-medium hover:opacity-70 transition-opacity">Full Portfolio →</Link>
             </Magnetic>
