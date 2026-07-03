@@ -95,7 +95,54 @@ function CharSpan({ char, index, total, scrollYProgress }: { char: string; index
   );
 }
 
-// ─── Marquee ──────────────────────────────────────────────────────────────────
+// ─── IntroReveal — blank screen \u2192 images scale/fade in \u2192 name pinned over them ──
+function IntroReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
+
+  const imagesOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.35]);
+  const imagesScale = useTransform(scrollYProgress, [0, 1], [0.8, 1.25]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [1, 0.55, 0.7]);
+  const nameScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.82]);
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.12, 0.85, 1], [0, 1, 1, 0]);
+  const promptOpacity = useTransform(scrollYProgress, [0, 0.08, 0.2], [1, 1, 0]);
+
+  const introImages = MARQUEE_IMAGES.slice(0, 9);
+
+  return (
+    <div ref={ref} style={{ height: '260vh', position: 'relative', background: '#0c0c0c' }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+        <motion.div
+          style={{ opacity: imagesOpacity, scale: imagesScale }}
+          className="absolute inset-0 grid grid-cols-3 md:grid-cols-3 gap-2 sm:gap-3 p-2 sm:p-4">
+          {introImages.map((src, i) => (
+            <div key={i} className="rounded-2xl overflow-hidden" style={{ gridColumn: i % 5 === 0 ? 'span 2' : undefined }}>
+              <img src={src} alt="" loading="lazy" className="w-full h-full object-cover" style={{ minHeight: '100%' }} />
+            </div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          style={{ opacity: overlayOpacity, background: 'radial-gradient(circle at 50% 50%, rgba(12,12,12,0.35) 0%, rgba(12,12,12,0.92) 75%)' }}
+          className="absolute inset-0" />
+
+        <motion.div style={{ scale: nameScale, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center px-4">
+          <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-center" style={{ fontSize: 'clamp(3rem, 13vw, 18vw)' }}>
+            Xan Orchid
+          </h1>
+        </motion.div>
+
+        <motion.div style={{ opacity: promptOpacity }} className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.5 }}>Scroll</span>
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-[1px] h-8" style={{ background: 'linear-gradient(to bottom, rgba(215,226,234,0.5), transparent)' }} />
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+
 const MARQUEE_IMAGES = [
   'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
   'https://static.wixstatic.com/media/b80b05_9df5fbb67954467daddbbddbdaf70345~mv2.png',
@@ -340,40 +387,36 @@ export default function App() {
   return (
     <div className="main-wrapper">
 
-      {/* ═══ HERO ═══ */}
-      <section className="h-screen flex flex-col overflow-x-clip relative" style={{ background: '#0c0c0c' }}>
-        <FadeIn delay={0} y={-20} once={false}>
-          <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
-            <Link to="/" className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Xan Orchid</Link>
-            <div className="flex gap-6 md:gap-10">
-              {[{ label: 'About', to: '/about' }, { label: 'Portfolio', to: '/portfolio' }].map(({ label, to }) => (
-                <Link key={label} to={to} className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">{label}</Link>
-              ))}
-              <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Contact</a>
-            </div>
-          </nav>
-        </FadeIn>
+      {/* ═══ FIXED NAV \u2014 stays visible through the intro scroll ═══ */}
+      <FadeIn delay={0} y={-20} once={false} className="fixed top-0 left-0 right-0 z-50">
+        <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
+          <Link to="/" className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Xan Orchid</Link>
+          <div className="flex gap-6 md:gap-10">
+            {[{ label: 'About', to: '/about' }, { label: 'Portfolio', to: '/portfolio' }].map(({ label, to }) => (
+              <Link key={label} to={to} className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">{label}</Link>
+            ))}
+            <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity">Contact</a>
+          </div>
+        </nav>
+      </FadeIn>
 
-        <div className="overflow-hidden mt-6 sm:mt-4 md:-mt-2 px-4 md:px-8">
-          <FadeIn delay={0.15} y={40} once={false}>
-            <h1 className="hero-heading font-black uppercase tracking-tight leading-none w-full" style={{ fontSize: 'clamp(3rem, 12.5vw, 17.5vw)' }}>
-              Xan Orchid
-            </h1>
-          </FadeIn>
-        </div>
+      {/* ═══ INTRO \u2014 blank screen \u2192 images scale in \u2192 name pinned over them ═══ */}
+      <IntroReveal />
 
+      {/* ═══ HERO — tagline, CTA, portrait ═══ */}
+      <section className="min-h-[70vh] flex flex-col justify-end overflow-x-clip relative" style={{ background: '#0c0c0c' }}>
         <div className="flex justify-between items-end flex-1 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10">
-          <FadeIn delay={0.35} y={20} once={false}>
+          <FadeIn delay={0.1} y={20}>
             <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]" style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}>
               a creative designer driven by crafting striking and unforgettable brands
             </p>
           </FadeIn>
-          <FadeIn delay={0.5} y={20} once={false}><ContactButton /></FadeIn>
+          <FadeIn delay={0.2} y={20}><ContactButton /></FadeIn>
         </div>
 
         <div className="absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[320px] md:w-[400px] lg:w-[460px]">
-          <FadeIn delay={0.6} y={30} once={false}>
+          <FadeIn delay={0.15} y={30}>
             <Magnet padding={150} strength={3}>
               <img src="https://static.wixstatic.com/media/b80b05_4b81f695dc32416e98f8148f01b06014~mv2.jpg" alt="Xan Orchid" className="w-full object-cover object-top"
                 style={{ borderRadius: '50% 50% 0 0', maskImage: 'linear-gradient(to top, transparent 0%, black 20%)', WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 20%)', aspectRatio: '2/3' }} />
