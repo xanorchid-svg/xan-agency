@@ -5,6 +5,9 @@ import { ThumbsUp, Heart, MessageSquare, Send, Home, User, type LucideIcon } fro
 import wildchildVideo from './assets/wildchild.mp4';
 import powerbagelsVideo from './assets/powerbagels.mp4';
 import xanaduHero from './assets/xanadu-hero.png';
+import reel1 from './assets/reel1.mp4';
+import reel2 from './assets/reel2.mp4';
+import reel3 from './assets/reel3.mp4';
 import { CustomCursor } from './components/CustomCursor';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
@@ -145,8 +148,8 @@ function HeroSimple() {
         <span className="text-[#D7E2EA] text-xs uppercase tracking-widest mb-6 block text-center" style={{ opacity: 0.6 }}>Xan Orchid</span>
       </FadeIn>
       <FadeIn delay={0.1} once={false}>
-        <h1 className="hero-heading font-black uppercase leading-[0.95] text-center max-w-4xl" style={{ fontSize: 'clamp(2.2rem, 6.5vw, 5rem)' }}>
-          a creative designer driven by crafting striking and unforgettable brands
+        <h1 className="hero-heading font-black uppercase leading-[0.95] text-center max-w-4xl" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}>
+          Here to make your dreams a reality.
         </h1>
       </FadeIn>
       <FadeIn delay={0.2} once={false} className="mt-10">
@@ -161,12 +164,8 @@ function HeroSimple() {
   );
 }
 
-// ─── PANEL 2 — images appear one by one, then name slides up over them ────────
-const INTRO_MEDIA = [
-  'https://static.wixstatic.com/media/b80b05_4197938df6674fbfb082c1c0ebc8e7b5~mv2.png',
-  'https://static.wixstatic.com/media/b80b05_1183020d0f444e2b87555f2431eed7fe~mv2.jpg',
-  'https://static.wixstatic.com/media/b80b05_4a4d6bfee6474a4fbf5405bda2781163~mv2.jpg',
-];
+// ─── PANEL 2 — videos appear one by one, then name slides all the way through and off-screen ──
+const INTRO_VIDEOS = [reel1, reel2, reel3];
 
 function ImagesNamePanel() {
   const ref = useRef<HTMLDivElement>(null);
@@ -175,21 +174,24 @@ function ImagesNamePanel() {
   const img1 = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
   const img2 = useTransform(scrollYProgress, [0.08, 0.24], [0, 1]);
   const img3 = useTransform(scrollYProgress, [0.16, 0.32], [0, 1]);
-  const nameY = useTransform(scrollYProgress, [0.35, 0.85], ['60%', '0%']);
-  const nameOpacity = useTransform(scrollYProgress, [0.35, 0.45], [0, 1]);
+  // Name enters from below, holds legibly, then continues moving all the way
+  // off the top of the frame \u2014 fully gone before this panel's scroll room ends,
+  // so the next panel is never revealed mid-way through the name passing by.
+  const nameY = useTransform(scrollYProgress, [0.35, 0.92], ['70%', '-140%']);
+  const nameOpacity = useTransform(scrollYProgress, [0.35, 0.42], [0, 1]);
 
   return (
-    <div ref={ref} style={{ height: '220vh', position: 'relative', zIndex: 2 }}>
+    <div ref={ref} style={{ height: '240vh', position: 'relative', zIndex: 2 }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
         <div className="relative w-full max-w-5xl px-6 flex items-center justify-center gap-3 sm:gap-5">
           <motion.div style={{ opacity: img1, scale: img1 }} className="w-1/4 rounded-2xl overflow-hidden">
-            <img src={INTRO_MEDIA[0]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <video src={INTRO_VIDEOS[0]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
           </motion.div>
           <motion.div style={{ opacity: img2, scale: img2 }} className="w-1/3 rounded-2xl overflow-hidden">
-            <img src={INTRO_MEDIA[1]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <video src={INTRO_VIDEOS[1]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
           </motion.div>
           <motion.div style={{ opacity: img3, scale: img3 }} className="w-1/4 rounded-2xl overflow-hidden">
-            <img src={INTRO_MEDIA[2]} alt="" className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
+            <video src={INTRO_VIDEOS[2]} autoPlay muted loop playsInline className="w-full object-cover rounded-2xl" style={{ aspectRatio: '3/5' }} />
           </motion.div>
         </div>
         <motion.div style={{ y: nameY, opacity: nameOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
