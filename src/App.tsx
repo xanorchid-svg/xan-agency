@@ -203,11 +203,11 @@ function IntroAndAboutCombined() {
 
   // Panel 2's local progress: 0\u20131 across just its portion of the combined scroll.
   const panel2Local = useTransform(scrollYProgress, [0, PANEL2_FRACTION], [0, 1], { clamp: true });
-  // Videos: grow in from a point (like emerging from the orchid's center),
-  // hold at full size, then scroll up and away before the name arrives.
+  // Videos: grow in from a point, hold at full size while the name enters
+  // and passes over them, then exit together with the text at the very end.
   const videosScale = useTransform(panel2Local, [0, 0.16], [0.15, 1]);
-  const videosOpacity = useTransform(panel2Local, [0, 0.1, 0.3, 0.4], [0, 1, 1, 0]);
-  const videosY = useTransform(panel2Local, [0.3, 0.42], ['0%', '-55%']);
+  const videosOpacity = useTransform(panel2Local, [0, 0.1, 0.6, 0.9], [0, 1, 1, 0]);
+  const videosY = useTransform(panel2Local, [0.6, 0.9], ['0%', '-55%']);
   const nameY = useTransform(panel2Local, [0.35, 0.98], ['70%', '-140%']);
   const nameOpacity = useTransform(panel2Local, [0.35, 0.45], [0, 1]);
 
