@@ -7,6 +7,7 @@ import xanaduHero from './assets/xanadu-hero.png';
 import reel1 from './assets/reel1.mp4';
 import reel2 from './assets/reel2.mp4';
 import reel3 from './assets/reel3.mp4';
+import orchidBg from './assets/orchid-bg.png';
 import { GrainOverlay } from './components/GrainOverlay';
 import { RevealImage } from './components/RevealImage';
 import { Magnetic } from './components/Magnetic';
@@ -141,20 +142,39 @@ function FixedNav() {
 }
 
 // ─── PANEL 1 — restrained hero, no heavy motion ────────────────────────────────
+// ─── OrchidBackground — continuous seamless vertical scroll, screen-blended so
+// only the glow shows against the dark sections. Built from a static image \u2014
+// no video needed for this effect, the loop itself is what creates the motion.
+function OrchidBackground({ opacity = 0.45 }: { opacity?: number }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ opacity }}>
+      <motion.div
+        animate={{ y: ['0%', '-50%'] }}
+        transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
+        style={{ willChange: 'transform' }}>
+        {[0, 1].map((i) => (
+          <img key={i} src={orchidBg} alt="" className="w-full object-cover" style={{ height: '100vh', mixBlendMode: 'screen' }} />
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
 function HeroSimple() {
   return (
-    <section className="h-screen flex flex-col justify-center items-center relative px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
+    <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden px-6" style={{ background: '#0c0c0c', fontFamily: FONT }}>
+      <OrchidBackground opacity={0.4} />
       <FadeIn once={false}>
-        <span className="text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
+        <span className="relative text-xs uppercase tracking-[0.3em] mb-6 block text-center" style={{ color: RED, fontFamily: FONT }}>Xan Orchid</span>
       </FadeIn>
       <FadeIn delay={0.1} once={false}>
         <h1
-          className="font-bold uppercase text-center whitespace-normal sm:whitespace-nowrap"
+          className="relative font-bold uppercase text-center whitespace-normal sm:whitespace-nowrap"
           style={{ fontFamily: FONT, color: '#D7E2EA', fontSize: 'clamp(1.4rem, 4vw, 2.75rem)', letterSpacing: '-0.01em', lineHeight: 1.1 }}>
           Here to make your dreams a reality.
         </h1>
       </FadeIn>
-      <FadeIn delay={0.2} once={false} className="mt-10">
+      <FadeIn delay={0.2} once={false} className="relative mt-10">
         <ContactButton />
       </FadeIn>
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
@@ -194,26 +214,29 @@ function ImagesNamePanel() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
 
-  const img1 = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
-  const img2 = useTransform(scrollYProgress, [0.08, 0.24], [0, 1]);
-  const img3 = useTransform(scrollYProgress, [0.16, 0.32], [0, 1]);
-  // Name enters from below, holds legibly, then continues moving all the way
-  // off the top of the frame \u2014 fully gone before this panel's scroll room ends,
-  // so the next panel is never revealed mid-way through the name passing by.
-  const nameY = useTransform(scrollYProgress, [0.35, 0.92], ['70%', '-140%']);
-  const nameOpacity = useTransform(scrollYProgress, [0.35, 0.42], [0, 1]);
+  const img1 = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
+  const img2 = useTransform(scrollYProgress, [0.06, 0.2], [0, 1]);
+  const img3 = useTransform(scrollYProgress, [0.12, 0.26], [0, 1]);
+  // Slower, more gradual pass \u2014 name enters, holds, then continues all the way
+  // off the top of the frame before this panel's scroll room runs out.
+  const nameY = useTransform(scrollYProgress, [0.3, 0.98], ['70%', '-140%']);
+  const nameOpacity = useTransform(scrollYProgress, [0.3, 0.4], [0, 1]);
 
   return (
-    <div ref={ref} style={{ height: '240vh', position: 'relative', zIndex: 2 }}>
+    <div ref={ref} style={{ height: '340vh', position: 'relative', zIndex: 2 }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0c0c0c' }} className="flex items-center justify-center">
-        <div className="w-full max-w-4xl px-6 grid grid-cols-3 gap-3 sm:gap-5 items-center">
-          <motion.div style={{ opacity: img1, scale: img1 }}>
+        {/* Middle video slightly larger than the two sides. opacity-only fade-in
+            (no scale) plus a forced GPU layer per item \u2014 the scale transform on
+            a live <video> was the likely cause of the middle item silently
+            failing to composite on some desktop browsers while working on mobile. */}
+        <div className="w-full max-w-4xl px-6 grid items-center gap-3 sm:gap-5" style={{ gridTemplateColumns: '0.85fr 1fr 0.85fr' }}>
+          <motion.div style={{ opacity: img1, transform: 'translateZ(0)', willChange: 'opacity' }}>
             <IntroVideo src={INTRO_VIDEOS[0]} />
           </motion.div>
-          <motion.div style={{ opacity: img2, scale: img2 }}>
+          <motion.div style={{ opacity: img2, transform: 'translateZ(0)', willChange: 'opacity' }}>
             <IntroVideo src={INTRO_VIDEOS[1]} />
           </motion.div>
-          <motion.div style={{ opacity: img3, scale: img3 }}>
+          <motion.div style={{ opacity: img3, transform: 'translateZ(0)', willChange: 'opacity' }}>
             <IntroVideo src={INTRO_VIDEOS[2]} />
           </motion.div>
         </div>
@@ -236,6 +259,7 @@ function AboutTeaser() {
           animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
           transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         />
+        <OrchidBackground opacity={0.5} />
         <div className="absolute inset-0" style={{ background: 'rgba(12,12,12,0.35)' }} />
         <div className="relative z-10 max-w-2xl text-center" style={{ fontFamily: FONT }}>
           <FadeIn><span className="text-xs uppercase tracking-[0.3em]" style={{ color: RED }}>About</span></FadeIn>
