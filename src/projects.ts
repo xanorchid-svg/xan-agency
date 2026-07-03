@@ -12,6 +12,8 @@ export type Category =
   | 'Illustration'
   | 'Graphic Design';
 
+export type FilterTag = Category | 'All';
+
 export interface Stat {
   value: string;
   label: string;
@@ -52,6 +54,17 @@ export const SOCIALS = {
   upwork:
     'https://www.upwork.com/freelancers/~01b1742c39720ba911?s=1017484851352698959&p=1664027421637550080',
 };
+
+// Filter bar categories \u2014 PortfolioPage.tsx should import this
+export const ALL_TAGS: FilterTag[] = [
+  'All',
+  'Social Media',
+  'Web Design',
+  'Advertising',
+  'Branding',
+  'Illustration',
+  'Graphic Design',
+];
 
 export const PROJECTS: Project[] = [
   {
@@ -359,28 +372,48 @@ export const PROJECTS: Project[] = [
     stats: [],
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // MERGE NOTE: this is a stub. Your existing Power Bagels entry
-  // (coverVideo powerbagels.mp4, etc. per the 2026-07-02 handover)
-  // has real content I don't have visibility into \u2014 copy this
-  // externalUrl into your existing entry rather than replacing it
-  // wholesale with this stub.
-  // ─────────────────────────────────────────────────────────────
   {
     slug: 'power-bagels',
     title: 'Power Bagels',
-    subtitle: '', // keep your existing subtitle
-    category: 'Web Design',
-    tags: ['Web Design', 'Branding'],
-    coverVideo: '/src/assets/powerbagels.mp4', // keep your existing cover
-    coverImg: '',
+    subtitle: 'Brand identity & content creation for a high-energy bagel concept',
+    category: 'Branding',
+    tags: ['Branding', 'Graphic Design'],
+    coverVideo: '/src/assets/powerbagels.mp4',
+    coverImg: '', // TODO: add a still/screenshot to src/assets/ for the portfolio grid thumbnail — the video only shows on the full case-study page
     galleryImgs: [],
     externalUrl: 'https://www.powerbagels.com',
     externalUrlLabel: 'Visit Website',
-    problem: '', // keep your existing copy
-    solution: '', // keep your existing copy
+    problem:
+      'Power Bagels needed a bold brand identity and content that stood out on social media and in-store \u2014 confident, fun, and immediately recognizable.',
+    solution:
+      'Built a high-energy brand and produced video content that captured the playful personality of the concept, driving engagement and brand awareness.',
     stats: [],
   },
+  {
+    slug: 'xanadu',
+    title: 'Dream Xanadu',
+    subtitle: 'Full brand & web design for a network for awakening places',
+    category: 'Web Design',
+    tags: ['Web Design', 'Branding'],
+    coverImg: '/assets/xanadu-hero.png', // handled by the xanaduHero import in ProjectDetail.tsx
+    galleryImgs: [],
+    externalUrl: 'https://dreamxanadu.com',
+    externalUrlLabel: 'Visit Website',
+    directLink: true,
+    problem:
+      'Xanadu needed a complete brand identity and digital presence that conveyed trust, beauty, and mystery \u2014 a network unlike anything else.',
+    solution:
+      'Designed the full visual identity and website for Dream Xanadu \u2014 logo, color system, and a rich immersive web experience that brings the network to life.',
+    stats: [],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // BRONCO BUCKLE COMPANY \u2014 checked every prior git commit (all
+  // the way back to the first redesign commit) and this project
+  // isn't in any of them. It's not on Wix either. If you still want
+  // it on the site, send me the images/links/copy and I'll add it \u2014
+  // otherwise it may have been planned but never actually built in.
+  // ─────────────────────────────────────────────────────────────
 
   // ─────────────────────────────────────────────────────────────
   // DIRECT-LINK PROJECTS \u2014 Xan built the site or runs the Instagram

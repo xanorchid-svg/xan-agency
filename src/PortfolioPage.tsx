@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PROJECTS, ALL_TAGS } from './projects';
+import type { FilterTag, Category } from './projects';
 import { ContactButton } from './App';
 import xanaduHero from './assets/xanadu-hero.png';
 
 export default function PortfolioPage() {
-  const [activeTag, setActiveTag] = useState('All');
-  const filtered = activeTag === 'All' ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(activeTag));
+  const [activeTag, setActiveTag] = useState<FilterTag>('All');
+  const filtered =
+    activeTag === 'All'
+      ? PROJECTS
+      : PROJECTS.filter((p) => p.tags.includes(activeTag as Category));
 
   return (
     <div className="main-wrapper min-h-screen" style={{ background: '#0c0c0c' }}>
@@ -41,19 +45,22 @@ export default function PortfolioPage() {
       <div className="px-5 sm:px-8 md:px-10 py-10">
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
           <AnimatePresence>
-            {filtered.map((project, i) => (
-              <motion.div key={project.slug} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.35, delay: i * 0.04 }}>
-                {project.externalUrl && project.slug === 'xanadu' ? (
-                  <a href={project.externalUrl} target="_blank" rel="noopener noreferrer" className="block group">
-                    <GridCard project={project} xanaduHero={xanaduHero} />
-                  </a>
-                ) : (
-                  <Link to={`/portfolio/${project.slug}`} className="block group">
-                    <GridCard project={project} xanaduHero={xanaduHero} />
-                  </Link>
-                )}
-              </motion.div>
-            ))}
+            {filtered.map((project, i) => {
+              const directHref = project.externalUrl || project.socials?.instagram;
+              return (
+                <motion.div key={project.slug} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.35, delay: i * 0.04 }}>
+                  {project.directLink && directHref ? (
+                    <a href={directHref} target="_blank" rel="noopener noreferrer" className="block group">
+                      <GridCard project={project} xanaduHero={xanaduHero} />
+                    </a>
+                  ) : (
+                    <Link to={`/portfolio/${project.slug}`} className="block group">
+                      <GridCard project={project} xanaduHero={xanaduHero} />
+                    </Link>
+                  )}
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
       </div>
@@ -77,8 +84,14 @@ function GridCard({ project, xanaduHero }: { project: import('./projects').Proje
   const imgSrc = project.slug === 'xanadu' ? xanaduHero : project.coverImg;
   return (
     <>
-      <div className="overflow-hidden rounded-2xl relative" style={{ aspectRatio: '1' }}>
-        <img src={imgSrc} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      <div className="overflow-hidden rounded-2xl relative" style={{ aspectRatio: '1', background: 'rgba(255,255,255,0.03)' }}>
+        {imgSrc ? (
+          <img src={imgSrc} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.3 }}>{project.title}</p>
+          </div>
+        )}
         <div className="absolute inset-0 flex items-end p-5 transition-all duration-300 bg-black/0 group-hover:bg-black/50">
           <div className="translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
             <p className="text-white text-xs uppercase tracking-widest mb-1" style={{ opacity: 0.7 }}>{project.category}</p>
