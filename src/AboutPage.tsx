@@ -74,7 +74,7 @@ export default function AboutPage() {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[#D7E2EA] text-sm font-light" style={{ opacity: 0.35 }}>© 2026 Xan Orchid</p>
           <div className="flex gap-5">
-            <a href="https://www.instagram.com/graphix.xan" target="_blank" rel="noopener noreferrer" className="text-[#D7E2EA] text-sm hover:opacity-70 transition-opacity" style={{ opacity: 0.5 }}>Instagram</a>
+            <a href="https://www.instagram.com/xanorchid" target="_blank" rel="noopener noreferrer" className="text-[#D7E2EA] text-sm hover:opacity-70 transition-opacity" style={{ opacity: 0.5 }}>Instagram</a>
             <a href="https://www.linkedin.com/in/xan-orchid/" target="_blank" rel="noopener noreferrer" className="text-[#D7E2EA] text-sm hover:opacity-70 transition-opacity" style={{ opacity: 0.5 }}>LinkedIn</a>
           </div>
         </div>

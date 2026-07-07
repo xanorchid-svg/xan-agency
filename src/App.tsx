@@ -539,7 +539,7 @@ export default function App() {
             <Magnetic strength={0.3}><Link to="/about" data-cursor="hover" className="text-[#D7E2EA] text-sm uppercase tracking-wider font-medium hover:opacity-70 transition-opacity">About</Link></Magnetic>
           </div>
           <div className="flex gap-5">
-            {[{ label: 'Instagram', href: 'https://www.instagram.com/graphix.xan' }, { label: 'LinkedIn', href: 'https://www.linkedin.com/in/xan-orchid/' }, { label: 'Upwork', href: 'https://www.upwork.com/freelancers/~01b1742c39720ba911' }].map(({ label, href }) => (
+            {[{ label: 'Instagram', href: 'https://www.instagram.com/xanorchid' }, { label: 'LinkedIn', href: 'https://www.linkedin.com/in/xan-orchid/' }, { label: 'Upwork', href: 'https://www.upwork.com/freelancers/~01b1742c39720ba911' }].map(({ label, href }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" data-cursor="hover" className="text-[#D7E2EA] text-sm hover:opacity-70 transition-opacity" style={{ opacity: 0.5 }}>{label}</a>
             ))}
           </div>

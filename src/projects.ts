@@ -48,7 +48,7 @@ export interface Project {
 
 // Global footer / nav socials (from Wix header, confirmed on every page)
 export const SOCIALS = {
-  instagram: 'https://www.instagram.com/graphix.xan',
+  instagram: 'https://www.instagram.com/xanorchid',
   linkedin: 'https://www.linkedin.com/in/xan-orchid/',
   upwork:
     'https://www.upwork.com/freelancers/~01b1742c39720ba911?s=1017484851352698959&p=1664027421637550080',
