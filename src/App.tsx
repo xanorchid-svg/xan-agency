@@ -388,7 +388,32 @@ function FeaturedCard({
 // ─── Contact Form ─────────────────────────────────────────────────────────────
 function ContactForm() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', message: '' });
+
+  const handleSubmit = async () => {
+    if (!form.firstName || !form.email || !form.message) {
+      setError('Please fill in your name, email, and message.');
+      return;
+    }
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed to send');
+      setSent(true);
+    } catch (e) {
+      setError("Something went wrong \u2014 please try again, or email directly.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   if (sent) return (
     <motion.div initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ ease: EASE, duration: 0.8 }} className="text-center py-16">
       <p className="text-[#D7E2EA] font-medium uppercase tracking-wide text-xl">Message received!</p>
@@ -407,8 +432,11 @@ function ContactForm() {
         className="bg-transparent border border-[#D7E2EA]/20 rounded-xl px-4 py-3 text-[#D7E2EA] font-light placeholder-[#D7E2EA]/30 focus:outline-none focus:border-[#D7E2EA]/50 transition-colors" />
       <textarea data-cursor="hover" placeholder="Message" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
         className="bg-transparent border border-[#D7E2EA]/20 rounded-xl px-4 py-3 text-[#D7E2EA] font-light placeholder-[#D7E2EA]/30 focus:outline-none focus:border-[#D7E2EA]/50 transition-colors resize-none" />
+      {error && <p className="text-center text-sm" style={{ color: RED }}>{error}</p>}
       <div className="flex justify-center mt-2">
-        <button onClick={() => setSent(true)} data-cursor="hover"><ContactButton /></button>
+        <button onClick={handleSubmit} disabled={sending} data-cursor="hover" style={{ opacity: sending ? 0.6 : 1 }}>
+          <ContactButton />
+        </button>
       </div>
     </div>
   );
