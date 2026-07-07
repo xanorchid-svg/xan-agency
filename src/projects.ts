@@ -276,7 +276,7 @@ export const PROJECTS: Project[] = [
     tags: ['Website'],
     coverImg: 'https://raw.githubusercontent.com/xanorchid-svg/unicorn-alliance/main/public/unicorn-assets/whatsapp.jpeg',
     galleryImgs: [],
-    externalUrl: 'https://unicorn-alliance.vercel.app/',
+    externalUrl: 'https://www.theunicornalliance.com/',
     externalUrlLabel: 'Visit Website',
     problem: '',
     solution: '',
