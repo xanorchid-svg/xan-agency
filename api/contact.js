@@ -31,10 +31,9 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // onboarding@resend.dev works immediately with zero setup. Once you
-        // verify your own domain in Resend, swap this to something like
-        // "Xan Orchid <hello@dreamxanadu.com>" for a branded from-address.
-        from: 'Xan Orchid Website <onboarding@resend.dev>',
+        // Domain verified in Resend is agency.dreamxanadu.com (a subdomain),
+        // so the mailbox name goes before that, not "agency@" itself.
+        from: 'Xan Orchid <hello@agency.dreamxanadu.com>',
         to: ['orchid.alexandra.jane@gmail.com'],
         reply_to: email,
         subject: `New inquiry from ${firstName} ${lastName || ''}`.trim(),
