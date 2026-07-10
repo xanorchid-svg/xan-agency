@@ -25,8 +25,11 @@ const AUTO_SPEED = 9; // degrees / second, autoplay
 const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes
 const CLICK_SUPPRESS_THRESHOLD = 6; // px of drag movement before we swallow the click
 const NUDGE_EASE = 0.16;
-const MIN_CARD = 74;
-const MAX_CARD = 220;
+function cardBounds(viewportWidth: number) {
+  if (viewportWidth < 640) return { min: 86, max: 240 };
+  if (viewportWidth < 1024) return { min: 110, max: 320 };
+  return { min: 132, max: 420 };
+}
 const DRAG_SENSITIVITY = 0.32; // degrees of rotation per px of drag
 const WHEEL_SENSITIVITY = 0.18;
 
@@ -60,7 +63,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   const lastTimeRef = useRef<number | null>(null);
   const frontIndexRef = useRef(0);
 
-  const [geometry, setGeometry] = useState({ radius: 0, cardSize: MIN_CARD });
+  const [geometry, setGeometry] = useState({ radius: 0, cardSize: 132, perspective: 1600 });
   const [frontIndex, setFrontIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
@@ -81,10 +84,12 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       if (!el) return;
       const w = el.clientWidth;
       const h = el.clientHeight;
-      const fitRadius = 0.42 * Math.min(w, h / Math.cos((TILT_DEG * Math.PI) / 180));
+      const fitRadius = 0.44 * Math.min(w, h / Math.cos((TILT_DEG * Math.PI) / 180));
       const rawCard = 2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * 0.72;
-      const cardSize = Math.max(MIN_CARD, Math.min(MAX_CARD, rawCard));
-      setGeometry({ radius: fitRadius, cardSize });
+      const { min, max } = cardBounds(window.innerWidth);
+      const cardSize = Math.max(min, Math.min(max, rawCard));
+      const perspective = Math.max(1300, fitRadius * 3.2);
+      setGeometry({ radius: fitRadius, cardSize, perspective });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -265,10 +270,10 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center" style={{ opacity: 0.5 }}>
         <div
           style={{
-            width: '70%',
-            height: '70%',
+            width: '75%',
+            height: '75%',
             borderRadius: '9999px',
-            filter: 'blur(70px)',
+            filter: 'blur(110px)',
             background: `conic-gradient(from 0deg, ${PALETTE.join(', ')}, ${PALETTE[0]})`,
             opacity: 0.35,
             animation: reducedMotion ? undefined : 'portfolio-glow-spin 40s linear infinite',
@@ -281,8 +286,8 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         role="region"
         aria-label="Portfolio, arranged as a rotating carousel"
         tabIndex={0}
-        className="relative h-[360px] sm:h-[440px] md:h-[520px] lg:h-[580px] max-w-4xl mx-auto outline-none"
-        style={{ perspective: 1400, cursor: 'grab', touchAction: 'pan-y' }}
+        className="relative w-full h-[62vh] min-h-[440px] sm:h-[68vh] sm:min-h-[520px] md:h-[74vh] md:min-h-[600px] lg:h-[80vh] lg:min-h-[680px] max-h-[920px] max-w-[1700px] mx-auto outline-none"
+        style={{ perspective: geometry.perspective, cursor: 'grab', touchAction: 'pan-y' }}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
         onPointerDown={onPointerDown}
@@ -318,28 +323,28 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       </div>
 
       {/* Synced title, index counter, and nav arrows */}
-      <div className="mt-8 sm:mt-10 flex flex-col items-center gap-4">
+      <div className="mt-6 sm:mt-8 flex flex-col items-center gap-5">
         <AnimatePresence mode="wait">
           {activeProject && (
             <motion.div
               key={activeProject.slug}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-center px-4"
             >
-              <p className="text-[#D7E2EA] text-xs uppercase tracking-widest mb-1" style={{ opacity: 0.45 }}>
+              <p className="text-[#D7E2EA] text-sm uppercase tracking-widest mb-2" style={{ opacity: 0.45 }}>
                 {String(activeGlobalIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')} — {activeProject.category}
               </p>
-              <h3 className="hero-heading font-black uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl">
+              <h3 className="hero-heading font-black uppercase tracking-tight text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none">
                 {activeProject.title}
               </h3>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <NavButton direction="left" onClick={goPrev} />
           <NavButton direction="right" onClick={goNext} />
         </div>
@@ -354,10 +359,10 @@ function NavButton({ direction, onClick }: { direction: 'left' | 'right'; onClic
       type="button"
       aria-label={direction === 'left' ? 'Previous project' : 'Next project'}
       onClick={onClick}
-      className="flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 hover:scale-110"
+      className="flex items-center justify-center w-14 h-14 rounded-full transition-all duration-200 hover:scale-110"
       style={{ background: 'rgba(215,226,234,0.06)', border: '1px solid rgba(215,226,234,0.25)' }}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ transform: direction === 'left' ? 'rotate(180deg)' : undefined }}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ transform: direction === 'left' ? 'rotate(180deg)' : undefined }}>
         <path d="M9 6l6 6-6 6" stroke="#D7E2EA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </button>
