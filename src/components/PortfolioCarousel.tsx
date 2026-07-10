@@ -20,15 +20,15 @@ const IMAGE_MAP: Record<string, string> = {
 // Orchid palette, matching the homepage's procedural flower background.
 const PALETTE = ['#3b6bff', '#4f3bff', '#8b3bff', '#c93bff', '#ff6ec7'];
 
-const TILT_DEG = 24;
 const AUTO_SPEED = 9; // degrees / second, autoplay
-const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes
+const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes after a drag/wheel/arrow nudge
 const CLICK_SUPPRESS_THRESHOLD = 6; // px of drag movement before we swallow the click
 const NUDGE_EASE = 0.16;
+const PACKING = 0.6; // lower = more gap between neighboring slides
 function cardBounds(viewportWidth: number) {
-  if (viewportWidth < 640) return { min: 86, max: 240 };
-  if (viewportWidth < 1024) return { min: 110, max: 320 };
-  return { min: 132, max: 420 };
+  if (viewportWidth < 640) return { min: 56, max: 220 };
+  if (viewportWidth < 1024) return { min: 64, max: 300 };
+  return { min: 72, max: 380 };
 }
 const DRAG_SENSITIVITY = 0.32; // degrees of rotation per px of drag
 const WHEEL_SENSITIVITY = 0.18;
@@ -50,7 +50,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
 
   const rotationRef = useRef(0);
   const draggingRef = useRef(false);
-  const hoverPausedRef = useRef(false);
+  const pausedRef = useRef(false);
   const pointerIdRef = useRef<number | null>(null);
   const dragStartXRef = useRef(0);
   const dragStartRotationRef = useRef(0);
@@ -66,12 +66,18 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   const [geometry, setGeometry] = useState({ radius: 0, cardSize: 132, perspective: 1600 });
   const [frontIndex, setFrontIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const [paused, setPaused] = useState(false);
 
   const anglePerCard = N > 0 ? 360 / N : 0;
   const loopKey = projects.map((p) => p.slug).join('|');
 
   const markInteracting = useCallback(() => {
     interactingUntilRef.current = performance.now() + RESUME_DELAY;
+  }, []);
+
+  const togglePaused = useCallback(() => {
+    pausedRef.current = !pausedRef.current;
+    setPaused(pausedRef.current);
   }, []);
 
   // Fit the ring's radius to whatever space the stage actually has, then size
@@ -84,8 +90,8 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       if (!el) return;
       const w = el.clientWidth;
       const h = el.clientHeight;
-      const fitRadius = 0.44 * Math.min(w, h / Math.cos((TILT_DEG * Math.PI) / 180));
-      const rawCard = 2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * 0.72;
+      const fitRadius = 0.44 * Math.min(w, h);
+      const rawCard = 2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * PACKING;
       const { min, max } = cardBounds(window.innerWidth);
       const cardSize = Math.max(min, Math.min(max, rawCard));
       const perspective = Math.max(1300, fitRadius * 3.2);
@@ -107,9 +113,9 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   }, [loopKey, N]);
 
   const applyFrame = useCallback(() => {
-    if (ringRef.current) {
-      ringRef.current.style.transform = `rotateY(${rotationRef.current}deg)`;
-    }
+    // Rotation is baked into each card's own X/Z position below (via `eff`),
+    // so the ring wrapper itself stays untransformed -- it only exists to
+    // hold the shared 3D (preserve-3d) context.
     let bestIdx = 0;
     let bestAbs = 999;
     for (let i = 0; i < N; i++) {
@@ -121,12 +127,18 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         bestIdx = i;
       }
       if (!el) continue;
+      // Cards stay billboarded (always facing the camera) and simply travel
+      // along the circle's X/Z path -- reads as parallel slides on an arc
+      // rather than fan blades, and never needs backface culling.
       const t = Math.min(1, abs / 100);
-      const scale = 1.16 - t * 0.4;
+      const rad = (eff * Math.PI) / 180;
+      const x = geometry.radius * Math.sin(rad);
+      const z = geometry.radius * (Math.cos(rad) - 1);
+      const scale = 1.08 - t * 0.32;
       const opacity = abs > 100 ? 0 : 1 - t * 0.8;
       const blur = t * 5;
-      const brightness = 1 - t * 0.55;
-      el.style.transform = `rotateY(${i * anglePerCard}deg) translateZ(${geometry.radius}px) scale(${scale})`;
+      const brightness = 1 - t * 0.5;
+      el.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
       el.style.opacity = String(opacity);
       el.style.filter = `blur(${blur}px) brightness(${brightness})`;
       el.style.zIndex = String(Math.round(1000 - abs));
@@ -138,7 +150,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     }
   }, [N, anglePerCard, geometry.radius]);
 
-  // The single animation loop: autoplay drift, hover-pause, drag override,
+  // The single animation loop: autoplay drift, manual pause, drag override,
   // and eased arrow-key/button nudges all resolve into one rotation value.
   useEffect(() => {
     if (N === 0) return;
@@ -159,7 +171,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         }
       } else if (
         !reducedMotion &&
-        !hoverPausedRef.current &&
+        !pausedRef.current &&
         performance.now() > interactingUntilRef.current
       ) {
         rotationRef.current += AUTO_SPEED * dt;
@@ -174,12 +186,24 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     };
   }, [reducedMotion, N, applyFrame]);
 
-  const onPointerEnter = () => {
-    hoverPausedRef.current = true;
-  };
-  const onPointerLeave = () => {
-    hoverPausedRef.current = false;
-  };
+  // Native (non-passive) wheel listener -- React's synthetic onWheel is
+  // attached passively by default, which silently blocks preventDefault()
+  // and lets the page scroll instead of rotating the ring. Wiring it here
+  // directly is what actually makes horizontal wheel/trackpad scroll work.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (!delta) return;
+      e.preventDefault();
+      nudgeActiveRef.current = false;
+      rotationRef.current -= delta * WHEEL_SENSITIVITY;
+      markInteracting();
+    };
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, [markInteracting]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -214,15 +238,6 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     }
   };
 
-  const onWheel = (e: React.WheelEvent) => {
-    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (!delta) return;
-    e.preventDefault();
-    nudgeActiveRef.current = false;
-    rotationRef.current -= delta * WHEEL_SENSITIVITY;
-    markInteracting();
-  };
-
   const goNext = () => {
     nudgeTargetRef.current = rotationRef.current - anglePerCard;
     nudgeActiveRef.current = true;
@@ -249,6 +264,15 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       e.preventDefault();
       e.stopPropagation();
     }
+  };
+
+  // Click empty space on the stage to pause/resume; clicking a card still
+  // navigates as normal. The ring no longer stops just because the mouse
+  // happens to be hovering over it.
+  const onStageClick = (e: React.MouseEvent) => {
+    if (suppressClickRef.current) return;
+    if ((e.target as HTMLElement).closest('a')) return;
+    togglePaused();
   };
 
   if (N === 0) return null;
@@ -288,19 +312,17 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         tabIndex={0}
         className="relative w-full h-[62vh] min-h-[440px] sm:h-[68vh] sm:min-h-[520px] md:h-[74vh] md:min-h-[600px] lg:h-[80vh] lg:min-h-[680px] max-h-[920px] max-w-[1700px] mx-auto outline-none"
         style={{ perspective: geometry.perspective, cursor: 'grab', touchAction: 'pan-y' }}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
-        onWheel={onWheel}
         onKeyDown={onKeyDown}
         onClickCapture={onClickCapture}
+        onClick={onStageClick}
       >
         <div
           className="absolute inset-0 flex items-center justify-center"
-          style={{ transformStyle: 'preserve-3d', transform: `rotateX(${TILT_DEG}deg)` }}
+          style={{ transformStyle: 'preserve-3d' }}
         >
           <div
             ref={ringRef}
@@ -346,10 +368,29 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
 
         <div className="flex items-center gap-5">
           <NavButton direction="left" onClick={goPrev} />
+          <PlayPauseButton paused={paused} onClick={togglePaused} />
           <NavButton direction="right" onClick={goNext} />
         </div>
       </div>
     </div>
+  );
+}
+
+function PlayPauseButton({ paused, onClick }: { paused: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={paused ? 'Resume rotation' : 'Pause rotation'}
+      onClick={onClick}
+      className="flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 hover:scale-110"
+      style={{ background: 'rgba(215,226,234,0.06)', border: '1px solid rgba(215,226,234,0.25)' }}
+    >
+      {paused ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#D7E2EA"><path d="M8 5v14l11-7z" /></svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#D7E2EA"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+      )}
+    </button>
   );
 }
 
@@ -412,8 +453,6 @@ function CarouselCard({
         height: cardSize,
         marginLeft: -cardSize / 2,
         marginTop: -cardSize / 2,
-        backfaceVisibility: 'hidden',
-        WebkitBackfaceVisibility: 'hidden',
         willChange: 'transform, opacity, filter',
       }}
     >
