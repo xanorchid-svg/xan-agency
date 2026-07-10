@@ -1,22 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { PROJECTS, ALL_TAGS } from './projects';
 import type { FilterTag, Category } from './projects';
 import { ContactButton } from './App';
-import xanaduHero from './assets/xanadu-hero.png';
-import wildchildVideo from './assets/wildchild.mp4';
-import powerbagelsVideo from './assets/powerbagels.mp4';
-import perfeqtionCover from './assets/perfeqtion-cover.png';
-
-const VIDEO_MAP: Record<string, string> = {
-  'dandelion-wild-school': wildchildVideo,
-  'power-bagels': powerbagelsVideo,
-};
-
-const IMAGE_MAP: Record<string, string> = {
-  'perfeqtion-imaging': perfeqtionCover,
-};
+import PortfolioCarousel from './components/PortfolioCarousel';
 
 export default function PortfolioPage() {
   const [activeTag, setActiveTag] = useState<FilterTag>('All');
@@ -54,27 +42,8 @@ export default function PortfolioPage() {
         ))}
       </div>
 
-      <div className="px-5 sm:px-8 md:px-10 py-10">
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          <AnimatePresence>
-            {filtered.map((project, i) => {
-              const directHref = project.externalUrl || project.socials?.instagram;
-              return (
-                <motion.div key={project.slug} layout initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.35, delay: i * 0.04 }}>
-                  {project.directLink && directHref ? (
-                    <a href={directHref} target="_blank" rel="noopener noreferrer" className="block group">
-                      <GridCard project={project} xanaduHero={xanaduHero} />
-                    </a>
-                  ) : (
-                    <Link to={`/portfolio/${project.slug}`} className="block group">
-                      <GridCard project={project} xanaduHero={xanaduHero} />
-                    </Link>
-                  )}
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
+      <div className="py-10">
+        <PortfolioCarousel projects={filtered} />
       </div>
 
       <div className="text-center py-16"><ContactButton /></div>
@@ -89,35 +58,5 @@ export default function PortfolioPage() {
         </div>
       </footer>
     </div>
-  );
-}
-
-function GridCard({ project, xanaduHero }: { project: import('./projects').Project; xanaduHero: string }) {
-  const imgSrc = project.slug === 'xanadu' ? xanaduHero : (IMAGE_MAP[project.slug] || project.coverImg);
-  const videoSrc = VIDEO_MAP[project.slug];
-  return (
-    <>
-      <div className="overflow-hidden rounded-2xl relative" style={{ aspectRatio: '1', background: 'rgba(255,255,255,0.03)' }}>
-        {videoSrc ? (
-          <video src={videoSrc} autoPlay muted loop playsInline className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-        ) : imgSrc ? (
-          <img src={imgSrc} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <p className="text-[#D7E2EA] text-xs uppercase tracking-widest" style={{ opacity: 0.3 }}>{project.title}</p>
-          </div>
-        )}
-        <div className="absolute inset-0 flex items-end p-5 transition-all duration-300 bg-black/0 group-hover:bg-black/50">
-          <div className="translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-            <p className="text-white text-xs uppercase tracking-widest mb-1" style={{ opacity: 0.7 }}>{project.category}</p>
-            <h3 className="text-white font-black uppercase text-sm sm:text-base leading-tight">{project.title}</h3>
-          </div>
-        </div>
-      </div>
-      <div className="mt-3 px-1">
-        <p className="text-[#D7E2EA] text-xs uppercase tracking-widest mb-1" style={{ opacity: 0.4 }}>{project.category}</p>
-        <h3 className="text-[#D7E2EA] font-medium uppercase text-sm">{project.title}</h3>
-      </div>
-    </>
   );
 }
