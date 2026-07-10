@@ -24,11 +24,15 @@ const AUTO_SPEED = 9; // degrees / second, autoplay
 const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes after a drag/wheel/arrow nudge
 const CLICK_SUPPRESS_THRESHOLD = 6; // px of drag movement before we swallow the click
 const NUDGE_EASE = 0.16;
-const PACKING = 0.6; // lower = more gap between neighboring slides
+const PACKING = 0.62; // lower = more gap between neighboring slides
+const HEADROOM = 1.45; // leaves room so the enlarged front card doesn't collide with its neighbors
+const FRONT_SCALE = 1.55; // how much bigger the centered card renders vs. the base size
+const TILT_DEG = 22; // tips the ring's path into a visible arc instead of a flat line
+const TILT_RAD = (TILT_DEG * Math.PI) / 180;
 function cardBounds(viewportWidth: number) {
-  if (viewportWidth < 640) return { min: 56, max: 220 };
-  if (viewportWidth < 1024) return { min: 64, max: 300 };
-  return { min: 72, max: 380 };
+  if (viewportWidth < 640) return { min: 70, max: 260 };
+  if (viewportWidth < 1024) return { min: 88, max: 340 };
+  return { min: 100, max: 420 };
 }
 const DRAG_SENSITIVITY = 0.32; // degrees of rotation per px of drag
 const WHEEL_SENSITIVITY = 0.18;
@@ -90,8 +94,13 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       if (!el) return;
       const w = el.clientWidth;
       const h = el.clientHeight;
-      const fitRadius = 0.44 * Math.min(w, h);
-      const rawCard = 2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * PACKING;
+      // Two independent constraints: the ring's X-spread must fit the width,
+      // and its tilted vertical arc (2 * radius * sin(TILT)) must fit the
+      // height. Whichever is tighter wins.
+      const radiusByWidth = 0.44 * w;
+      const radiusByHeight = (0.62 * h) / (2 * Math.sin(TILT_RAD));
+      const fitRadius = Math.min(radiusByWidth, radiusByHeight);
+      const rawCard = (2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * PACKING) / HEADROOM;
       const { min, max } = cardBounds(window.innerWidth);
       const cardSize = Math.max(min, Math.min(max, rawCard));
       const perspective = Math.max(1300, fitRadius * 3.2);
@@ -127,18 +136,20 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         bestIdx = i;
       }
       if (!el) continue;
-      // Cards stay billboarded (always facing the camera) and simply travel
-      // along the circle's X/Z path -- reads as parallel slides on an arc
-      // rather than fan blades, and never needs backface culling.
+      // Cards stay billboarded (always facing the camera) and travel along a
+      // circle that's tilted in 3D (position only, never rotated) -- reads
+      // as parallel slides riding a curved, visibly arcing rail rather than
+      // fan blades or a flat line, and never needs backface culling.
       const t = Math.min(1, abs / 100);
       const rad = (eff * Math.PI) / 180;
       const x = geometry.radius * Math.sin(rad);
-      const z = geometry.radius * (Math.cos(rad) - 1);
-      const scale = 1.08 - t * 0.32;
+      const y = -geometry.radius * Math.sin(TILT_RAD) * (Math.cos(rad) - 1);
+      const z = geometry.radius * Math.cos(TILT_RAD) * (Math.cos(rad) - 1);
+      const scale = FRONT_SCALE - t * (FRONT_SCALE - 0.55);
       const opacity = abs > 100 ? 0 : 1 - t * 0.8;
       const blur = t * 5;
       const brightness = 1 - t * 0.5;
-      el.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
+      el.style.transform = `translateX(${x}px) translateY(${y}px) translateZ(${z}px) scale(${scale})`;
       el.style.opacity = String(opacity);
       el.style.filter = `blur(${blur}px) brightness(${brightness})`;
       el.style.zIndex = String(Math.round(1000 - abs));
@@ -187,18 +198,18 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   }, [reducedMotion, N, applyFrame]);
 
   // Native (non-passive) wheel listener -- React's synthetic onWheel is
-  // attached passively by default, which silently blocks preventDefault()
-  // and lets the page scroll instead of rotating the ring. Wiring it here
-  // directly is what actually makes horizontal wheel/trackpad scroll work.
+  // attached passively by default, which silently blocks preventDefault().
+  // We only intercept when the gesture is clearly horizontal (trackpad swipe
+  // or shift+wheel); a normal vertical scroll passes straight through so the
+  // page keeps scrolling instead of getting stuck under the carousel.
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
     const handleWheel = (e: WheelEvent) => {
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (!delta) return;
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
       nudgeActiveRef.current = false;
-      rotationRef.current -= delta * WHEEL_SENSITIVITY;
+      rotationRef.current -= e.deltaX * WHEEL_SENSITIVITY;
       markInteracting();
     };
     el.addEventListener('wheel', handleWheel, { passive: false });
@@ -281,7 +292,9 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   const activeGlobalIndex = previewIndex ?? frontIndex;
 
   return (
-    <div className="relative">
+    <div
+      className="relative flex flex-col w-full h-[62vh] min-h-[480px] sm:h-[66vh] sm:min-h-[540px] md:h-[70vh] md:min-h-[600px] max-h-[820px] max-w-[1700px] mx-auto"
+    >
       {!reducedMotion && (
         <style>{`
           @keyframes portfolio-glow-spin {
@@ -305,12 +318,15 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         />
       </div>
 
+      {/* Ring area takes whatever height is left after the label below --
+          both live inside one fixed-height box so nothing ever falls out
+          of view and the title never overlaps the cards. */}
       <div
         ref={stageRef}
         role="region"
         aria-label="Portfolio, arranged as a rotating carousel"
         tabIndex={0}
-        className="relative w-full h-[62vh] min-h-[440px] sm:h-[68vh] sm:min-h-[520px] md:h-[74vh] md:min-h-[600px] lg:h-[80vh] lg:min-h-[680px] max-h-[920px] max-w-[1700px] mx-auto outline-none"
+        className="relative flex-1 min-h-0 w-full outline-none"
         style={{ perspective: geometry.perspective, cursor: 'grab', touchAction: 'pan-y' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -344,8 +360,9 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         </div>
       </div>
 
-      {/* Synced title, index counter, and nav arrows */}
-      <div className="mt-6 sm:mt-8 flex flex-col items-center gap-5">
+      {/* Synced title, index counter, and nav arrows -- fixed natural height,
+          always inside the same viewport-bounded box as the ring above. */}
+      <div className="shrink-0 pt-4 sm:pt-6 pb-2 flex flex-col items-center gap-4">
         <AnimatePresence mode="wait">
           {activeProject && (
             <motion.div
@@ -356,17 +373,17 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-center px-4"
             >
-              <p className="text-[#D7E2EA] text-sm uppercase tracking-widest mb-2" style={{ opacity: 0.45 }}>
+              <p className="text-[#D7E2EA] text-xs sm:text-sm uppercase tracking-widest mb-1" style={{ opacity: 0.45 }}>
                 {String(activeGlobalIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')} — {activeProject.category}
               </p>
-              <h3 className="hero-heading font-black uppercase tracking-tight text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none">
+              <h3 className="hero-heading font-black uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl leading-none">
                 {activeProject.title}
               </h3>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4">
           <NavButton direction="left" onClick={goPrev} />
           <PlayPauseButton paused={paused} onClick={togglePaused} />
           <NavButton direction="right" onClick={goNext} />
