@@ -25,14 +25,14 @@ const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes after a d
 const CLICK_SUPPRESS_THRESHOLD = 6; // px of drag movement before we swallow the click
 const NUDGE_EASE = 0.16;
 const PACKING = 0.62; // lower = more gap between neighboring slides
-const HEADROOM = 1.45; // leaves room so the enlarged front card doesn't collide with its neighbors
-const FRONT_SCALE = 1.55; // how much bigger the centered card renders vs. the base size
+const HEADROOM = 1.3; // leaves room so the enlarged front card doesn't collide with its neighbors
+const FRONT_SCALE = 1.7; // how much bigger the centered card renders vs. the base size
 const TILT_DEG = 22; // tips the ring's path into a visible arc instead of a flat line
 const TILT_RAD = (TILT_DEG * Math.PI) / 180;
 function cardBounds(viewportWidth: number) {
-  if (viewportWidth < 640) return { min: 70, max: 260 };
-  if (viewportWidth < 1024) return { min: 88, max: 340 };
-  return { min: 100, max: 420 };
+  if (viewportWidth < 640) return { min: 110, max: 480 };
+  if (viewportWidth < 1024) return { min: 160, max: 700 };
+  return { min: 200, max: 950 };
 }
 const DRAG_SENSITIVITY = 0.32; // degrees of rotation per px of drag
 const WHEEL_SENSITIVITY = 0.18;
@@ -97,8 +97,8 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       // Two independent constraints: the ring's X-spread must fit the width,
       // and its tilted vertical arc (2 * radius * sin(TILT)) must fit the
       // height. Whichever is tighter wins.
-      const radiusByWidth = 0.44 * w;
-      const radiusByHeight = (0.62 * h) / (2 * Math.sin(TILT_RAD));
+      const radiusByWidth = 0.5 * w;
+      const radiusByHeight = (0.72 * h) / (2 * Math.sin(TILT_RAD));
       const fitRadius = Math.min(radiusByWidth, radiusByHeight);
       const rawCard = (2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * PACKING) / HEADROOM;
       const { min, max } = cardBounds(window.innerWidth);
@@ -293,7 +293,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
 
   return (
     <div
-      className="relative flex flex-col w-full h-[62vh] min-h-[480px] sm:h-[66vh] sm:min-h-[540px] md:h-[70vh] md:min-h-[600px] max-h-[820px] max-w-[1700px] mx-auto"
+      className="relative flex flex-col w-full h-[74vh] min-h-[560px] sm:h-[82vh] sm:min-h-[640px] md:h-[88vh] md:min-h-[720px] max-h-[1150px] max-w-[2100px] mx-auto"
     >
       {!reducedMotion && (
         <style>{`
