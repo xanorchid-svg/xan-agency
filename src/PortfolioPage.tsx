@@ -21,10 +21,12 @@ const IMAGE_MAP: Record<string, string> = {
 
 export default function PortfolioPage() {
   const [activeTag, setActiveTag] = useState<FilterTag>('All');
-  // The 3D carousel is only really at its best with the full set -- for any
-  // subcategory filter (a handful of projects) the plain grid reads better
-  // and sidesteps the whole "few tiles on a big ring" problem entirely.
-  const viewMode = activeTag === 'All' ? 'carousel' : 'list';
+  // The 3D carousel is on hold for now -- it wasn't feeling right yet, so
+  // every filter (including "All") uses the plain grid until we revisit it.
+  // Flip CAROUSEL_ENABLED back to true (and the <PortfolioCarousel> below is
+  // still there, untouched) to bring it back for "All".
+  const CAROUSEL_ENABLED = false;
+  const viewMode = CAROUSEL_ENABLED && activeTag === 'All' ? 'carousel' : 'list';
   const filtered =
     activeTag === 'All'
       ? PROJECTS
