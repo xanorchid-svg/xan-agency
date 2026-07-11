@@ -22,7 +22,7 @@ const PALETTE = ['#3b6bff', '#4f3bff', '#8b3bff', '#c93bff', '#ff6ec7'];
 
 const AUTO_SPEED = 9; // degrees / second, autoplay
 const RESUME_DELAY = 1100; // ms of inactivity before autoplay resumes after a drag/wheel/arrow nudge
-const CLICK_SUPPRESS_THRESHOLD = 6; // px of drag movement before we swallow the click
+const DRAG_THRESHOLD = 8; // px of movement before a press is treated as a drag rather than a click
 const NUDGE_EASE = 0.16;
 const PACKING = 0.62; // lower = more gap between neighboring slides
 const HEADROOM = 1.3; // leaves room so the enlarged front card doesn't collide with its neighbors
@@ -216,32 +216,44 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     return () => el.removeEventListener('wheel', handleWheel);
   }, [markInteracting]);
 
+  // Drag vs. click is decided lazily: a press only becomes a "drag" once the
+  // pointer has actually moved past DRAG_THRESHOLD. Until then it's treated
+  // as a pending click, so ordinary hand jitter during a tap never rotates
+  // the ring or swallows the navigation click.
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    draggingRef.current = true;
-    nudgeActiveRef.current = false;
     pointerIdRef.current = e.pointerId;
     dragStartXRef.current = e.clientX;
     dragStartRotationRef.current = rotationRef.current;
     dragDistanceRef.current = 0;
+    draggingRef.current = false;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    if (stageRef.current) stageRef.current.style.cursor = 'grabbing';
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!draggingRef.current || pointerIdRef.current !== e.pointerId) return;
+    if (pointerIdRef.current !== e.pointerId) return;
     const dx = e.clientX - dragStartXRef.current;
     dragDistanceRef.current = Math.max(dragDistanceRef.current, Math.abs(dx));
-    if (dragDistanceRef.current > CLICK_SUPPRESS_THRESHOLD) suppressClickRef.current = true;
-    rotationRef.current = dragStartRotationRef.current + dx * DRAG_SENSITIVITY;
+    if (!draggingRef.current && dragDistanceRef.current > DRAG_THRESHOLD) {
+      draggingRef.current = true;
+      suppressClickRef.current = true;
+      nudgeActiveRef.current = false;
+      if (stageRef.current) stageRef.current.style.cursor = 'grabbing';
+    }
+    if (draggingRef.current) {
+      rotationRef.current = dragStartRotationRef.current + dx * DRAG_SENSITIVITY;
+    }
   };
 
   const endDrag = (e: React.PointerEvent) => {
     if (pointerIdRef.current !== e.pointerId) return;
+    const wasDragging = draggingRef.current;
     draggingRef.current = false;
     pointerIdRef.current = null;
-    markInteracting();
-    if (stageRef.current) stageRef.current.style.cursor = 'grab';
+    if (wasDragging) {
+      markInteracting();
+      if (stageRef.current) stageRef.current.style.cursor = 'grab';
+    }
     if (suppressClickRef.current) {
       setTimeout(() => {
         suppressClickRef.current = false;
