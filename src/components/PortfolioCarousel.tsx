@@ -289,15 +289,6 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     }
   };
 
-  // Click empty space on the stage to pause/resume; clicking a card still
-  // navigates as normal. The ring no longer stops just because the mouse
-  // happens to be hovering over it.
-  const onStageClick = (e: React.MouseEvent) => {
-    if (suppressClickRef.current) return;
-    if ((e.target as HTMLElement).closest('a')) return;
-    togglePaused();
-  };
-
   if (N === 0) return null;
 
   const activeProject = projects[previewIndex ?? frontIndex];
@@ -346,7 +337,6 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
         onPointerCancel={endDrag}
         onKeyDown={onKeyDown}
         onClickCapture={onClickCapture}
-        onClick={onStageClick}
       >
         <div
           className="absolute inset-0 flex items-center justify-center"
