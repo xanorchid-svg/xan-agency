@@ -44,9 +44,20 @@ function normalizeAngle(a: number) {
   return x;
 }
 
-export default function PortfolioCarousel({ projects }: { projects: Project[] }) {
+export default function PortfolioCarousel({
+  projects,
+  totalCount,
+}: {
+  projects: Project[];
+  /** Full, unfiltered project count. When given, card size and the angle
+   *  between slots are derived from this instead of the filtered list length,
+   *  so a sparse tag (e.g. "Illustrations") reads at the exact same scale
+   *  and spacing as "All" -- it just populates fewer of the ring's slots. */
+  totalCount?: number;
+}) {
   const reducedMotion = usePrefersReducedMotion();
   const N = projects.length;
+  const spacingCount = totalCount && totalCount > 0 ? totalCount : N;
 
   const stageRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -72,7 +83,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
 
-  const anglePerCard = N > 0 ? 360 / N : 0;
+  const anglePerCard = spacingCount > 0 ? 360 / spacingCount : 0;
   const loopKey = projects.map((p) => p.slug).join('|');
 
   const markInteracting = useCallback(() => {
@@ -100,7 +111,11 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
       const radiusByWidth = 0.5 * w;
       const radiusByHeight = (0.72 * h) / (2 * Math.sin(TILT_RAD));
       const fitRadius = Math.min(radiusByWidth, radiusByHeight);
-      const rawCard = (2 * fitRadius * Math.sin(Math.PI / Math.max(N, 3)) * PACKING) / HEADROOM;
+      // Sized off spacingCount (the full, unfiltered total when provided) so
+      // every tag filter renders cards at the same scale as "All" -- a
+      // sparse filter just leaves most of the ring's slots empty rather than
+      // stretching its few cards bigger to fill the circle.
+      const rawCard = (2 * fitRadius * Math.sin(Math.PI / Math.max(spacingCount, 3)) * PACKING) / HEADROOM;
       const { min, max } = cardBounds(window.innerWidth);
       const cardSize = Math.max(min, Math.min(max, rawCard));
       const perspective = Math.max(1300, fitRadius * 3.2);
@@ -110,7 +125,7 @@ export default function PortfolioCarousel({ projects }: { projects: Project[] })
     const ro = new ResizeObserver(measure);
     if (stageRef.current) ro.observe(stageRef.current);
     return () => ro.disconnect();
-  }, [N, loopKey]);
+  }, [spacingCount, loopKey]);
 
   // Reset to a clean, centered state whenever the filtered project set changes.
   useEffect(() => {

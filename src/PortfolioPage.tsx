@@ -71,7 +71,7 @@ export default function PortfolioPage() {
 
       {viewMode === 'carousel' ? (
         <div className="py-10">
-          <PortfolioCarousel projects={filtered} />
+          <PortfolioCarousel projects={filtered} totalCount={PROJECTS.length} />
         </div>
       ) : (
         <div className="px-5 sm:px-8 md:px-10 py-10">
