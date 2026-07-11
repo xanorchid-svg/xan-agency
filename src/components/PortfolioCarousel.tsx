@@ -235,6 +235,16 @@ export default function PortfolioCarousel({
   // pointer has actually moved past DRAG_THRESHOLD. Until then it's treated
   // as a pending click, so ordinary hand jitter during a tap never rotates
   // the ring or swallows the navigation click.
+  //
+  // Pointer capture is deferred too, and that part matters even more: most
+  // browsers redirect the eventual "click" event's target to the capturing
+  // element once setPointerCapture has been called on a pointer, regardless
+  // of where the cursor actually is at release. Capturing immediately on
+  // pointerdown (the previous behavior) meant *every* click's target got
+  // rewritten to the stage div itself -- the click never actually reached
+  // the project link's DOM node, so navigation silently never fired. Only
+  // capturing once we've confirmed a real drag avoids that entirely for
+  // ordinary clicks.
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     pointerIdRef.current = e.pointerId;
@@ -242,7 +252,6 @@ export default function PortfolioCarousel({
     dragStartRotationRef.current = rotationRef.current;
     dragDistanceRef.current = 0;
     draggingRef.current = false;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
@@ -253,6 +262,7 @@ export default function PortfolioCarousel({
       draggingRef.current = true;
       suppressClickRef.current = true;
       nudgeActiveRef.current = false;
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       if (stageRef.current) stageRef.current.style.cursor = 'grabbing';
     }
     if (draggingRef.current) {
@@ -268,6 +278,11 @@ export default function PortfolioCarousel({
     if (wasDragging) {
       markInteracting();
       if (stageRef.current) stageRef.current.style.cursor = 'grab';
+      try {
+        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {
+        // already released / never captured -- fine to ignore
+      }
     }
     if (suppressClickRef.current) {
       setTimeout(() => {
@@ -393,9 +408,7 @@ export default function PortfolioCarousel({
               <p className="text-[#D7E2EA] text-xs sm:text-sm uppercase tracking-widest mb-1" style={{ opacity: 0.45 }}>
                 {String(activeGlobalIndex + 1).padStart(2, '0')} / {String(N).padStart(2, '0')} — {activeProject.category}
               </p>
-              <h3 className="hero-heading font-black uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl leading-none">
-                {activeProject.title}
-              </h3>
+              <ActiveTitleLink project={activeProject} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -425,6 +438,28 @@ function PlayPauseButton({ paused, onClick }: { paused: boolean; onClick: () => 
         <svg width="16" height="16" viewBox="0 0 24 24" fill="#D7E2EA"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
       )}
     </button>
+  );
+}
+
+function ActiveTitleLink({ project }: { project: Project }) {
+  const directHref = project.externalUrl || project.socials?.instagram;
+  const titleEl = (
+    <h3 className="hero-heading font-black uppercase tracking-tight text-2xl sm:text-3xl md:text-4xl leading-none">
+      {project.title}
+    </h3>
+  );
+  const className = 'inline-block transition-opacity duration-200 hover:opacity-70';
+  if (project.directLink && directHref) {
+    return (
+      <a href={directHref} target="_blank" rel="noopener noreferrer" className={className}>
+        {titleEl}
+      </a>
+    );
+  }
+  return (
+    <Link to={`/portfolio/${project.slug}`} className={className}>
+      {titleEl}
+    </Link>
   );
 }
 
