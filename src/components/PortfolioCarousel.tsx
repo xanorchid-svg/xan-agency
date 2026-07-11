@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Project } from '../projects';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -44,20 +44,16 @@ function normalizeAngle(a: number) {
   return x;
 }
 
-export default function PortfolioCarousel({
-  projects,
-  totalCount,
-}: {
-  projects: Project[];
-  /** Full, unfiltered project count. When given, card size and the angle
-   *  between slots are derived from this instead of the filtered list length,
-   *  so a sparse tag (e.g. "Illustrations") reads at the exact same scale
-   *  and spacing as "All" -- it just populates fewer of the ring's slots. */
-  totalCount?: number;
-}) {
+export default function PortfolioCarousel({ projects }: { projects: Project[] }) {
   const reducedMotion = usePrefersReducedMotion();
+  const navigate = useNavigate();
   const N = projects.length;
-  const spacingCount = totalCount && totalCount > 0 ? totalCount : N;
+  // Spacing and size both adapt to however many projects are actually in
+  // view, so N tiles are always spread evenly around the *whole* loop --
+  // equal gap between every neighboring pair, including the last one back
+  // to the first. A fixed slot count (tried previously) left most of the
+  // ring empty for sparse tag filters, which read as tiles "disappearing".
+  const spacingCount = N;
 
   const stageRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -319,6 +315,30 @@ export default function PortfolioCarousel({
     }
   };
 
+  // Belt-and-suspenders navigation: normally the click bubbles through to
+  // the card's own <a>/<Link> and that handles it. But this stage is a deep
+  // stack of absolutely-positioned, individually 3D-transformed siblings
+  // (perspective + preserve-3d + per-card translateX/Y/Z + scale), and in
+  // that setup a click's hit-tested target can resolve somewhere other than
+  // the anchor even when the cursor is visibly over a card. previewIndex is
+  // updated by simple pointerenter/leave on each card wrapper -- a much more
+  // reliable signal here -- so if the native click missed the link, we still
+  // know exactly which project was under the cursor and can navigate to it
+  // directly instead of the click silently doing nothing.
+  const onStageClick = (e: React.MouseEvent) => {
+    if (suppressClickRef.current) return; // a real drag just ended, not a click
+    if ((e.target as HTMLElement).closest('a')) return; // native link click already handled it
+    if (previewIndex == null) return; // click missed every card
+    const project = projects[previewIndex];
+    if (!project) return;
+    const directHref = project.externalUrl || project.socials?.instagram;
+    if (project.directLink && directHref) {
+      window.open(directHref, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(`/portfolio/${project.slug}`);
+    }
+  };
+
   if (N === 0) return null;
 
   const activeProject = projects[previewIndex ?? frontIndex];
@@ -367,6 +387,7 @@ export default function PortfolioCarousel({
         onPointerCancel={endDrag}
         onKeyDown={onKeyDown}
         onClickCapture={onClickCapture}
+        onClick={onStageClick}
       >
         <div
           className="absolute inset-0 flex items-center justify-center"

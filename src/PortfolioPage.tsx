@@ -19,11 +19,12 @@ const IMAGE_MAP: Record<string, string> = {
   'perfeqtion-imaging': perfeqtionCover,
 };
 
-type ViewMode = 'carousel' | 'list';
-
 export default function PortfolioPage() {
   const [activeTag, setActiveTag] = useState<FilterTag>('All');
-  const [viewMode, setViewMode] = useState<ViewMode>('carousel');
+  // The 3D carousel is only really at its best with the full set -- for any
+  // subcategory filter (a handful of projects) the plain grid reads better
+  // and sidesteps the whole "few tiles on a big ring" problem entirely.
+  const viewMode = activeTag === 'All' ? 'carousel' : 'list';
   const filtered =
     activeTag === 'All'
       ? PROJECTS
@@ -47,31 +48,20 @@ export default function PortfolioPage() {
         </motion.h1>
       </div>
 
-      <div className="sticky top-0 z-20 px-6 md:px-10 py-4 flex gap-2 flex-wrap items-center justify-between"
+      <div className="sticky top-0 z-20 px-6 md:px-10 py-4 flex gap-2 flex-wrap"
         style={{ background: '#0c0c0c', borderBottom: '1px solid rgba(215,226,234,0.08)' }}>
-        <div className="flex gap-2 flex-wrap">
-          {ALL_TAGS.map((tag) => (
-            <button key={tag} onClick={() => setActiveTag(tag)}
-              className="px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200"
-              style={{ background: activeTag === tag ? '#D7E2EA' : 'transparent', color: activeTag === tag ? '#0c0c0c' : '#D7E2EA', border: '1px solid rgba(215,226,234,0.25)' }}>
-              {tag}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2 shrink-0">
-          {(['carousel', 'list'] as ViewMode[]).map((mode) => (
-            <button key={mode} onClick={() => setViewMode(mode)}
-              className="px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200"
-              style={{ background: viewMode === mode ? '#D7E2EA' : 'transparent', color: viewMode === mode ? '#0c0c0c' : '#D7E2EA', border: '1px solid rgba(215,226,234,0.25)' }}>
-              {mode}
-            </button>
-          ))}
-        </div>
+        {ALL_TAGS.map((tag) => (
+          <button key={tag} onClick={() => setActiveTag(tag)}
+            className="px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-200"
+            style={{ background: activeTag === tag ? '#D7E2EA' : 'transparent', color: activeTag === tag ? '#0c0c0c' : '#D7E2EA', border: '1px solid rgba(215,226,234,0.25)' }}>
+            {tag}
+          </button>
+        ))}
       </div>
 
       {viewMode === 'carousel' ? (
         <div className="py-10">
-          <PortfolioCarousel projects={filtered} totalCount={PROJECTS.length} />
+          <PortfolioCarousel projects={filtered} />
         </div>
       ) : (
         <div className="px-5 sm:px-8 md:px-10 py-10">
