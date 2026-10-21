@@ -44,6 +44,8 @@ export interface Project {
   stats: Stat[];
   needsCopy?: boolean;
   directLink?: boolean;
+  /** Gallery tile shape. Defaults to 4/3; social projects use 4/5 so portrait posts fill the tile. */
+  galleryAspect?: string;
 }
 
 // Global footer / nav socials (from Wix header, confirmed on every page)
@@ -129,6 +131,61 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    slug: 'tap-sponsor',
+    title: 'Tap Sponsor',
+    subtitle: 'Social media for the #1 sponsorship platform for college events',
+    category: 'Social Media',
+    tags: ['Social Media'],
+    coverImg: '/social/tapsponsor-02-halloween-sponsored.webp',
+    galleryImgs: [
+      '/social/tapsponsor-02-halloween-sponsored.webp',
+      '/social/tapsponsor-05-200-hosts.webp',
+      '/social/tapsponsor-03-haunted-colleges.webp',
+      '/social/tapsponsor-06-costume-rankings.webp',
+      '/social/tapsponsor-04-game-day.webp',
+      '/social/tapsponsor-01-ambassador.webp',
+    ],
+    galleryAspect: '4/5',
+    socials: {
+      instagram: 'https://www.instagram.com/tapsponsor/',
+    },
+    problem:
+      'Tap Sponsor connects fraternities, sororities and student event hosts with brands that sponsor their parties and tailgates with free product and cash. It needed content that speaks campus language and turns scrolling students into event hosts posting on the platform.',
+    solution:
+      'Manage Tap Sponsor\u2019s Instagram and Facebook with high-energy, trend-led content built around the college calendar: game-day and tailgate posts, a Halloween series (sponsored-party pushes, the most haunted colleges, top costume rankings), social-proof posts on how many hosts got sponsored, and an ambassador recruitment campaign.',
+    stats: [],
+  },
+  {
+    slug: 'sapateiro-winery',
+    title: 'Sapateiro Winery',
+    subtitle: 'Launching a new Instagram for a boutique winery near Porto, Portugal',
+    category: 'Social Media',
+    tags: ['Social Media', 'Advertising'],
+    coverImg: '/social/sapateiro-05-three-wines.webp',
+    galleryImgs: [
+      '/social/sapateiro-01-welcome.webp',
+      '/social/sapateiro-05-three-wines.webp',
+      '/social/sapateiro-02-vineyard-reel.webp',
+      '/social/sapateiro-06-harvest-together.webp',
+      '/social/sapateiro-04-taste-reel.webp',
+      '/social/sapateiro-07-harvest-reel.webp',
+      '/social/sapateiro-03-origin-story.webp',
+      '/social/sapateiro-08-labeling-reel.webp',
+      '/social/sapateiro-09-september-reel.webp',
+    ],
+    galleryAspect: '4/5',
+    externalUrl: 'https://sapateiro.wine',
+    externalUrlLabel: 'Visit Website',
+    socials: {
+      instagram: 'https://www.instagram.com/sapateirowinery/',
+    },
+    problem:
+      'Sapateiro, a family-run boutique winery an hour from Porto, lost its original Instagram account and had to rebuild its audience from zero \u2014 right as harvest season and its busiest stretch of wine-tasting visits arrived.',
+    solution:
+      'Launched the new @sapateirowinery account in late August and ran it through September: a welcome and origin-story launch, wine release posts, and a run of harvest reels from the vineyard and winery \u2014 picking, destemming, hand-labeling bottles \u2014 supported by a Meta ad campaign promoting the tasting experiences and an email campaign to bring the existing mailing list over to the new account.',
+    stats: [],
+  },
+  {
     slug: 'power-bagels',
     title: 'Power Bagels',
     subtitle: 'Brand identity & content creation for a high-energy bagel concept',
@@ -165,17 +222,29 @@ export const PROJECTS: Project[] = [
   {
     slug: 'bronco-buckle-company',
     title: 'Bronco Buckle Company',
-    subtitle: 'Hand-crafted sterling silver belt buckles, Dallas, TX',
-    category: 'Website',
-    tags: ['Website'],
-    coverImg: 'https://www.broncobuckles.com/bblogo.png',
-    galleryImgs: [],
+    subtitle: 'Website & social media for hand-crafted sterling silver buckles, Dallas, TX',
+    category: 'Social Media',
+    tags: ['Social Media', 'Website'],
+    coverImg: '/social/bronco-04-the-classic.webp',
+    galleryImgs: [
+      '/social/bronco-01-lifetime-gift-reel.webp',
+      '/social/bronco-04-the-classic.webp',
+      '/social/bronco-05-the-elegante.webp',
+      '/social/bronco-03-money-clip.webp',
+      '/social/bronco-02-worn-for-decades.webp',
+      '/social/bronco-06-client-words.webp',
+    ],
+    galleryAspect: '4/5',
     externalUrl: 'https://www.broncobuckles.com/',
     externalUrlLabel: 'Visit Website',
-    problem: '',
-    solution: '',
+    socials: {
+      instagram: 'https://www.instagram.com/broncobuckles/',
+    },
+    problem:
+      'Bronco Buckles makes heirloom, hand-engraved sterling silver buckles, but the craftsmanship and the family story behind each piece weren\u2019t coming through online \u2014 the brand needed a home on the web and a social presence that felt as considered as the product.',
+    solution:
+      'Built the brand\u2019s website and run its Instagram and Facebook: product launches for The Classic, The Elegante and the new Money Clip, a founder-story reel about a father\u2019s gift to his sons, client testimonial posts, and gift-season campaigns \u2014 all in a warm, timeless Western look that matches the buckles themselves.',
     stats: [],
-    needsCopy: true,
   },
   {
     slug: 'sailing-portfolio',

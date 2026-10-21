@@ -140,7 +140,7 @@ export default function ProjectDetail() {
       {project.galleryImgs.length > 0 && (
         <div className="px-5 sm:px-8 md:px-10 pb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {project.galleryImgs.map((img, i) => (
-            <motion.div key={i} className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '4/3', background: 'rgba(255,255,255,0.03)' }}
+            <motion.div key={i} className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: project.galleryAspect || '4/3', background: 'rgba(255,255,255,0.03)' }}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: (i % 6) * 0.08 }}>
               <img src={img} alt={`${project.title} ${i + 1}`} className="w-full h-full object-contain" loading="lazy" />
             </motion.div>
