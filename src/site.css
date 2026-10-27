@@ -134,3 +134,12 @@ h1,h2{font-family:'Playfair Display',Georgia,serif!important;font-weight:400!imp
 .fc .cap{position:absolute;left:0;right:0;bottom:0;padding:90px 28px 28px;background:linear-gradient(to top,rgba(46,14,54,.92),rgba(46,14,54,0));color:#FFFFFF}
 .arrowbtn{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;border:1.5px solid #4B1957;background:transparent;color:#4B1957;font-size:20px;cursor:pointer;transition:background .3s,color .3s}
 .arrowbtn:hover{background:#4B1957;color:#FFFFFF}
+/* testimonial carousel */
+.tslide{opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s cubic-bezier(0.16,1,0.3,1),transform .9s cubic-bezier(0.16,1,0.3,1),filter .9s;pointer-events:none}
+.tslide.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+.tarrow{width:44px;height:44px;border-radius:50%;border:1.5px solid #4B1957;background:transparent;color:#4B1957;font-size:17px;cursor:pointer;transition:background .3s,color .3s}
+.tarrow:hover{background:#4B1957;color:#FFFFFF}
+.tdot{width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(75,25,87,.25);cursor:pointer;transition:width .5s cubic-bezier(0.16,1,0.3,1)}
+.tdot.on{width:30px}
+@media (max-width: 760px){.tcar{text-align:center}.tnav{justify-content:center}}
+@media (prefers-reduced-motion: reduce){.tslide{transition:none;filter:none;transform:none}}

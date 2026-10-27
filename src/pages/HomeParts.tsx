@@ -1,3 +1,5 @@
+import Testimonials from '../site/Testimonials';
+
 export function Hero() {
   return (
     <>
@@ -153,10 +155,7 @@ export function Middle() {
 <div className="rv"><p className="disp iri-d" style={{margin: "0", fontSize: "clamp(64px, 7vw, 104px)", lineHeight: "1", color: "#4B1957"}}>80%</p><p style={{margin: "14px 0 0", fontSize: "16px", lineHeight: "1.5", color: "#4A2A52"}}>more social followers<br /><span className="sans" style={{fontSize: "12px", fontWeight: "600", letterSpacing: "0.14em", textTransform: "uppercase", color: "#5E3A68"}}>Diamond Vitality Center</span></p></div>
 <div className="rv"><p className="disp iri-d" style={{margin: "0", fontSize: "clamp(64px, 7vw, 104px)", lineHeight: "1", color: "#4B1957"}}>84%</p><p style={{margin: "14px 0 0", fontSize: "16px", lineHeight: "1.5", color: "#4A2A52"}}>more followers (67 → 123)<br /><span className="sans" style={{fontSize: "12px", fontWeight: "600", letterSpacing: "0.14em", textTransform: "uppercase", color: "#5E3A68"}}>Bronco Buckles</span></p></div>
 </div>
-<figure className="rv stats-q" style={{margin: "clamp(72px, 8vw, 110px) 0 0", maxWidth: "980px"}}>
-<blockquote className="disp" style={{margin: "0", fontSize: "clamp(26px, 3vw, 42px)", lineHeight: "1.3", color: "#2B1230"}}><span className="iri-d">“</span>Every project was delivered on time and exceeded our expectations. Xan is hardworking, reliable, and truly talented.<span className="iri-d">”</span></blockquote>
-<figcaption style={{marginTop: "24px", fontSize: "15px", color: "#4A2A52"}}><span className="sans" style={{fontWeight: "700", color: "#4B1957"}}>Aubry Merkle</span> — Perfeqtion Imaging &amp; Real Health MD</figcaption>
-</figure>
+<Testimonials />
 <a href="/work" className="rv sans" style={{marginTop: "48px", display: "inline-flex", alignItems: "center", gap: "10px", minHeight: "44px", fontSize: "14px", fontWeight: "600", letterSpacing: "0.04em", borderBottom: "1.5px solid #4B1957"}}>See the work <span aria-hidden="true">→</span></a>
 </div>
 </section>
