@@ -1,0 +1,231 @@
+[
+ {
+  "slug": "xanadu",
+  "title": "Xanadu",
+  "sub": "A network for awakening places",
+  "cats": [
+   "Brand",
+   "Web",
+   "App",
+   "Social",
+   "AI"
+  ],
+  "thumb": "/media/x-hero.jpg"
+ },
+ {
+  "slug": "touchstone-bernays",
+  "title": "Touchstone Bernays",
+  "sub": "Social media for a Texas defense litigation firm — trusted since 1946",
+  "cats": [
+   "Social",
+   "AI"
+  ],
+  "thumb": "/media/tb-logo.jpg"
+ },
+ {
+  "slug": "bronco-buckles",
+  "title": "Bronco Buckle Company",
+  "sub": "Hand-crafted sterling silver buckles & belts — Dallas, TX",
+  "cats": [
+   "Web",
+   "Social",
+   "Brand"
+  ],
+  "thumb": "/media/th-bronco.jpg"
+ },
+ {
+  "slug": "tap-sponsor",
+  "title": "Tap Sponsor",
+  "sub": "Social media for a college event sponsorship platform",
+  "cats": [
+   "Social"
+  ],
+  "thumb": "/media/tap-logo.jpg"
+ },
+ {
+  "slug": "sapateiro",
+  "title": "Sapateiro Winery",
+  "sub": "Meta ads, email and a new Instagram for a boutique winery near Porto",
+  "cats": [
+   "Ads",
+   "Social"
+  ],
+  "thumb": "/media/sap-5.jpg"
+ },
+ {
+  "slug": "wild-child-nosara",
+  "title": "Wild Child Nosara",
+  "sub": "Rewilding education — website, enrollment app and social",
+  "cats": [
+   "Web",
+   "App",
+   "Social",
+   "Ads"
+  ],
+  "thumb": "/media/wc-0.jpg"
+ },
+ {
+  "slug": "power-bagels",
+  "title": "Power Bagels",
+  "sub": "High-protein bagels — e-commerce site & brand content",
+  "cats": [
+   "Web",
+   "Brand"
+  ],
+  "thumb": "/media/v-pb.jpg"
+ },
+ {
+  "slug": "perfeqtion-imaging",
+  "title": "Perfeqtion Imaging & Real Health MD",
+  "sub": "Reels, carousels and campaign graphics for Dr. Jenn Simmons",
+  "cats": [
+   "Social",
+   "Ads"
+  ],
+  "thumb": "/media/pq-0.jpg"
+ },
+ {
+  "slug": "diamond-vitality-center",
+  "title": "Diamond Vitality Center",
+  "sub": "Rebrand, website, memberships and social for an integrative wellness center",
+  "cats": [
+   "Brand",
+   "Web",
+   "Social"
+  ],
+  "thumb": "/media/dvc-0.jpg"
+ },
+ {
+  "slug": "sailing-portfolio",
+  "title": "Ozzie Young — Sailing Portfolio",
+  "sub": "A recruiting site for a junior sailor",
+  "cats": [
+   "Web"
+  ],
+  "thumb": "/media/th-oz.jpg"
+ },
+ {
+  "slug": "unicorn-alliance",
+  "title": "Unicorn Alliance",
+  "sub": "A storybook web experience",
+  "cats": [
+   "Web"
+  ],
+  "thumb": "/media/th-ua.jpg"
+ },
+ {
+  "slug": "posada-natura",
+  "title": "Posada Natura",
+  "sub": "Reels for a Costa Rica rainforest retreat center",
+  "cats": [
+   "Social"
+  ],
+  "thumb": "/media/posada-0.jpg"
+ },
+ {
+  "slug": "age-thoughtfully",
+  "title": "Age Thoughtfully",
+  "sub": "Website for Marissa Kennerson's podcast & coaching business",
+  "cats": [
+   "Web"
+  ],
+  "thumb": "/media/age-0.jpg"
+ },
+ {
+  "slug": "seekr",
+  "title": "Seekr",
+  "sub": "An ad campaign for a platform that holds the internet accountable",
+  "cats": [
+   "Ads"
+  ],
+  "thumb": "/media/seekr-0.jpg"
+ },
+ {
+  "slug": "simple",
+  "title": "Simple",
+  "sub": "Ads for a restaurant purchasing app",
+  "cats": [
+   "Ads"
+  ],
+  "thumb": "/media/simple-0.jpg"
+ },
+ {
+  "slug": "abrago",
+  "title": "Abrago",
+  "sub": "A one-stop study abroad platform — New Venture Challenge winner",
+  "cats": [
+   "App",
+   "Brand"
+  ],
+  "thumb": "/media/abrago-0.jpg"
+ },
+ {
+  "slug": "gogal",
+  "title": "GoGal",
+  "sub": "The pocketknife app for women",
+  "cats": [
+   "App",
+   "Brand"
+  ],
+  "thumb": "/media/gogal-0.jpg"
+ },
+ {
+  "slug": "one-local",
+  "title": "ONE Local",
+  "sub": "Connecting the community through healing",
+  "cats": [
+   "Brand",
+   "Web",
+   "Social"
+  ],
+  "thumb": "/media/onelocal-0.jpg"
+ },
+ {
+  "slug": "goddess-activations",
+  "title": "Goddess Activations",
+  "sub": "Helping women tap into their true potential",
+  "cats": [
+   "Social",
+   "Brand"
+  ],
+  "thumb": "/media/goddess-0.jpg"
+ },
+ {
+  "slug": "hypnositea",
+  "title": "Hypnositea",
+  "sub": "Hypnose your day.",
+  "cats": [
+   "Brand"
+  ],
+  "thumb": "/media/th-hypno.jpg"
+ },
+ {
+  "slug": "astro-trips",
+  "title": "Astro Trips",
+  "sub": "A minted NFT illustration project",
+  "cats": [
+   "Art",
+   "Brand"
+  ],
+  "thumb": "/media/astro-0.jpg"
+ },
+ {
+  "slug": "flyers",
+  "title": "Flyers & Print",
+  "sub": "Posters, brochures and event flyers",
+  "cats": [
+   "Brand",
+   "Art"
+  ],
+  "thumb": "/media/flyers-0.jpg"
+ },
+ {
+  "slug": "artwork",
+  "title": "Artwork",
+  "sub": "Painting, collage & mixed media",
+  "cats": [
+   "Art"
+  ],
+  "thumb": "/media/art-0.jpg"
+ }
+]
