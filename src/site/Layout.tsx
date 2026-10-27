@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { startMotion } from './motion';
 
 const NAV = [
   { href: '/#services', label: 'Services' },
@@ -73,6 +74,7 @@ export function Footer() {
 export function Page({ title, children, cta = true }: { title: string; children: ReactNode; cta?: boolean }) {
   useEffect(() => {
     document.title = title;
+    startMotion();
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
     const hash = window.location.hash;
     if (hash) {

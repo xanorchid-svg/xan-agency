@@ -52,12 +52,12 @@ export default function Home() {
       <section id="quiz" style={{ background: '#FFFFFF' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(88px, 11vw, 150px) clamp(20px, 5vw, 56px)' }}>
           <QuizHead />
-          <div className="rv" role="group" aria-label="Choose your biggest challenge" style={{ margin: '56px auto 0', maxWidth: 1080, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 14 }}>
+          <div className="quizgrid stg" role="group" aria-label="Choose your biggest challenge" style={{ margin: '56px auto 0', maxWidth: 1240 }}>
             {OPTS.map((o, i) => {
               const on = pick === i;
               return (
                 <button key={o.label} type="button" className="opt" onClick={() => setPick(i)} aria-pressed={on} style={{ textAlign: 'left', minHeight: 120, padding: 24, borderRadius: 18, border: `1.5px solid ${on ? '#4B1957' : 'rgba(75,25,87,0.16)'}`, background: on ? '#4B1957' : '#FBF6FC', color: on ? '#FFFFFF' : '#2B1230', cursor: 'pointer', fontFamily: "'Jost', sans-serif", display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 18 }}>
-                  <span className="sans" style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.2em', opacity: 0.7 }}>0{i + 1}</span>
+                  <span className="sans" style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, letterSpacing: '0.2em', opacity: 0.7 }}>0{i + 1}</span>
                   <span style={{ fontSize: 19, lineHeight: 1.35, fontWeight: 400 }}>{o.label}</span>
                 </button>
               );
