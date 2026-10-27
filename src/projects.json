@@ -10,7 +10,7 @@
    "Social",
    "AI"
   ],
-  "thumb": "/media/x-hero.jpg"
+  "thumb": "/media/x-hero.webp"
  },
  {
   "slug": "touchstone-bernays",
@@ -20,7 +20,7 @@
    "Social",
    "AI"
   ],
-  "thumb": "/media/tb-logo.jpg"
+  "thumb": "/media/tb-logo.webp"
  },
  {
   "slug": "bronco-buckles",
@@ -31,7 +31,7 @@
    "Social",
    "Brand"
   ],
-  "thumb": "/media/th-bronco.jpg"
+  "thumb": "/media/th-bronco.webp"
  },
  {
   "slug": "tap-sponsor",
@@ -40,7 +40,7 @@
   "cats": [
    "Social"
   ],
-  "thumb": "/media/tap-logo.jpg"
+  "thumb": "/media/tap-logo.webp"
  },
  {
   "slug": "sapateiro",
@@ -50,7 +50,7 @@
    "Ads",
    "Social"
   ],
-  "thumb": "/media/sap-5.jpg"
+  "thumb": "/media/sap-5.webp"
  },
  {
   "slug": "wild-child-nosara",
@@ -62,7 +62,7 @@
    "Social",
    "Ads"
   ],
-  "thumb": "/media/wc-0.jpg"
+  "thumb": "/media/wc-0.webp"
  },
  {
   "slug": "power-bagels",
@@ -72,7 +72,7 @@
    "Web",
    "Brand"
   ],
-  "thumb": "/media/v-pb.jpg"
+  "thumb": "/media/v-pb.webp"
  },
  {
   "slug": "perfeqtion-imaging",
@@ -82,7 +82,7 @@
    "Social",
    "Ads"
   ],
-  "thumb": "/media/pq-0.jpg"
+  "thumb": "/media/pq-0.webp"
  },
  {
   "slug": "diamond-vitality-center",
@@ -93,7 +93,7 @@
    "Web",
    "Social"
   ],
-  "thumb": "/media/dvc-0.jpg"
+  "thumb": "/media/dvc-0.webp"
  },
  {
   "slug": "sailing-portfolio",
@@ -102,7 +102,7 @@
   "cats": [
    "Web"
   ],
-  "thumb": "/media/th-oz.jpg"
+  "thumb": "/media/th-oz.webp"
  },
  {
   "slug": "unicorn-alliance",
@@ -111,7 +111,7 @@
   "cats": [
    "Web"
   ],
-  "thumb": "/media/th-ua.jpg"
+  "thumb": "/media/th-ua.webp"
  },
  {
   "slug": "posada-natura",
@@ -120,7 +120,7 @@
   "cats": [
    "Social"
   ],
-  "thumb": "/media/posada-0.jpg"
+  "thumb": "/media/posada-0.webp"
  },
  {
   "slug": "age-thoughtfully",
@@ -129,7 +129,7 @@
   "cats": [
    "Web"
   ],
-  "thumb": "/media/age-0.jpg"
+  "thumb": "/media/age-0.webp"
  },
  {
   "slug": "seekr",
@@ -138,7 +138,7 @@
   "cats": [
    "Ads"
   ],
-  "thumb": "/media/seekr-0.jpg"
+  "thumb": "/media/seekr-0.webp"
  },
  {
   "slug": "simple",
@@ -147,7 +147,7 @@
   "cats": [
    "Ads"
   ],
-  "thumb": "/media/simple-0.jpg"
+  "thumb": "/media/simple-0.webp"
  },
  {
   "slug": "abrago",
@@ -157,7 +157,7 @@
    "App",
    "Brand"
   ],
-  "thumb": "/media/abrago-0.jpg"
+  "thumb": "/media/abrago-0.webp"
  },
  {
   "slug": "gogal",
@@ -167,7 +167,7 @@
    "App",
    "Brand"
   ],
-  "thumb": "/media/gogal-0.jpg"
+  "thumb": "/media/gogal-0.webp"
  },
  {
   "slug": "one-local",
@@ -178,7 +178,7 @@
    "Web",
    "Social"
   ],
-  "thumb": "/media/onelocal-0.jpg"
+  "thumb": "/media/onelocal-0.webp"
  },
  {
   "slug": "goddess-activations",
@@ -188,7 +188,7 @@
    "Social",
    "Brand"
   ],
-  "thumb": "/media/goddess-0.jpg"
+  "thumb": "/media/goddess-0.webp"
  },
  {
   "slug": "hypnositea",
@@ -197,7 +197,7 @@
   "cats": [
    "Brand"
   ],
-  "thumb": "/media/th-hypno.jpg"
+  "thumb": "/media/th-hypno.webp"
  },
  {
   "slug": "astro-trips",
@@ -207,7 +207,7 @@
    "Art",
    "Brand"
   ],
-  "thumb": "/media/astro-0.jpg"
+  "thumb": "/media/astro-0.webp"
  },
  {
   "slug": "flyers",
@@ -217,7 +217,7 @@
    "Brand",
    "Art"
   ],
-  "thumb": "/media/flyers-0.jpg"
+  "thumb": "/media/flyers-0.webp"
  },
  {
   "slug": "artwork",
@@ -226,6 +226,6 @@
   "cats": [
    "Art"
   ],
-  "thumb": "/media/art-0.jpg"
+  "thumb": "/media/art-0.webp"
  }
 ]

@@ -9,7 +9,7 @@ export default function AboutBody() {
 <h1 className="fu" style={{margin: "20px 0 0", fontWeight: "300", fontSize: "clamp(56px, 8.4vw, 132px)", lineHeight: "0.92", letterSpacing: "-0.045em", animationDelay: ".08s"}}>Designer. Builder. <span className="serif iri-d" style={{fontStyle: "italic", color: "#4B1957"}}>Founder.</span></h1>
 <p className="fu" style={{margin: "36px 0 0", fontSize: "19px", lineHeight: "1.75", color: "#4A2A52", maxWidth: "620px", animationDelay: ".16s"}}>I'm Xan Orchid — a creative entrepreneur in Dallas, Texas. I've run my own agency since 2020, helping businesses with branding, websites, social media, logo and template design. Today I pair that eye with AI: Claude is my engineering partner, so a one-woman studio can deliver what used to take a team.</p>
 </div>
-<figure className="fu" style={{flex: "0 1 440px", minWidth: "260px", margin: "0", animationDelay: ".2s"}}><img src="/media/xan-studio.jpg" alt="Portrait of Xan Orchid resting her chin on her hand" style={{display: "block", width: "100%", height: "auto", borderRadius: "14px"}} /></figure>
+<figure className="fu" style={{flex: "0 1 440px", minWidth: "260px", margin: "0", animationDelay: ".2s"}}><img decoding="async" fetchPriority="high" src="/media/xan-studio.webp" alt="Portrait of Xan Orchid resting her chin on her hand" style={{display: "block", width: "100%", height: "auto", borderRadius: "14px"}} /></figure>
 </section>
 <section style={{borderTop: "1px solid rgba(75,25,87,0.1)"}}>
 <div style={{maxWidth: "1320px", margin: "0 auto", padding: "clamp(72px, 9vw, 120px) clamp(20px, 5vw, 64px)", display: "flex", flexWrap: "wrap", gap: "clamp(40px, 6vw, 96px)"}}>

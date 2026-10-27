@@ -164,8 +164,8 @@ export function Middle() {
 <section id="about" style={{background: "#FFFFFF"}}>
 <div style={{maxWidth: "1280px", margin: "0 auto", padding: "clamp(96px, 12vw, 160px) clamp(20px, 5vw, 56px)", display: "flex", flexWrap: "wrap", gap: "clamp(48px, 6vw, 96px)", alignItems: "center"}}>
 <div className="rv-scale" style={{flex: "1 1 380px", minWidth: "0", position: "relative", padding: "0 0 70px 0"}}>
-<img src="/media/xan-studio.jpg" alt="Portrait of Xan Orchid resting her chin on her hand" style={{display: "block", width: "82%", height: "auto", borderRadius: "24px"}} />
-<img src="/media/xan-hat.jpg" alt="Xan Orchid in a wide-brimmed sun hat" style={{position: "absolute", right: "0", bottom: "0", width: "44%", height: "auto", borderRadius: "18px", border: "8px solid #FFFFFF", boxShadow: "0 30px 60px rgba(75,25,87,0.18)"}} />
+<img decoding="async" loading="lazy" src="/media/xan-studio.webp" alt="Portrait of Xan Orchid resting her chin on her hand" style={{display: "block", width: "82%", height: "auto", borderRadius: "24px"}} />
+<img decoding="async" loading="lazy" src="/media/xan-hat.webp" alt="Xan Orchid in a wide-brimmed sun hat" style={{position: "absolute", right: "0", bottom: "0", width: "44%", height: "auto", borderRadius: "18px", border: "8px solid #FFFFFF", boxShadow: "0 30px 60px rgba(75,25,87,0.18)"}} />
 <span className="disp iri-fill" aria-hidden="true" style={{position: "absolute", left: "-10px", bottom: "10px", display: "inline-flex", alignItems: "center", justifyContent: "center", width: "96px", height: "96px", borderRadius: "50%", color: "#4B1957", fontSize: "34px", boxShadow: "0 16px 36px rgba(75,25,87,0.25)"}}>XO</span>
 </div>
 <div style={{flex: "1.1 1 440px", minWidth: "0"}}>

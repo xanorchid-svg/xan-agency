@@ -1,5 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { startMotion } from './motion';
+import { seoFor, applySeo } from '../seo';
 
 const NAV = [
   { href: '/#services', label: 'Services' },
@@ -13,7 +15,7 @@ export function Header() {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(236,203,244,0.82)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '16px clamp(20px, 5vw, 56px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 14 }} aria-label="Xan Orchid Studio — home">
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 14 }} aria-label="Xan Orchid — home">
           <span className="disp iri-d" style={{ fontSize: 30, lineHeight: 1, color: '#4B1957', letterSpacing: '-0.02em' }}>XO</span>
           <span style={{ width: 1, height: 26, background: 'rgba(75,25,87,0.35)' }} />
           <span className="sans" style={{ fontWeight: 700, fontSize: 15, color: '#4B1957' }}>Xan Orchid</span>
@@ -71,9 +73,10 @@ export function Footer() {
   );
 }
 
-export function Page({ title, children, cta = true }: { title: string; children: ReactNode; cta?: boolean }) {
+export function Page({ children, cta = true }: { title?: string; children: ReactNode; cta?: boolean }) {
+  const { pathname } = useLocation();
   useEffect(() => {
-    document.title = title;
+    applySeo(seoFor(pathname));
     startMotion();
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
     const hash = window.location.hash;
@@ -83,7 +86,7 @@ export function Page({ title, children, cta = true }: { title: string; children:
     } else {
       window.scrollTo(0, 0);
     }
-  }, [title, typeof window !== 'undefined' ? window.location.pathname : '']);
+  }, [pathname]);
   return (
     <div style={{ background: '#FBF6FC', color: '#2B1230', fontFamily: "'Jost', system-ui, sans-serif", fontWeight: 300, minHeight: '100vh', overflowX: 'clip' }}>
       <Header />

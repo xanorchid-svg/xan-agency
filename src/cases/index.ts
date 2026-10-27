@@ -1,4 +1,4 @@
-import type React from "react";
+import type { ComponentType } from 'react';
 import Xanadu from './Xanadu';
 import TouchstoneBernays from './TouchstoneBernays';
 import BroncoBuckles from './BroncoBuckles';
@@ -22,7 +22,7 @@ import Hypnositea from './Hypnositea';
 import AstroTrips from './AstroTrips';
 import Flyers from './Flyers';
 import Artwork from './Artwork';
-export const CASES: Record<string, { title: string; Component: () => React.JSX.Element }> = {
+export const CASES: Record<string, { title: string; Component: ComponentType }> = {
   "xanadu": { title: "Xanadu", Component: Xanadu },
   "touchstone-bernays": { title: "Touchstone Bernays", Component: TouchstoneBernays },
   "bronco-buckles": { title: "Bronco Buckle Company", Component: BroncoBuckles },

@@ -1,24 +1,31 @@
+import { Suspense } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Page } from './Layout';
 import AboutBody from '../pages/AboutBody';
-import { CASES } from '../cases';
+import { getCase } from './caseRegistry';
 
 export function About() {
-  return <Page title="About — Xan Orchid Studio"><AboutBody /></Page>;
+  return <Page><AboutBody /></Page>;
 }
 
 const OLD: Record<string, string> = { 'bronco-buckle-company': 'bronco-buckles', 'perfeqtion': 'perfeqtion-imaging', 'diamond-vitality': 'diamond-vitality-center', 'art-portfolio': 'artwork' };
 
 export function CaseStudy() {
   const { slug = '' } = useParams();
-  const c = CASES[slug] || CASES[OLD[slug]];
-  if (!c) return <Navigate to="/work" replace />;
+  const c = getCase(slug);
+  if (!c) return <Navigate to={OLD[slug] ? `/work/${OLD[slug]}` : '/work'} replace />;
   const C = c.Component;
-  return <Page title={`${c.title} — Xan Orchid Studio`}><C /></Page>;
+  return (
+    <Page>
+      <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+        <C />
+      </Suspense>
+    </Page>
+  );
 }
 
 export function OldProject() {
   const { slug = '' } = useParams();
-  const to = CASES[slug] ? slug : OLD[slug];
+  const to = getCase(slug) ? slug : OLD[slug];
   return <Navigate to={to ? `/work/${to}` : '/work'} replace />;
 }
