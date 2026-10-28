@@ -8,7 +8,6 @@ import WildChildNosara from './WildChildNosara';
 import PowerBagels from './PowerBagels';
 import PerfeqtionImaging from './PerfeqtionImaging';
 import DiamondVitalityCenter from './DiamondVitalityCenter';
-import SailingPortfolio from './SailingPortfolio';
 import UnicornAlliance from './UnicornAlliance';
 import PosadaNatura from './PosadaNatura';
 import AgeThoughtfully from './AgeThoughtfully';
@@ -32,7 +31,6 @@ export const CASES: Record<string, { title: string; Component: ComponentType }> 
   "power-bagels": { title: "Power Bagels", Component: PowerBagels },
   "perfeqtion-imaging": { title: "Perfeqtion Imaging & Real Health MD", Component: PerfeqtionImaging },
   "diamond-vitality-center": { title: "Diamond Vitality Center", Component: DiamondVitalityCenter },
-  "sailing-portfolio": { title: "Ozzie Young \u2014 Sailing Portfolio", Component: SailingPortfolio },
   "unicorn-alliance": { title: "Unicorn Alliance", Component: UnicornAlliance },
   "posada-natura": { title: "Posada Natura", Component: PosadaNatura },
   "age-thoughtfully": { title: "Age Thoughtfully", Component: AgeThoughtfully },

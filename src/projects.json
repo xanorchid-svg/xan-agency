@@ -96,15 +96,6 @@
   "thumb": "/media/dvc-0.webp"
  },
  {
-  "slug": "sailing-portfolio",
-  "title": "Ozzie Young — Sailing Portfolio",
-  "sub": "A recruiting site for a junior sailor",
-  "cats": [
-   "Web"
-  ],
-  "thumb": "/media/th-oz.webp"
- },
- {
   "slug": "unicorn-alliance",
   "title": "Unicorn Alliance",
   "sub": "A storybook web experience",
