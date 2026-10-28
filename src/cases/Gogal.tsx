@@ -34,7 +34,7 @@ export default function Gogal() {
 <p className="mono" style={{margin: "0", fontSize: "12px", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6E4A78"}}>Next project →</p>
 <div style={{marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "32px", alignItems: "center"}}>
 <span style={{flex: "1 1 400px", fontWeight: "300", fontSize: "clamp(44px, 7vw, 112px)", letterSpacing: "-0.04em", lineHeight: "0.95"}}>ONE Local</span>
-<span style={{flex: "0 1 380px", aspectRatio: "4 / 3", borderRadius: "14px", overflow: "hidden", display: "block"}}><img decoding="async" loading="lazy" src="/media/onelocal-0.webp" alt="GoGal — project image 1" style={{display: "block", width: "100%", height: "100%", objectFit: "cover", objectPosition: "top"}} /></span>
+<span style={{flex: "0 1 380px", aspectRatio: "4 / 3", borderRadius: "14px", overflow: "hidden", display: "block"}}><img decoding="async" loading="lazy" src="/media/onelocal-0.webp" alt="" style={{display: "block", width: "100%", height: "100%", objectFit: "cover", objectPosition: "top"}} /></span>
 </div>
 </a>
 </section>
